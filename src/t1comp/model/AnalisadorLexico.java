@@ -41,7 +41,40 @@ public class AnalisadorLexico {
 
     private TokenType checkTokenType(String token) {
 
-        return TokenType.ID;
+        switch (token) {
+            case "class":
+                return TokenType.CLASS;
+            case "extends":
+                return TokenType.EXTENDS;
+            case "int":
+                return TokenType.INT;
+            case "string":
+                return TokenType.STRING;
+            case "constructor":
+                return TokenType.CONSTRUCTOR;
+            case "print":
+                return TokenType.PRINT;
+            case "read":
+                return TokenType.READ;
+            case "return":
+                return TokenType.RETURN;
+            case "super":
+                return TokenType.SUPER;
+            case "if":
+                return TokenType.IF;
+            case "else":
+                return TokenType.ELSE;
+            case "for":
+                return TokenType.FOR;
+            case "new":
+                return TokenType.NEW;
+            case "break":
+                return TokenType.BREAK;
+            default:
+                return TokenType.ID;
+
+        }
+
     }
 
     public String[] getLines(String text) {
@@ -62,7 +95,7 @@ public class AnalisadorLexico {
             lexeme = "";
             lineIndex = l;
             columnIndex = 0;
-            
+
             char[] characters = lines[l].toCharArray();
 
             for (int c = 0; c < characters.length; c++) {
@@ -73,7 +106,7 @@ public class AnalisadorLexico {
                     if (token.equals(TokenType.ID)) {
                         token = checkTokenType(lexeme);
                     }
-                    lexeme = lexeme.substring(0, lexeme.length()-1);
+                    lexeme = lexeme.substring(0, lexeme.length() - 1);
                     //insert on symbol table
                     System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
                     lastMatch = new ArrayList<TokenType>();
