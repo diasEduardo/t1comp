@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
 public class AnalisadorLexico {
 
     private ArrayList<String> tokenList;
-    private final TabelaDeSimbolos tabelaDeSimbolos;
+    private final SymbolsTable sysmbolsTable;
 
     public AnalisadorLexico() {
-        this.tabelaDeSimbolos = TabelaDeSimbolos.getInstance();
+        this.sysmbolsTable = SymbolsTable.getInstance();
     }
 
     public enum TokenType {
@@ -82,7 +82,7 @@ public class AnalisadorLexico {
     }
 
     public void analyze(String sourceCode) {
-        tabelaDeSimbolos.clean();
+        sysmbolsTable.clean();
         int lineIndex = 0, columnIndex = 0;
         ArrayList<TokenType> lastMatch = new ArrayList<TokenType>();
         String lexeme = "";
@@ -109,6 +109,8 @@ public class AnalisadorLexico {
                     }
                     
                     //insert on symbol table
+                    
+                    sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
                     System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
@@ -127,6 +129,7 @@ public class AnalisadorLexico {
                 if (token.equals(TokenType.ID)) {
                     token = checkTokenType(lexeme);
                 }
+                sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
                 //insert on symbol table
                 System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
 
@@ -137,9 +140,10 @@ public class AnalisadorLexico {
 
         }
 
+        sysmbolsTable.display();
         //System.out.println("1");
         ///System.out.println(tokenList.toString());
-        //System.out.println(tabelaDeSimbolos.getTable());
+        //System.out.println(sysmbolsTable.getTable());
     }
 
     public ArrayList<TokenType> doLexAnalysis(String lexeme) {

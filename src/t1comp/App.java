@@ -17,6 +17,7 @@ public final class App {
 
     private View view;
     private AnalisadorLexico lex; 
+    
     public static void main(String[] args) {
        new App();
     }
