@@ -66,7 +66,7 @@ public class View extends javax.swing.JFrame {
 
         sourceCodeArea.setColumns(20);
         sourceCodeArea.setRows(5);
-        sourceCodeArea.setText("aaaa da009a\n     bbbb\ndsad09sd a0s9da 0s9d0a9\n123 321321 3213\n 3123");
+        sourceCodeArea.setText("ifbreak i      if  1231323 else\naaaa \n231231 class \n  if  111 else 222");
         jScrollPane2.setViewportView(sourceCodeArea);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);

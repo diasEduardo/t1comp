@@ -145,7 +145,7 @@
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="aaaa da009a&#xa;     bbbb&#xa;dsad09sd a0s9da 0s9d0a9&#xa;123 321321 3213&#xa; 3123"/>
+            <Property name="text" type="java.lang.String" value="ifbreak i      if  1231323 else&#xa;aaaa &#xa;231231 class &#xa;  if  111 else 222"/>
           </Properties>
         </Component>
       </SubComponents>

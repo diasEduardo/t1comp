@@ -102,11 +102,12 @@ public class AnalisadorLexico {
                 lexeme += characters[c];
                 ArrayList<TokenType> match = doLexAnalysis(lexeme);
                 if (match.size() == 0 && lastMatch.size() == 1) {
+                    lexeme = lexeme.substring(0, lexeme.length() - 1);
                     TokenType token = lastMatch.get(0);
                     if (token.equals(TokenType.ID)) {
                         token = checkTokenType(lexeme);
                     }
-                    lexeme = lexeme.substring(0, lexeme.length() - 1);
+                    
                     //insert on symbol table
                     System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
                     lastMatch = new ArrayList<TokenType>();
