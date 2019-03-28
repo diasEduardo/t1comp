@@ -66,7 +66,7 @@ public class View extends javax.swing.JFrame {
 
         sourceCodeArea.setColumns(20);
         sourceCodeArea.setRows(5);
-        sourceCodeArea.setText("ifbreak i      if  1231323 else\naaaa \n231231 class \n  if  111 else 222");
+        sourceCodeArea.setText("class bintree{\n  constructor(){\n      ano = 1900;\n      mes = 1;\n      dia = 1;\n    }\n\n    constructor(int d, int m, int a){\n      dia = d;\n      mes = m;\n      ano = a;\n    }\n}");
         jScrollPane2.setViewportView(sourceCodeArea);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);

@@ -26,7 +26,7 @@ public class AnalisadorLexico {
         CLASS, EXTENDS, INT, STRING, CONSTRUCTOR, PRINT, READ, RETURN, SUPER, IF,
         ELSE, FOR, NEW, BREAK, AT, EQ, GT, GE, LT, LE, NE, PLUS, MINUS, MUL, DIV, MOD,
         ID, INTCONST, STRINGCONST, OBRACE, CBRACE, OPAR, CPAR, OBRACK, CBRACK, SEMICOMMA,
-        COMMA, DOT, BLANK, ERROR;
+        COMMA, DOT, BLANK, ERROR, NULLTYPE;
 
         public static TokenType get(String typeName) {
             for (TokenType categoria : TokenType.values()) {
@@ -38,7 +38,65 @@ public class AnalisadorLexico {
             return ERROR;
         }
     }
+    
+    private TokenType checkOperatorsToken(String token) {
+        switch (token) {
+            case ">":
+                return TokenType.GE;
+            case "<":
+                return TokenType.LE;
+            case ">=":
+                return TokenType.GT;
+            case "<=":
+                return TokenType.LT;
+            case "=":
+                return TokenType.AT;
+            case "==":
+                return TokenType.EQ;
+            case "!=":
+                return TokenType.NE;
+            case "+":
+                return TokenType.PLUS;
+            case "-":
+                return TokenType.MINUS;
+            case "/":
+                return TokenType.DIV;
+            case "*":
+                return TokenType.MUL;
+            case "%":
+                return TokenType.MOD;
+            default:
+                return TokenType.NULLTYPE;
+                    
+        }
+    }
 
+    private TokenType checkScopeToken(String token) {
+        switch (token) {
+            case "{":
+                return TokenType.OBRACE;
+            case "}":
+                return TokenType.CBRACE;
+            case "(":
+                return TokenType.OPAR;
+            case ")":
+                return TokenType.CPAR;
+            case "[":
+                return TokenType.OBRACK;
+            case "]":
+                return TokenType.CBRACK;
+            case ";":
+                return TokenType.SEMICOMMA;
+            case ",":
+                return TokenType.COMMA;
+            case ".":
+                return TokenType.DOT;
+            default:
+                return TokenType.NULLTYPE;
+                    
+        }
+    } 
+            
     private TokenType checkTokenType(String token) {
 
         switch (token) {
@@ -148,16 +206,25 @@ public class AnalisadorLexico {
 
     public ArrayList<TokenType> doLexAnalysis(String lexeme) {
         ArrayList<TokenType> response = new ArrayList<TokenType>();
-
+        TokenType pointAnalisys = checkOperatorsToken(lexeme);
+        TokenType scopeAnalisys = checkScopeToken(lexeme);
+        
         if (tokenMatch("^[a-zA-Z][a-zA-Z0-9]*$", lexeme)) {
             response.add(TokenType.ID);
         }
         if (tokenMatch("^[0-9]+$", lexeme)) {
             response.add(TokenType.INTCONST);
         }
+        if (!pointAnalisys.equals(TokenType.NULLTYPE)) {
+            response.add(pointAnalisys);
+        }
+        if (!scopeAnalisys.equals(TokenType.NULLTYPE)) {
+            response.add(scopeAnalisys);
+        }
         if (tokenMatch("^[ ]+$", lexeme)) {
             response.add(TokenType.BLANK);
         }
+        
 
         return response;
     }
