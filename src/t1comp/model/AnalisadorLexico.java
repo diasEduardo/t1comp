@@ -26,7 +26,7 @@ public class AnalisadorLexico {
         CLASS, EXTENDS, INT, STRING, CONSTRUCTOR, PRINT, READ, RETURN, SUPER, IF,
         ELSE, FOR, NEW, BREAK, AT, EQ, GT, GE, LT, LE, NE, PLUS, MINUS, MUL, DIV, MOD,
         ID, INTCONST, STRINGCONST, OBRACE, CBRACE, OPAR, CPAR, OBRACK, CBRACK, SEMICOMMA,
-        COMMA, DOT, BLANK, ERROR, NULLTYPE;
+        COMMA, DOT, BLANK, ERROR, NULLTYPE, SEMITOKEN;
 
         public static TokenType get(String typeName) {
             for (TokenType categoria : TokenType.values()) {
@@ -38,7 +38,7 @@ public class AnalisadorLexico {
             return ERROR;
         }
     }
-    
+
     private TokenType checkOperatorsToken(String token) {
 //        TODO NE CASE NOT CORRECT
         switch (token) {
@@ -54,6 +54,8 @@ public class AnalisadorLexico {
                 return TokenType.AT;
             case "==":
                 return TokenType.EQ;
+            case "!":
+                return TokenType.SEMITOKEN;
             case "!=":
                 return TokenType.NE;
             case "+":
@@ -68,7 +70,7 @@ public class AnalisadorLexico {
                 return TokenType.MOD;
             default:
                 return TokenType.NULLTYPE;
-                    
+
         }
     }
 
@@ -94,10 +96,10 @@ public class AnalisadorLexico {
                 return TokenType.DOT;
             default:
                 return TokenType.NULLTYPE;
-                    
+
         }
-    } 
-            
+    }
+
     private TokenType checkTokenType(String token) {
 
         switch (token) {
@@ -160,16 +162,14 @@ public class AnalisadorLexico {
             for (int c = 0; c < characters.length; c++) {
                 lexeme += characters[c];
                 ArrayList<TokenType> match = doLexAnalysis(lexeme);
-                if (match.size() == 0 && lastMatch.size() == 1) {
+                if (match.size() == 0 && lastMatch.size() == 1 && lastMatch.get(0) != TokenType.SEMITOKEN) {
                     lexeme = lexeme.substring(0, lexeme.length() - 1);
                     TokenType token = lastMatch.get(0);
                     if (token.equals(TokenType.ID)) {
                         token = checkTokenType(lexeme);
                     }
-                    
-                    
+
                     //insert on symbol table
-                    
                     sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
                     System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
                     lastMatch = new ArrayList<TokenType>();
@@ -184,7 +184,7 @@ public class AnalisadorLexico {
                     lastMatch = match;
                 }
             }
-            if (lastMatch.size() == 1) {
+            if (lastMatch.size() == 1 && lastMatch.get(0) != TokenType.SEMITOKEN) {
                 TokenType token = lastMatch.get(0);
                 if (token.equals(TokenType.ID)) {
                     token = checkTokenType(lexeme);
@@ -193,7 +193,7 @@ public class AnalisadorLexico {
                 //insert on symbol table
                 System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
 
-            } else if (lastMatch.size() > 1) {
+            } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
                 //error
                 System.out.println("ERROR");
             }
@@ -210,13 +210,17 @@ public class AnalisadorLexico {
         ArrayList<TokenType> response = new ArrayList<TokenType>();
         TokenType pointAnalisys = checkOperatorsToken(lexeme);
         TokenType scopeAnalisys = checkScopeToken(lexeme);
-        
+
         if (tokenMatch("^[a-zA-Z][a-zA-Z0-9]*$", lexeme)) {
             response.add(TokenType.ID);
         }
-        if (tokenMatch("^\"[a-zA-Z0-9]*\"?$", lexeme)) {
+
+        if (tokenMatch("^\"[^\"]*\"$", lexeme)) {
             response.add(TokenType.STRINGCONST);
+        } else if (tokenMatch("^\"[^\"]*", lexeme)) {
+            response.add(TokenType.SEMITOKEN);
         }
+
         if (tokenMatch("^[0-9]+$", lexeme)) {
             response.add(TokenType.INTCONST);
         }
@@ -229,7 +233,6 @@ public class AnalisadorLexico {
         if (tokenMatch("^[ ]+$", lexeme)) {
             response.add(TokenType.BLANK);
         }
-        
 
         return response;
     }
