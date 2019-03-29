@@ -9,6 +9,8 @@ package t1comp.model;
  *
  * @author nathan
  */
+
+// TODO add entry for the type for semantic analisys
 public class TableEntry{
         private AnalisadorLexico.TokenType token;
         private String lexeme;

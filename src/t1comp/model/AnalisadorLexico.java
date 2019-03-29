@@ -40,6 +40,7 @@ public class AnalisadorLexico {
     }
     
     private TokenType checkOperatorsToken(String token) {
+//        TODO NE CASE NOT CORRECT
         switch (token) {
             case ">":
                 return TokenType.GE;
@@ -53,6 +54,8 @@ public class AnalisadorLexico {
                 return TokenType.AT;
             case "==":
                 return TokenType.EQ;
+            case "!":
+                return TokenType.NE;
             case "!=":
                 return TokenType.NE;
             case "+":
@@ -166,6 +169,7 @@ public class AnalisadorLexico {
                         token = checkTokenType(lexeme);
                     }
                     
+                    
                     //insert on symbol table
                     
                     sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
@@ -176,7 +180,7 @@ public class AnalisadorLexico {
                     columnIndex = c;
                     c -= 1;
                 } else if (match.size() == 0 && lastMatch.size() != 1) {
-                    //error
+                    //error     
                     System.out.println("ERROR");
                 } else {
                     lastMatch = match;
@@ -211,6 +215,9 @@ public class AnalisadorLexico {
         
         if (tokenMatch("^[a-zA-Z][a-zA-Z0-9]*$", lexeme)) {
             response.add(TokenType.ID);
+        }
+        if (tokenMatch("^\"[a-zA-Z0-9]*\"?$", lexeme)) {
+            response.add(TokenType.STRINGCONST);
         }
         if (tokenMatch("^[0-9]+$", lexeme)) {
             response.add(TokenType.INTCONST);
