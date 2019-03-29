@@ -25,7 +25,7 @@ public final class TabelaDeSimbolos {
         return instance;
     }
 
-    public HashMap<AnalisadorLexico.TokenType, HashSet<String>> getTable () {
+    public HashMap< Pair<Integer, Integer>, Pair<AnalisadorLexico.TokenType, String>> getTable () {
         return tabela;
     }
 
