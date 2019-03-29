@@ -7,38 +7,35 @@ package t1comp.model;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import org.javatuples.Pair;
 
 /**
  *
  * @author nathan
  */
 public final class TabelaDeSimbolos {
-    public HashMap<AnalisadorLexico.TokenType, HashSet<String>> tabela;
+    public HashMap< Pair<Integer, Integer>, Pair<AnalisadorLexico.TokenType, String>> tabela;
     private static final TabelaDeSimbolos instance = new TabelaDeSimbolos();
-    
+
     private TabelaDeSimbolos() {
         clean();
     }
-    
+
     public static TabelaDeSimbolos getInstance() {
         return instance;
     }
-    
+
     public HashMap<AnalisadorLexico.TokenType, HashSet<String>> getTable () {
         return tabela;
     }
-    
-    public void addToken(AnalisadorLexico.TokenType type, String word) {
-        tabela.get(type).add(word);
+
+    public void addToken(int linha,int coluna,AnalisadorLexico.TokenType type, String word) {
+        Pair<Integer, Integer> key = new Pair<Integer, Integer>( linha, coluna);
+        Pair<AnalisadorLexico.TokenType, String> value = new Pair<AnalisadorLexico.TokenType, String>(type,word);
+        tabela.put(key,value);
     }
-    
+
     public void clean() {
-        tabela = new HashMap<AnalisadorLexico.TokenType, HashSet<String>>() {
-            {
-                for (AnalisadorLexico.TokenType categoria : AnalisadorLexico.TokenType.values()) {
-                    put(categoria, new HashSet<String>());
-                }
-            }
-        };
+        tabela = new HashMap< Pair<Integer, Integer>, Pair<AnalisadorLexico.TokenType, String>>();
     }
 }

@@ -8,7 +8,7 @@ package t1comp.model;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import org.javatuples.Pair;
 /**
  *
  * @author nathan
@@ -107,7 +107,7 @@ public class AnalisadorLexico {
                     if (token.equals(TokenType.ID)) {
                         token = checkTokenType(lexeme);
                     }
-                    
+
                     //insert on symbol table
                     System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
                     lastMatch = new ArrayList<TokenType>();
