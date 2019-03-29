@@ -43,19 +43,17 @@ public class AnalisadorLexico {
 //        TODO NE CASE NOT CORRECT
         switch (token) {
             case ">":
-                return TokenType.GE;
-            case "<":
-                return TokenType.LE;
-            case ">=":
                 return TokenType.GT;
-            case "<=":
+            case "<":
                 return TokenType.LT;
+            case ">=":
+                return TokenType.GE;
+            case "<=":
+                return TokenType.LE;
             case "=":
                 return TokenType.AT;
             case "==":
                 return TokenType.EQ;
-            case "!":
-                return TokenType.NE;
             case "!=":
                 return TokenType.NE;
             case "+":
