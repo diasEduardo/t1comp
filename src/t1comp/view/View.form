@@ -4,6 +4,21 @@
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="jMenuBar1">
       <SubComponents>
+        <Menu class="javax.swing.JMenu" name="jMenu1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Arquivo"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Abrir"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Analisar"/>
@@ -145,7 +160,7 @@
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="ifbreak i      if  1231323 else&#xa;aaaa &#xa;231231 class &#xa;  if  111 else 222"/>
+            <Property name="text" type="java.lang.String" value="class bintree{&#xa;  constructor(){&#xa;      ano = 1900;&#xa;      mes = 1;&#xa;      dia = 1;&#xa;    }&#xa;&#xa;    constructor(int d, int m, int a){&#xa;      dia = d;&#xa;      mes = m;&#xa;      ano = a;&#xa;    }&#xa;}"/>
           </Properties>
         </Component>
       </SubComponents>

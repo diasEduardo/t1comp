@@ -16,17 +16,17 @@ import java.util.regex.Pattern;
 public class AnalisadorLexico {
 
     private ArrayList<String> tokenList;
-    private final TabelaDeSimbolos tabelaDeSimbolos;
+    private final SymbolsTable sysmbolsTable;
 
     public AnalisadorLexico() {
-        this.tabelaDeSimbolos = TabelaDeSimbolos.getInstance();
+        this.sysmbolsTable = SymbolsTable.getInstance();
     }
 
     public enum TokenType {
         CLASS, EXTENDS, INT, STRING, CONSTRUCTOR, PRINT, READ, RETURN, SUPER, IF,
         ELSE, FOR, NEW, BREAK, AT, EQ, GT, GE, LT, LE, NE, PLUS, MINUS, MUL, DIV, MOD,
         ID, INTCONST, STRINGCONST, OBRACE, CBRACE, OPAR, CPAR, OBRACK, CBRACK, SEMICOMMA,
-        COMMA, DOT, BLANK, ERROR;
+        COMMA, DOT, BLANK, ERROR, NULLTYPE, SEMITOKEN;
 
         public static TokenType get(String typeName) {
             for (TokenType categoria : TokenType.values()) {
@@ -36,6 +36,67 @@ public class AnalisadorLexico {
             }
 
             return ERROR;
+        }
+    }
+
+    private TokenType checkOperatorsToken(String token) {
+//        TODO NE CASE NOT CORRECT
+        switch (token) {
+            case ">":
+                return TokenType.GT;
+            case "<":
+                return TokenType.LT;
+            case ">=":
+                return TokenType.GE;
+            case "<=":
+                return TokenType.LE;
+            case "=":
+                return TokenType.AT;
+            case "==":
+                return TokenType.EQ;
+            case "!":
+                return TokenType.SEMITOKEN;
+            case "!=":
+                return TokenType.NE;
+            case "+":
+                return TokenType.PLUS;
+            case "-":
+                return TokenType.MINUS;
+            case "/":
+                return TokenType.DIV;
+            case "*":
+                return TokenType.MUL;
+            case "%":
+                return TokenType.MOD;
+            default:
+                return TokenType.NULLTYPE;
+
+        }
+    }
+
+    private TokenType checkScopeToken(String token) {
+        switch (token) {
+            case "{":
+                return TokenType.OBRACE;
+            case "}":
+                return TokenType.CBRACE;
+            case "(":
+                return TokenType.OPAR;
+            case ")":
+                return TokenType.CPAR;
+            case "[":
+                return TokenType.OBRACK;
+            case "]":
+                return TokenType.CBRACK;
+            case ";":
+                return TokenType.SEMICOMMA;
+            case ",":
+                return TokenType.COMMA;
+            case ".":
+                return TokenType.DOT;
+            default:
+                return TokenType.NULLTYPE;
+
         }
     }
 
@@ -82,7 +143,7 @@ public class AnalisadorLexico {
     }
 
     public void analyze(String sourceCode) {
-        tabelaDeSimbolos.clean();
+        sysmbolsTable.clean();
         int lineIndex = 0, columnIndex = 0;
         ArrayList<TokenType> lastMatch = new ArrayList<TokenType>();
         String lexeme = "";
@@ -101,55 +162,66 @@ public class AnalisadorLexico {
             for (int c = 0; c < characters.length; c++) {
                 lexeme += characters[c];
                 ArrayList<TokenType> match = doLexAnalysis(lexeme);
-                if (match.size() == 0 && lastMatch.size() == 1) {
+                if (match.size() == 0 && lastMatch.size() == 1 && lastMatch.get(0) != TokenType.SEMITOKEN) {
                     lexeme = lexeme.substring(0, lexeme.length() - 1);
                     TokenType token = lastMatch.get(0);
                     if (token.equals(TokenType.ID)) {
                         token = checkTokenType(lexeme);
                     }
-                    
+
                     //insert on symbol table
-                    System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
+                    sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));                
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
                     lineIndex = l;
                     columnIndex = c;
                     c -= 1;
                 } else if (match.size() == 0 && lastMatch.size() != 1) {
-                    //error
-                    System.out.println("ERROR");
+                    //error     
+                    System.out.println("ERROR IN: "+ l + " , " + c);
                 } else {
                     lastMatch = match;
                 }
             }
-            if (lastMatch.size() == 1) {
+            if (lastMatch.size() == 1 && lastMatch.get(0) != TokenType.SEMITOKEN) {
                 TokenType token = lastMatch.get(0);
                 if (token.equals(TokenType.ID)) {
                     token = checkTokenType(lexeme);
                 }
-                //insert on symbol table
-                System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
-
-            } else if (lastMatch.size() > 1) {
-                //error
-                System.out.println("ERROR");
+                
+                sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
+            } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
+                System.out.println("ERROR IN: "+ l);
             }
 
         }
 
-        //System.out.println("1");
-        ///System.out.println(tokenList.toString());
-        //System.out.println(tabelaDeSimbolos.getTable());
+        sysmbolsTable.display();
     }
 
     public ArrayList<TokenType> doLexAnalysis(String lexeme) {
         ArrayList<TokenType> response = new ArrayList<TokenType>();
+        TokenType pointAnalisys = checkOperatorsToken(lexeme);
+        TokenType scopeAnalisys = checkScopeToken(lexeme);
 
         if (tokenMatch("^[a-zA-Z][a-zA-Z0-9]*$", lexeme)) {
             response.add(TokenType.ID);
         }
+
+        if (tokenMatch("^\"[^\"]*\"$", lexeme)) {
+            response.add(TokenType.STRINGCONST);
+        } else if (tokenMatch("^\"[^\"]*", lexeme)) {
+            response.add(TokenType.SEMITOKEN);
+        }
+
         if (tokenMatch("^[0-9]+$", lexeme)) {
             response.add(TokenType.INTCONST);
+        }
+        if (!pointAnalisys.equals(TokenType.NULLTYPE)) {
+            response.add(pointAnalisys);
+        }
+        if (!scopeAnalisys.equals(TokenType.NULLTYPE)) {
+            response.add(scopeAnalisys);
         }
         if (tokenMatch("^[ ]+$", lexeme)) {
             response.add(TokenType.BLANK);

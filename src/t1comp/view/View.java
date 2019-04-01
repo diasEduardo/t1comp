@@ -13,12 +13,18 @@ package t1comp.view;
  */
 
 import t1comp.App;
+import java.io.File;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
+import utils.FileHanddler;
 public class View extends javax.swing.JFrame {
 
     /**
      * Creates new form View
      */
-    
+    JFileChooser jfc = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+	
     private App app;
     
     public View(App app) {
@@ -50,6 +56,8 @@ public class View extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
 
@@ -66,7 +74,7 @@ public class View extends javax.swing.JFrame {
 
         sourceCodeArea.setColumns(20);
         sourceCodeArea.setRows(5);
-        sourceCodeArea.setText("ifbreak i      if  1231323 else\naaaa \n231231 class \n  if  111 else 222");
+        sourceCodeArea.setText("class bintree{\n  constructor(){\n      ano = 1900;\n      mes = 1;\n      dia = 1;\n    }\n\n    constructor(int d, int m, int a){\n      dia = d;\n      mes = m;\n      ano = a;\n    }\n}");
         jScrollPane2.setViewportView(sourceCodeArea);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -76,6 +84,18 @@ public class View extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel2.setText("Resultados Obtidos");
+
+        jMenu1.setText("Arquivo");
+
+        jMenuItem1.setText("Abrir");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Analisar");
 
@@ -143,11 +163,26 @@ public class View extends javax.swing.JFrame {
         app.analyzeSourceCode(this.getSourceCode());
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        //Handle open button action.
+        int returnValue = jfc.showOpenDialog(null);
+        
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = jfc.getSelectedFile();
+            String readedText =  FileHanddler.readFile(selectedFile.getAbsolutePath());
+            sourceCodeArea.setText(readedText);
+	}
+
+
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
