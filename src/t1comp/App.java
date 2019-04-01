@@ -11,6 +11,7 @@ package t1comp;
  */
 
 import t1comp.model.AnalisadorLexico;
+import t1comp.model.SymbolsTable;
 import t1comp.view.View;
 
 public final class App {
@@ -26,11 +27,12 @@ public final class App {
         this.view = new View(this);
         lex = new AnalisadorLexico();
         analyzeSourceCode(view.getSourceCode());
-        
         this.view.show(true);
     }
     
     public void analyzeSourceCode(String sourceCode) {
+        SymbolsTable table = SymbolsTable.getInstance();
         lex.analyze(sourceCode);
+        view.updateStatus(table.toString());
     }
 }

@@ -170,8 +170,7 @@ public class AnalisadorLexico {
                     }
 
                     //insert on symbol table
-                    sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
-                    System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
+                    sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));                
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
                     lineIndex = l;
@@ -179,7 +178,7 @@ public class AnalisadorLexico {
                     c -= 1;
                 } else if (match.size() == 0 && lastMatch.size() != 1) {
                     //error     
-                    System.out.println("ERROR");
+                    System.out.println("ERROR IN: "+ l + " , " + c);
                 } else {
                     lastMatch = match;
                 }
@@ -189,21 +188,15 @@ public class AnalisadorLexico {
                 if (token.equals(TokenType.ID)) {
                     token = checkTokenType(lexeme);
                 }
+                
                 sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
-                //insert on symbol table
-                System.out.println("(" + token + "," + lexeme + "," + lineIndex + "," + columnIndex + ")");
-
             } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
-                //error
-                System.out.println("ERROR");
+                System.out.println("ERROR IN: "+ l);
             }
 
         }
 
         sysmbolsTable.display();
-        //System.out.println("1");
-        ///System.out.println(tokenList.toString());
-        //System.out.println(sysmbolsTable.getTable());
     }
 
     public ArrayList<TokenType> doLexAnalysis(String lexeme) {

@@ -36,17 +36,23 @@ public final class SymbolsTable {
         tabela.clear();
     }
     
-    public void display () {
-        System.out.println("## Symbols Table: \n");
-        
+    @Override
+    public String toString() {
+        String printTable = "## Symbols Table: \n";
         for (TableEntry entry: tabela) {
-            System.out.println (
+            printTable = printTable.concat(
                 "Token: " + entry.getToken().toString() + 
                 " | Lexeme: " + entry.getLexeme() + 
                 " | Line: " + entry.getLine() +
                 " | Column: " + entry.getColumn()
+                    +"\n"
             );
         }
-       
+        
+        return printTable;
+    } 
+    
+    public void display () {
+//        System.out.println(toString());
     }
 }
