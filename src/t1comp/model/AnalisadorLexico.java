@@ -178,7 +178,7 @@ public class AnalisadorLexico {
                     c -= 1;
                 } else if (match.size() == 0 && lastMatch.size() != 1) {
                     //error     
-                    System.out.println("ERROR IN: "+ l + " , " + c);
+                    System.out.println("ERROR IN: "+ (l+1) + " , " + (c+1));
                 } else {
                     lastMatch = match;
                 }
@@ -191,7 +191,7 @@ public class AnalisadorLexico {
                 
                 sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
             } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
-                System.out.println("ERROR IN: "+ l);
+                System.out.println("ERROR IN: "+ (l+1));
             }
 
         }
@@ -210,7 +210,7 @@ public class AnalisadorLexico {
 
         if (tokenMatch("^\"[^\"]*\"$", lexeme)) {
             response.add(TokenType.STRINGCONST);
-        } else if (tokenMatch("^\"[^\"]*", lexeme)) {
+        } else if (tokenMatch("^\"[^\"]*$", lexeme)) {
             response.add(TokenType.SEMITOKEN);
         }
 
