@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import t1comp.model.TokenType;
 /**
  *
  * @author nathan
@@ -22,22 +23,7 @@ public class AnalisadorLexico {
         this.sysmbolsTable = SymbolsTable.getInstance();
     }
 
-    public enum TokenType {
-        CLASS, EXTENDS, INT, STRING, CONSTRUCTOR, PRINT, READ, RETURN, SUPER, IF,
-        ELSE, FOR, NEW, BREAK, AT, EQ, GT, GE, LT, LE, NE, PLUS, MINUS, MUL, DIV, MOD,
-        ID, INTCONST, STRINGCONST, OBRACE, CBRACE, OPAR, CPAR, OBRACK, CBRACK, SEMICOMMA,
-        COMMA, DOT, BLANK, ERROR, NULLTYPE, SEMITOKEN;
-
-        public static TokenType get(String typeName) {
-            for (TokenType categoria : TokenType.values()) {
-                if (typeName.equals(categoria.toString())) {
-                    return categoria;
-                }
-            }
-
-            return ERROR;
-        }
-    }
+    
 
     private TokenType checkOperatorsToken(String token) {
 //        TODO NE CASE NOT CORRECT
@@ -170,7 +156,8 @@ public class AnalisadorLexico {
                     }
 
                     //insert on symbol table
-                    sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));                
+                    int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
+                    
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
                     lineIndex = l;
@@ -189,7 +176,7 @@ public class AnalisadorLexico {
                     token = checkTokenType(lexeme);
                 }
                 
-                sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
+                int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
             } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
                 System.out.println("ERROR IN: "+ (l+1));
             }
