@@ -16,7 +16,7 @@ import t1comp.model.TokenType;
  */
 public class AnalisadorLexico {
 
-    private ArrayList<String> tokenList;
+    private ArrayList<Token> tokenList;
     private final SymbolsTable sysmbolsTable;
 
     public AnalisadorLexico() {
@@ -157,7 +157,7 @@ public class AnalisadorLexico {
 
                     //insert on symbol table
                     int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
-                    
+                    tokenList.add(new Token(token,tokenIndex));
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
                     lineIndex = l;
@@ -177,6 +177,7 @@ public class AnalisadorLexico {
                 }
                 
                 int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
+                tokenList.add(new Token(token,tokenIndex));
             } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
                 System.out.println("ERROR IN: "+ (l+1));
             }
@@ -226,7 +227,7 @@ public class AnalisadorLexico {
         return false;
     }
 
-    public String getNextToken() {
+    public Token getNextToken() {
         return tokenList.remove(0);
     }
 

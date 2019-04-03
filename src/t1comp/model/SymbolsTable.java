@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public final class SymbolsTable {
     //precisa ser privado e não pode remover itens do arraylist por questões de referencia
     private ArrayList<TableEntry> tabela;
+    //precisa ser privado e não pode remover itens do arraylist por questões de referencia
     private static final SymbolsTable instance = new SymbolsTable();
     
     private SymbolsTable() {
