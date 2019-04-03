@@ -18,7 +18,8 @@ public class AnalisadorLexico {
     private ArrayList<String> tokenList;
     private final SymbolsTable sysmbolsTable;
     private int errorLen = 40;
-
+    private String erroMessage = "";
+    
     public AnalisadorLexico() {
         this.sysmbolsTable = SymbolsTable.getInstance();
     }
@@ -266,7 +267,11 @@ public class AnalisadorLexico {
                 pre = "\n" + sourceLines[line - i].substring(0, lastPos) + pre;
                 len -= lastPos;
                 i += 1;
-                lastPos = sourceLines[line - i].length();
+                
+                if (line -1 > 0) {
+                    lastPos = sourceLines[line - i].length();
+                }
+                
 
             }
         }
@@ -285,6 +290,14 @@ public class AnalisadorLexico {
 
             }
         }
-        return "\nERROR\nlexical error founded at \n~~\n"+pre + msg + pos+"\n~~\nin line "+line+" and column "+column+"\n";
+        erroMessage = "\nERROR\nlexical error founded at \n~~\n"+pre + msg + pos+"\n~~\nin line "+line+" and column "+column+"\n";
+        
+        return erroMessage;
+    }
+    
+//    Set message as string to be displayed latter on the view
+    public String getErrorMessage() {
+        
+        return erroMessage;
     }
 }
