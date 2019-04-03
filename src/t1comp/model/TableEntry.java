@@ -9,50 +9,65 @@ package t1comp.model;
  *
  * @author nathan
  */
-
 // TODO add entry for the type for semantic analisys
-public class TableEntry{
-        private AnalisadorLexico.TokenType token;
-        private String lexeme;
-        private int line, column;
-        
-        public TableEntry(AnalisadorLexico.TokenType token, String lexeme, int line, int column) {
-            this.token = token;
-            this.lexeme = lexeme;
-            this.line = line;
-            this.column = column;
-        }
-        
-        public AnalisadorLexico.TokenType getToken() {
-            return token;
-        }
+public class TableEntry {
 
-        public void setToken(AnalisadorLexico.TokenType token) {
-            this.token = token;
-        }
-        
-        public String getLexeme() {
-            return lexeme;
-        }
+    private AnalisadorLexico.TokenType token;
+    private String lexeme;
+    private int line, column;
 
-        public void setLexeme(String lexema) {
-            this.lexeme = lexema;
-        }
+    public TableEntry(AnalisadorLexico.TokenType token, String lexeme, int line, int column) {
+        this.token = token;
+        this.lexeme = lexeme;
+        this.line = line;
+        this.column = column;
+    }
 
-        public int getLine() {
-            return line;
-        }
+    public AnalisadorLexico.TokenType getToken() {
+        return token;
+    }
 
-        public void setLine(int line) {
-            this.line = line;
-        }
+    public void setToken(AnalisadorLexico.TokenType token) {
+        this.token = token;
+    }
 
-        public int getColumn() {
-            return column;
-        }
+    public String getLexeme() {
+        return lexeme;
+    }
 
-        public void setColumn(int column) {
-            this.column = column;
-        }
-        
+    public void setLexeme(String lexema) {
+        this.lexeme = lexema;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line = line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    @Override
+    public String toString() {
+        String printTable = "";
+
+        printTable = printTable.concat(
+                "Token: " + token.toString()
+                + " | Lexeme: " + lexeme
+                + " | Line: " + line
+                + " | Column: " + column
+                + "\n"
+        );
+
+        return printTable;
+    }
+
 }

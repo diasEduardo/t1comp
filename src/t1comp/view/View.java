@@ -37,7 +37,7 @@ public class View extends javax.swing.JFrame {
     }
 
     public void updateStatus(String status) {
-        statusTextArea.setText(status);
+        statusTextArea.setText(statusTextArea.getText()+status);
     }
     /**
      * This method is called from within the constructor to initialize the form.
