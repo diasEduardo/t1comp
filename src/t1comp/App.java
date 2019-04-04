@@ -34,5 +34,6 @@ public final class App {
         SymbolsTable table = SymbolsTable.getInstance();
         lex.analyze(sourceCode);
         view.updateStatus(table.toString());
+        view.updateStatus(lex.getErrorMessage());
     }
 }

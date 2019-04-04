@@ -290,7 +290,7 @@ public class AnalisadorLexico {
 
             }
         }
-        erroMessage = "\nERROR\nlexical error founded at \n~~\n"+pre + msg + pos+"\n~~\nin line "+line+" and column "+column+"\n";
+        erroMessage += "\nERROR\nlexical error founded at \n~~\n"+pre + msg + pos+"\n~~\nin line "+(line+1)+" and column "+(column+1)+"\n";
         
         return erroMessage;
     }
