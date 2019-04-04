@@ -6,13 +6,15 @@
 package t1comp.model;
 
 import java.util.ArrayList;
-import java.util.Map;
+
 /**
  *
  * @author nathan
  */
 public final class SymbolsTable {
-    public ArrayList<TableEntry> tabela;
+    //precisa ser privado e não pode remover itens do arraylist por questões de referencia
+    private ArrayList<TableEntry> tabela;
+    //precisa ser privado e não pode remover itens do arraylist por questões de referencia
     private static final SymbolsTable instance = new SymbolsTable();
     
     private SymbolsTable() {
@@ -28,8 +30,13 @@ public final class SymbolsTable {
         return tabela;
     }
     
-    public void addToken(TableEntry newEntry) {
+    public int getIndex(){
+        return tabela.size();
+    }
+    
+    public int addEntry(TableEntry newEntry) {
         tabela.add(newEntry);
+        return tabela.size();
     }
     
     public void clean() {
