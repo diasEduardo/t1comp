@@ -9,7 +9,6 @@ package t1comp;
  *
  * @author nathan
  */
-
 import t1comp.model.AnalisadorLexico;
 import t1comp.model.SymbolsTable;
 import t1comp.view.View;
@@ -17,22 +16,29 @@ import t1comp.view.View;
 public final class App {
 
     private View view;
-    private AnalisadorLexico lex; 
-    
+    private AnalisadorLexico lex;
+
     public static void main(String[] args) {
-       new App();
+        new App();
     }
-    
+
     public App() {
         this.view = new View(this);
         lex = new AnalisadorLexico();
         analyzeSourceCode(view.getSourceCode());
         this.view.show(true);
     }
-    
+
     public void analyzeSourceCode(String sourceCode) {
         SymbolsTable table = SymbolsTable.getInstance();
         lex.analyze(sourceCode);
+        boolean test = true;
+        if (test) {
+            while (lex.hasTokens()) {
+                System.out.println(lex.getNextToken().toString());
+            }
+        }
+        view.updateStatus("\n\n\nnew Analysis\n");
         view.updateStatus(table.toString());
         view.updateStatus(lex.getErrorMessage());
     }

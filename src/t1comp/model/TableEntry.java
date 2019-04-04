@@ -5,29 +5,32 @@
  */
 package t1comp.model;
 
+import t1comp.model.TokenType;
+
 /**
  *
  * @author nathan
  */
 // TODO add entry for the type for semantic analisys
+
 public class TableEntry {
 
-    private AnalisadorLexico.TokenType token;
+    private TokenType token;
     private String lexeme;
     private int line, column;
 
-    public TableEntry(AnalisadorLexico.TokenType token, String lexeme, int line, int column) {
+    public TableEntry(TokenType token, String lexeme, int line, int column) {
         this.token = token;
         this.lexeme = lexeme;
         this.line = line;
         this.column = column;
     }
 
-    public AnalisadorLexico.TokenType getToken() {
+    public TokenType getToken() {
         return token;
     }
 
-    public void setToken(AnalisadorLexico.TokenType token) {
+    public void setToken(TokenType token) {
         this.token = token;
     }
 
@@ -69,5 +72,4 @@ public class TableEntry {
 
         return printTable;
     }
-
 }

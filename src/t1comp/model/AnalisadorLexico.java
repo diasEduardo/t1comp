@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import t1comp.model.TokenType;
 /**
  *
  * @author nathan
  */
 public class AnalisadorLexico {
 
-    private ArrayList<String> tokenList;
+    private ArrayList<Token> tokenList;
     private final SymbolsTable sysmbolsTable;
     private int errorLen = 40;
     private String erroMessage = "";
@@ -24,22 +25,7 @@ public class AnalisadorLexico {
         this.sysmbolsTable = SymbolsTable.getInstance();
     }
 
-    public enum TokenType {
-        CLASS, EXTENDS, INT, STRING, CONSTRUCTOR, PRINT, READ, RETURN, SUPER, IF,
-        ELSE, FOR, NEW, BREAK, AT, EQ, GT, GE, LT, LE, NE, PLUS, MINUS, MUL, DIV, MOD,
-        ID, INTCONST, STRINGCONST, OBRACE, CBRACE, OPAR, CPAR, OBRACK, CBRACK, SEMICOMMA,
-        COMMA, DOT, BLANK, ERROR, NULLTYPE, SEMITOKEN;
-
-        public static TokenType get(String typeName) {
-            for (TokenType categoria : TokenType.values()) {
-                if (typeName.equals(categoria.toString())) {
-                    return categoria;
-                }
-            }
-
-            return ERROR;
-        }
-    }
+    
 
     private TokenType checkOperatorsToken(String token) {
 //        TODO NE CASE NOT CORRECT
@@ -146,6 +132,7 @@ public class AnalisadorLexico {
 
     public void analyze(String sourceCode) {
         sysmbolsTable.clean();
+        erroMessage = "";
         int lineIndex = 0, columnIndex = 0;
         ArrayList<TokenType> lastMatch = new ArrayList<TokenType>();
         String lexeme = "";
@@ -172,18 +159,20 @@ public class AnalisadorLexico {
                     }
 
                     //insert on symbol table
-                    sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
+                    int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
+                    tokenList.add(new Token(token,tokenIndex));
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
                     columnIndex = c;
                     c -= 1;
-                } else if (match.size() == 0 && lastMatch.size() != 1) {
+                } else if (match.size() == 0 && (lastMatch.size() != 1 || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN))) {
                     //error     
                     System.out.println(error(lines, lineIndex, columnIndex, c, errorLen));
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
                     columnIndex = c;
                     c -= 1;
+
                 } else {
                     lastMatch = match;
                 }
@@ -194,9 +183,11 @@ public class AnalisadorLexico {
                     token = checkTokenType(lexeme);
                 }
 
-                sysmbolsTable.addToken(new TableEntry(token, lexeme, lineIndex, columnIndex));
+                int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
+                tokenList.add(new Token(token,tokenIndex));
             } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
                 System.out.println(error(lines, lineIndex, columnIndex, lines[l].length(), errorLen));
+
             }
 
         }
@@ -215,7 +206,7 @@ public class AnalisadorLexico {
 
         if (tokenMatch("^\"[^\"]*\"$", lexeme)) {
             response.add(TokenType.STRINGCONST);
-        } else if (tokenMatch("^\"[^\"]*", lexeme)) {
+        } else if (tokenMatch("^\"[^\"]*$", lexeme)) {
             response.add(TokenType.SEMITOKEN);
         }
 
@@ -244,7 +235,7 @@ public class AnalisadorLexico {
         return false;
     }
 
-    public String getNextToken() {
+    public Token getNextToken() {
         return tokenList.remove(0);
     }
 
