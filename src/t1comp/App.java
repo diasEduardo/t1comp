@@ -38,6 +38,8 @@ public final class App {
                 System.out.println(lex.getNextToken().toString());
             }
         }
+        view.updateStatus("\n\n\nnew Analysis\n");
         view.updateStatus(table.toString());
+        view.updateStatus(lex.getErrorMessage());
     }
 }

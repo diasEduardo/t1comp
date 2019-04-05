@@ -18,7 +18,9 @@ public class AnalisadorLexico {
 
     private ArrayList<Token> tokenList;
     private final SymbolsTable sysmbolsTable;
-
+    private int errorLen = 40;
+    private String erroMessage = "";
+    
     public AnalisadorLexico() {
         this.sysmbolsTable = SymbolsTable.getInstance();
     }
@@ -130,6 +132,7 @@ public class AnalisadorLexico {
 
     public void analyze(String sourceCode) {
         sysmbolsTable.clean();
+        erroMessage = "";
         int lineIndex = 0, columnIndex = 0;
         ArrayList<TokenType> lastMatch = new ArrayList<TokenType>();
         String lexeme = "";
@@ -160,12 +163,16 @@ public class AnalisadorLexico {
                     tokenList.add(new Token(token,tokenIndex));
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
-                    lineIndex = l;
                     columnIndex = c;
                     c -= 1;
-                } else if (match.size() == 0 && lastMatch.size() != 1) {
+                } else if (match.size() == 0 && (lastMatch.size() != 1 || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN))) {
                     //error     
-                    System.out.println("ERROR IN: "+ (l+1) + " , " + (c+1));
+                    System.out.println(error(lines, lineIndex, columnIndex, c, errorLen));
+                    lastMatch = new ArrayList<TokenType>();
+                    lexeme = "";
+                    columnIndex = c;
+                    c -= 1;
+
                 } else {
                     lastMatch = match;
                 }
@@ -175,11 +182,12 @@ public class AnalisadorLexico {
                 if (token.equals(TokenType.ID)) {
                     token = checkTokenType(lexeme);
                 }
-                
+
                 int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
                 tokenList.add(new Token(token,tokenIndex));
             } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
-                System.out.println("ERROR IN: "+ (l+1));
+                System.out.println(error(lines, lineIndex, columnIndex, lines[l].length(), errorLen));
+
             }
 
         }
@@ -233,5 +241,54 @@ public class AnalisadorLexico {
 
     public boolean hasTokens() {
         return !tokenList.isEmpty();
+    }
+
+    private String error(String[] sourceLines, int line, int column, int size, int showedLenght) {
+        String msg = "»" + sourceLines[line].substring(column, size) + "«";
+        String pre = "";
+        String pos = "";
+        int lastPos = column;
+        int len = showedLenght;
+        int i = 0;
+        while (len > 0 && (line - i) >= 0) {
+            if (len <= lastPos) {
+                pre = sourceLines[line - i].substring(lastPos - len, lastPos) + pre;
+                len -= lastPos;
+            } else {
+                pre = "\n" + sourceLines[line - i].substring(0, lastPos) + pre;
+                len -= lastPos;
+                i += 1;
+                
+                if (line -1 > 0) {
+                    lastPos = sourceLines[line - i].length();
+                }
+                
+
+            }
+        }
+        lastPos = size;
+        len = showedLenght;
+        i = 0;
+        while (len > 0 && (line + i) < sourceLines.length) {
+            if (lastPos + len <= sourceLines[line + i].length()) {
+                pos = pos + sourceLines[line + i].substring(lastPos, lastPos + len);
+                len -= (sourceLines[line + i].length() - lastPos);
+            } else {
+                pos = pos + sourceLines[line + i].substring(lastPos, sourceLines[line + i].length()) + "\n";
+                len -= (sourceLines[line + i].length() - lastPos);
+                i += 1;
+                lastPos = 0;
+
+            }
+        }
+        erroMessage += "\nERROR\nlexical error founded at \n~~\n"+pre + msg + pos+"\n~~\nin line "+(line+1)+" and column "+(column+1)+"\n";
+        
+        return erroMessage;
+    }
+    
+//    Set message as string to be displayed latter on the view
+    public String getErrorMessage() {
+        
+        return erroMessage;
     }
 }
