@@ -10,7 +10,9 @@ package t1comp;
  * @author nathan
  */
 import t1comp.model.AnalisadorLexico;
+import t1comp.model.LL1Table;
 import t1comp.model.SymbolsTable;
+import t1comp.model.TableBuilder;
 import t1comp.view.View;
 
 public final class App {
@@ -35,11 +37,15 @@ public final class App {
         boolean test = true;
         if (test) {
             while (lex.hasTokens()) {
-                System.out.println(lex.getNextToken().toString());
+                lex.getNextToken();
+//                System.out.println(lex.getNextToken().toString());
             }
         }
         view.updateStatus("\n\n\nnew Analysis\n");
         view.updateStatus(table.toString());
         view.updateStatus(lex.getErrorMessage());
+        
+        LL1Table parseTable = TableBuilder.buildTable();
+        System.out.println(parseTable.toString());
     }
 }

@@ -22,11 +22,30 @@ public class LL1Table {
     }
     
     public void add(String NonTerminal, String terminal, String production) {
-        table.get(NonTerminal).put(terminal, production);
+        if (table.containsKey(NonTerminal)) {
+            table.get(NonTerminal).put(terminal, production);
+        } else {
+            HashMap newRow = new HashMap<>();
+            newRow.put(terminal, production);
+            table.put(NonTerminal, newRow);
+        }
     }
     
     public String get(String NonTerminal, String terminal) {
         return table.get(NonTerminal).get(terminal);
     }
     
+    @Override
+    public String toString() {
+        String print = "";
+        for (String nonTerminal : table.keySet()) {
+            print += "# " + nonTerminal +  ": ";
+            HashMap<String, String> tableRow = table.get(nonTerminal);
+            for (String terminal : tableRow.keySet()) {
+                print += terminal + " => " + tableRow.get(terminal) + " | ";
+            }
+            print += "\n";
+        }
+        return print;
+    }
 }
