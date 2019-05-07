@@ -88,7 +88,66 @@ public class TableBuilder {
         table.add("VARDECL", "ident", "VARDECLTYPE ident VARDECL1");
         table.add("VARDECL", "int", "VARDECLTYPE ident VARDECL1");
         table.add("VARDECL", "string", "VARDECLTYPE ident VARDECL1");
+        
+        table.add("VARDECL1", ";", "VARDECL2");
+        table.add("VARDECL1", "[", "VARDECLBRACKETS VARDECL2");
+        table.add("VARDECL1", ",", "VARDECL2");
+        
+        table.add("VARDECL2", ";", "");
+        table.add("VARDECL2", ",", "VARDECLWITHCOMA");
+        
+        table.add("VARDECLTYPE", "ident", "ident");
+        table.add("VARDECLTYPE", "int", "int");
+        table.add("VARDECLTYPE", "string", "string");
+        
+        table.add("VARDECLBRACKETS", "[", "[ ] VARDECLBRACKETS1");
+        
+        table.add("VARDECLBRACKETS1", "ident", "");
+        table.add("VARDECLBRACKETS1", ";", "");
+        table.add("VARDECLBRACKETS1", "[", "VARDECLBRACKETS");
+        table.add("VARDECLBRACKETS1", ",", "");
+        table.add("VARDECLBRACKETS1", ")", "");
+        
+        table.add("VARDECLWITHCOMA", ",", ", ident VARDECLWITHCOMA1");
+        
+        table.add("VARDECLWITHCOMA1", ";", "");
+        table.add("VARDECLWITHCOMA1", "[", "VARDECLBRACKETS VARDECL2");
+        table.add("VARDECLWITHCOMA1", ",", "VARDECLWITHCOMA");
+        
+        table.add("CONSTRUCTDECL", "constructor", "constructor METHODBODY");
+                
+        table.add("METHODDECL", "ident", "VARDECLTYPE METHODDECL1");
+        table.add("METHODDECL", "int", "VARDECLTYPE METHODDECL1");
+        table.add("METHODDECL", "string", "VARDECLTYPE METHODDECL1");
+                        
+        table.add("METHODDECL1", "ident", "ident METHODBODY");
+        table.add("METHODDECL1", "[", "VARDECLBRACKETS ident METHODBODY");
+        
+        table.add("METHODBODY", "(", "( METHODBODY1");
+        
+        table.add("METHODBODY1", "ident", "PARAMLIST ) STATEMENT");
+        table.add("METHODBODY1", "int", "PARAMLIST ) STATEMENT");
+        table.add("METHODBODY1", "string", "PARAMLIST ) STATEMENT");
+        table.add("METHODBODY1", ")", ") STATEMENT");
+        
+        table.add("PARAMLIST", "ident", "VARDECLTYPE ident PARAMLIST12");
+        table.add("PARAMLIST", "int", "VARDECLTYPE ident PARAMLIST12");
+        table.add("PARAMLIST", "string", "VARDECLTYPE ident PARAMLIST12");
+        
+        table.add("PARAMLIST12", "[", "VARDECLBRACKETS PARAMLIST13");
+        table.add("PARAMLIST12", ",", "PARAMLIST2");
+        table.add("PARAMLIST12", ")", "");
+                
+        table.add("PARAMLIST13", ")", "");
+        table.add("PARAMLIST13", ",", "PARAMLIST2");
+        
+        table.add("PARAMLIST2", ",", ", VARDECLTYPE ident PARAMLIST12");
+        
+       
+        
+        
 //        TODO
+        
         
         return table;
     }
