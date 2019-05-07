@@ -17,7 +17,7 @@ public class LL1Table {
         this.table = new HashMap<String, HashMap<String, String>>();
     }
     
-    public HashMap<String, HashMap<String, String>> getTabke() {
+    public HashMap<String, HashMap<String, String>> getTable() {
         return table;
     }
     
