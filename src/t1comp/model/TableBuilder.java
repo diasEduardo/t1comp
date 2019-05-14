@@ -352,6 +352,48 @@ public class TableBuilder {
         table.add("EXPRESSION", "string-constant", "NUMEXPRESSION EXPRESSION1");
         table.add("EXPRESSION", "null", "NUMEXPRESSION EXPRESSION1");
         
+        table.add("EXPRESSION1", ";", "");
+        table.add("EXPRESSION1", "]", "");
+        table.add("EXPRESSION1", ",", "");
+        table.add("EXPRESSION1", ")", "");
+        table.add("EXPRESSION1", "!=", "EXPRESSIONCOMPARE NUMEXPRESSION");
+        table.add("EXPRESSION1", "==", "EXPRESSIONCOMPARE NUMEXPRESSION");
+        table.add("EXPRESSION1", ">=", "EXPRESSIONCOMPARE NUMEXPRESSION");
+        table.add("EXPRESSION1", "<=", "EXPRESSIONCOMPARE NUMEXPRESSION");
+        table.add("EXPRESSION1", ">", "EXPRESSIONCOMPARE NUMEXPRESSION");
+        table.add("EXPRESSION1", "<", "EXPRESSIONCOMPARE NUMEXPRESSION");
+        
+        table.add("EXPRESSIONCOMPARE", "!=", "!=");
+        table.add("EXPRESSIONCOMPARE", "==", "==");
+        table.add("EXPRESSIONCOMPARE", ">=", ">=");
+        table.add("EXPRESSIONCOMPARE", "<=", "<=");
+        table.add("EXPRESSIONCOMPARE", ">", ">");
+        table.add("EXPRESSIONCOMPARE", "<", "<");
+        
+        table.add("NUMEXPRESSION", "ident", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "(", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "+", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "-", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "int-constant", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "string-constant", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "null", "TERM NUMEXPRESSION1");
+        
+        table.add("NUMEXPRESSION1", ";", "");
+        table.add("NUMEXPRESSION1", "]", "");
+        table.add("NUMEXPRESSION1", ",", "");
+        table.add("NUMEXPRESSION1", ")", "");
+        table.add("NUMEXPRESSION1", "!=", "");
+        table.add("NUMEXPRESSION1", "==", "");
+        table.add("NUMEXPRESSION1", ">=", "");
+        table.add("NUMEXPRESSION1", "<=", "");
+        table.add("NUMEXPRESSION1", ">", "");
+        table.add("NUMEXPRESSION1", "<", "");
+        table.add("NUMEXPRESSION1", "+", "SUMMINUS NUMEXPRESSION");
+        table.add("NUMEXPRESSION1", "-", "SUMMINUS NUMEXPRESSION");
+        
+        table.add("SUMMINUS", "+", "+");
+        table.add("SUMMINUS", "-", "-");
+        
         
         
 //        TODO
