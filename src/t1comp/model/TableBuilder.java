@@ -291,6 +291,68 @@ public class TableBuilder {
         table.add("LVALUEEXPLIST1", "/", "");
         table.add("LVALUEEXPLIST1", "*", "");
         
+        table.add("LVALUEEXPLIST2", ";", "");
+        table.add("LVALUEEXPLIST2", "[", "LVALUEEXPLIST");
+        table.add("LVALUEEXPLIST2", "]", "");
+        table.add("LVALUEEXPLIST2", ",", "");
+        table.add("LVALUEEXPLIST2", "(", "( LVALUEEXPLIST3");
+        table.add("LVALUEEXPLIST2", ")", "");
+        table.add("LVALUEEXPLIST2", "=", "");
+        table.add("LVALUEEXPLIST2", ".", "LVALUEEXPLIST");
+        table.add("LVALUEEXPLIST2", "!=", "");
+        table.add("LVALUEEXPLIST2", "==", "");
+        table.add("LVALUEEXPLIST2", ">=", "");
+        table.add("LVALUEEXPLIST2", "<=", "");
+        table.add("LVALUEEXPLIST2", ">", "");
+        table.add("LVALUEEXPLIST2", "<", "");
+        table.add("LVALUEEXPLIST2", "+", "");
+        table.add("LVALUEEXPLIST2", "-", "");
+        table.add("LVALUEEXPLIST2", "%", "");
+        table.add("LVALUEEXPLIST2", "/", "");
+        table.add("LVALUEEXPLIST2", "*", "");
+        
+        table.add("LVALUEEXPLIST3", "ident", "ARGLIST ) LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "(", "ARGLIST ) LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", ")", ") LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "+", "ARGLIST ) LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "-", "ARGLIST ) LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "int-constant", "ARGLIST ) LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "string-constant", "ARGLIST ) LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "null", "ARGLIST ) LVALUEEXPLIST1");
+        
+        table.add("ALOCEXPRESSION", "new", "ALOCEXPRESSION1");
+        
+        table.add("ALOCEXPRESSION1", "ident", "ident ALOCEXPRESSION2");
+        table.add("ALOCEXPRESSION1", "int", "int ALOCEXPRESSIONPLUS");
+        table.add("ALOCEXPRESSION1", "string", "string ALOCEXPRESSIONPLUS");
+        
+        table.add("ALOCEXPRESSION2", "[", "ALOCEXPRESSIONPLUS");
+        table.add("ALOCEXPRESSION2", "(", "( ALOCEXPRESSION3");
+        
+        table.add("ALOCEXPRESSION3", "ident", "ARGLIST )");
+        table.add("ALOCEXPRESSION3", "(", "ARGLIST )");
+        table.add("ALOCEXPRESSION3", ")", ")");
+        table.add("ALOCEXPRESSION3", "+", "ARGLIST )");
+        table.add("ALOCEXPRESSION3", "-", "ARGLIST )");
+        table.add("ALOCEXPRESSION3", "int-constant", "ARGLIST )");
+        table.add("ALOCEXPRESSION3", "string-constant", "ARGLIST )");
+        table.add("ALOCEXPRESSION3", "null", "ARGLIST )");
+        
+        table.add("ALOCEXPRESSIONPLUS", "[", "[ EXPRESSION ] ALOCEXPRESSIONPLUS1 )");
+        
+        table.add("ALOCEXPRESSIONPLUS1", ";", "");
+        table.add("ALOCEXPRESSIONPLUS1", "[", "ALOCEXPRESSIONPLUS");
+        table.add("ALOCEXPRESSIONPLUS1", ")", "");
+        
+        table.add("EXPRESSION", "ident", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "(", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "+", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "-", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "int-constant", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "string-constant", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "null", "NUMEXPRESSION EXPRESSION1");
+        
+        
         
 //        TODO
         
