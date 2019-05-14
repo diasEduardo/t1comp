@@ -220,6 +220,77 @@ public class TableBuilder {
         table.add("FORSTAT3", "ident", "ATRIBSTAT ) STATEMENT");
         table.add("FORSTAT3", ")", ") STATEMENT");
         
+        table.add("STATLIST", "ident", "STATEMENT STATLIST1");
+        table.add("STATLIST", "{", "STATEMENT STATLIST1");
+        table.add("STATLIST", ";", "STATEMENT STATLIST1");
+        table.add("STATLIST", "int", "STATEMENT STATLIST1");
+        table.add("STATLIST", "string", "STATEMENT STATLIST1");
+        table.add("STATLIST", "break", "STATEMENT STATLIST1");
+        table.add("STATLIST", "print", "STATEMENT STATLIST1");
+        table.add("STATLIST", "read", "STATEMENT STATLIST1");
+        table.add("STATLIST", "return", "STATEMENT STATLIST1");
+        table.add("STATLIST", "super", "STATEMENT STATLIST1");
+        table.add("STATLIST", "if", "STATEMENT STATLIST1");
+        table.add("STATLIST", "for", "STATEMENT STATLIST1");
+
+        table.add("STATLIST1", "ident", "STATLIST");
+        table.add("STATLIST1", "{", "STATLIST");
+        table.add("STATLIST1", "}", "");
+        table.add("STATLIST1", ";", "STATLIST");
+        table.add("STATLIST1", "int", "STATLIST");
+        table.add("STATLIST1", "string", "STATLIST");
+        table.add("STATLIST1", "break", "STATLIST");
+        table.add("STATLIST1", "print", "STATLIST");
+        table.add("STATLIST1", "read", "STATLIST");
+        table.add("STATLIST1", "return", "STATLIST");
+        table.add("STATLIST1", "super", "STATLIST");
+        table.add("STATLIST1", "if", "STATLIST");
+        table.add("STATLIST1", "for", "STATLIST");
+        
+        table.add("LVALUE", "ident", "ident LVALUE1");
+        
+        table.add("LVALUE1", ";", "");
+        table.add("LVALUE1", "[", "LVALUEEXPLIST");
+        table.add("LVALUE1", "]", "");
+        table.add("LVALUE1", ",", "");
+        table.add("LVALUE1", ")", "");
+        table.add("LVALUE1", "=", "");
+        table.add("LVALUE1", ".", "LVALUEEXPLIST");
+        table.add("LVALUE1", "!=", "");
+        table.add("LVALUE1", "==", "");
+        table.add("LVALUE1", ">=", "");
+        table.add("LVALUE1", "<=", "");
+        table.add("LVALUE1", ">", "");
+        table.add("LVALUE1", "<", "");
+        table.add("LVALUE1", "+", "");
+        table.add("LVALUE1", "-", "");
+        table.add("LVALUE1", "%", "");
+        table.add("LVALUE1", "/", "");
+        table.add("LVALUE1", "*", "");
+        
+        table.add("LVALUEEXPLIST", "[", "[ EXPRESSION ] LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST", ".", ". ident LVALUEEXPLIST2");
+        
+        
+        table.add("LVALUEEXPLIST1", ";", "");
+        table.add("LVALUEEXPLIST1", "[", "LVALUEEXPLIST");
+        table.add("LVALUEEXPLIST1", "]", "");
+        table.add("LVALUEEXPLIST1", ",", "");
+        table.add("LVALUEEXPLIST1", ")", "");
+        table.add("LVALUEEXPLIST1", "=", "");
+        table.add("LVALUEEXPLIST1", ".", "LVALUEEXPLIST");
+        table.add("LVALUEEXPLIST1", "!=", "");
+        table.add("LVALUEEXPLIST1", "==", "");
+        table.add("LVALUEEXPLIST1", ">=", "");
+        table.add("LVALUEEXPLIST1", "<=", "");
+        table.add("LVALUEEXPLIST1", ">", "");
+        table.add("LVALUEEXPLIST1", "<", "");
+        table.add("LVALUEEXPLIST1", "+", "");
+        table.add("LVALUEEXPLIST1", "-", "");
+        table.add("LVALUEEXPLIST1", "%", "");
+        table.add("LVALUEEXPLIST1", "/", "");
+        table.add("LVALUEEXPLIST1", "*", "");
+        
         
 //        TODO
         
