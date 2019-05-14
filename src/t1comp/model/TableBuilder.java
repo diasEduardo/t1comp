@@ -394,10 +394,65 @@ public class TableBuilder {
         table.add("SUMMINUS", "+", "+");
         table.add("SUMMINUS", "-", "-");
         
+        table.add("TERM", "ident", "UNARYEXPR TERM3");
+        table.add("TERM", "(", "UNARYEXPR TERM3");
+        table.add("TERM", "+", "UNARYEXPR TERM3");
+        table.add("TERM", "-", "UNARYEXPR TERM3");
+        table.add("TERM", "int-constant", "UNARYEXPR TERM3");
+        table.add("TERM", "string-constant", "UNARYEXPR TERM3");
+        table.add("TERM", "null", "UNARYEXPR TERM3");
+        
+        table.add("TERM2", "%", "MULDIVMOD UNARYEXPR TERM3");
+        table.add("TERM2", "/", "MULDIVMOD UNARYEXPR TERM3");
+        table.add("TERM2", "*", "MULDIVMOD UNARYEXPR TERM3");
         
         
-//        TODO
+        table.add("TERM3", ";", "");
+        table.add("TERM3", "]", "");
+        table.add("TERM3", ",", "");
+        table.add("TERM3", ")", "");
+        table.add("TERM3", "!=", "");
+        table.add("TERM3", "==", "");
+        table.add("TERM3", ">=", "");
+        table.add("TERM3", "<=", "");
+        table.add("TERM3", ">", "");
+        table.add("TERM3", "<", "");
+        table.add("TERM3", "+", "");
+        table.add("TERM3", "-", "");
+        table.add("TERM3", "%", "TERM2");
+        table.add("TERM3", "/", "TERM2");
+        table.add("TERM3", "*", "TERM2");
         
+        table.add("MULDIVMOD", "%", "%");
+        table.add("MULDIVMOD", "/", "/");
+        table.add("MULDIVMOD", "*", "*");
+        
+        table.add("UNARYEXPR", "ident", "FACTOR");
+        table.add("UNARYEXPR", "(", "FACTOR");
+        table.add("UNARYEXPR", "+", "FACTOR");
+        table.add("UNARYEXPR", "-", "FACTOR");
+        table.add("UNARYEXPR", "int-constant", "SUMMINUS FACTOR");
+        table.add("UNARYEXPR", "string-constant", "SUMMINUS FACTOR");
+        table.add("UNARYEXPR", "null", "FACTOR");
+        
+        table.add("FACTOR", "ident", "LVALUE");
+        table.add("FACTOR", "(", "( EXPRESSION )");
+        table.add("FACTOR", "int-constant", "int-constant");
+        table.add("FACTOR", "string-constant", "string-constant");
+        table.add("FACTOR", "null", "null");
+        
+        table.add("ARGLIST", "ident", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "(", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "+", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "-", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "int-constant", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "string-constant", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "null", "EXPRESSION ARGLIST2");
+        
+        table.add("ARGLIST2", ",", "ARGLISTEXP");
+        table.add("ARGLIST2", ")", "");
+        
+        table.add("ARGLISTEXP", ")", ", EXPRESSION ARGLIST2");
         
         return table;
     }
