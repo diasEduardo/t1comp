@@ -143,7 +143,82 @@ public class TableBuilder {
         
         table.add("PARAMLIST2", ",", ", VARDECLTYPE ident PARAMLIST12");
         
-       
+        table.add("STATEMENT", "ident", "ident STATEMENT1");
+        table.add("STATEMENT", "{", "{ STATLIST }");
+        table.add("STATEMENT", ";", ";");
+        table.add("STATEMENT", "int", "int ident VARDECL1 ;");
+        table.add("STATEMENT", "string", "string ident VARDECL1 ;");
+        table.add("STATEMENT", "break", "break ;");
+        table.add("STATEMENT", "print", "PRINTSTAT ;");
+        table.add("STATEMENT", "read", "READSTAT ;");
+        table.add("STATEMENT", "return", "RETURNSTAT ;");
+        table.add("STATEMENT", "super", "SUPERSTAT ;");
+        table.add("STATEMENT", "if", "IFSTAT");
+        table.add("STATEMENT", "for", "FORSTAT");
+        
+        table.add("STATEMENT1", "ident", "ident VARDECL1 ;");
+        table.add("STATEMENT1", "[", "LVALUEEXPLIST = ATRIBSTAT1 ;");
+        table.add("STATEMENT1", "=", "= ATRIBSTAT1 ;");
+        table.add("STATEMENT1", ".", "LVALUEEXPLIST = ATRIBSTAT1 ;");
+        
+        table.add("ATRIBSTAT", "ident", "ident LVALUE1 = ATRIBSTAT1");
+        
+        table.add("ATRIBSTAT1", "ident", "EXPRESSION");
+        table.add("ATRIBSTAT1", "(", "EXPRESSION");
+        table.add("ATRIBSTAT1", "new", "ALOCEXPRESSION");
+        table.add("ATRIBSTAT1", "+", "EXPRESSION");
+        table.add("ATRIBSTAT1", "-", "EXPRESSION");
+        table.add("ATRIBSTAT1", "int-constant", "EXPRESSION");
+        table.add("ATRIBSTAT1", "string-constant", "EXPRESSION");
+        table.add("ATRIBSTAT1", "null", "EXPRESSION");
+        
+        table.add("PRINTSTAT", "print", "print EXPRESSION");
+        
+        table.add("READSTAT", "read", "read LVALUE");
+        
+        table.add("RETURNSTAT", "return", "return RETURNSTAT1");
+        
+        table.add("RETURNSTAT1", "ident", "EXPRESSION");
+        table.add("RETURNSTAT1", ";", "");
+        table.add("RETURNSTAT1", "(", "EXPRESSION");
+        table.add("RETURNSTAT1", "+", "EXPRESSION");
+        table.add("RETURNSTAT1", "-", "EXPRESSION");
+        table.add("RETURNSTAT1", "int-constant", "EXPRESSION");
+        table.add("RETURNSTAT1", "string-constant", "EXPRESSION");
+        table.add("RETURNSTAT1", "null", "EXPRESSION");
+        
+        table.add("SUPERSTAT", "super", "super ( SUPERSTAT1");
+        
+        table.add("SUPERSTAT1", "ident", "ARGLIST )");
+        table.add("SUPERSTAT1", "(", "ARGLIST )");
+        table.add("SUPERSTAT1", ")", ")");
+        table.add("SUPERSTAT1", "+", "ARGLIST )");
+        table.add("SUPERSTAT1", "-", "ARGLIST )");
+        table.add("SUPERSTAT1", "int-constant", "ARGLIST )");
+        table.add("SUPERSTAT1", "string-constant", "ARGLIST )");
+        table.add("SUPERSTAT1", "null", "ARGLIST )");
+        
+        table.add("IFSTAT", "if", "if ( EXPRESSION ) STATEMENT IFSTAT1");
+        
+        table.add("IFSTAT1", "else", "IFSTAT1 -> else STATEMENT end");
+        table.add("IFSTAT1", "end", "end");
+        
+        table.add("FORSTAT", "for", "for ( FORSTAT1");
+        
+        table.add("FORSTAT1", "ident", "ATRIBSTAT ; FORSTAT2");
+        table.add("FORSTAT1", ";", "; FORSTAT2");
+        
+        table.add("FORSTAT2", "ident", "EXPRESSION ; FORSTAT3");
+        table.add("FORSTAT2", ";", "; FORSTAT3");
+        table.add("FORSTAT2", "(", "EXPRESSION ; FORSTAT3");
+        table.add("FORSTAT2", "+", "EXPRESSION ; FORSTAT3");
+        table.add("FORSTAT2", "-", "EXPRESSION ; FORSTAT3");
+        table.add("FORSTAT2", "int-constant", "EXPRESSION ; FORSTAT3");
+        table.add("FORSTAT2", "string-constant", "EXPRESSION ; FORSTAT3");
+        table.add("FORSTAT2", "null", "EXPRESSION ; FORSTAT3");
+        
+        table.add("FORSTAT3", "ident", "ATRIBSTAT ) STATEMENT");
+        table.add("FORSTAT3", ")", ") STATEMENT");
         
         
 //        TODO
