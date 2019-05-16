@@ -44,10 +44,12 @@ public class TableBuilder {
         table.add("CLASSBODY2", "}", "}");
         table.add("CLASSBODY2", "int", "VARDECLTYPE CLASSBODY22");
         table.add("CLASSBODY2", "string", "VARDECLTYPE CLASSBODY22");
-        
+        table.add("CLASSBODY2", "constructor", "CLASSBODYCONSTRUCTDECL CLASSBODY4");
+                
         table.add("CLASSBODY22", "ident", "ident CLASSBODY23");
         table.add("CLASSBODY22", "[", "VARDECLBRACKETS ident METHODBODY CLASSBODYMETHODDECL1 }");
         
+        //rever isso
         table.add("CLASSBODY23", "class", "VARDECL1 ; CLASSBODY2");
         table.add("CLASSBODY23", "ident", "VARDECL1 ; CLASSBODY2");
         table.add("CLASSBODY23", "}", "VARDECL1 ; CLASSBODY2");
@@ -58,14 +60,16 @@ public class TableBuilder {
         table.add("CLASSBODY23", ",", "VARDECL1 ; CLASSBODY2");
         table.add("CLASSBODY23", "(", "METHODBODY CLASSBODYMETHODDECL1 }");
         table.add("CLASSBODY23", "", "VARDECL1 ; CLASSBODY2");
+        table.add("CLASSBODY23", "constructor", "VARDECL1 ; CLASSBODY2");
         
         table.add("CLASSBODY3", "ident", "CLASSBODY4");
         table.add("CLASSBODY3", "}", "CLASSBODY4");
         table.add("CLASSBODY3", "int", "CLASSBODY4");
         table.add("CLASSBODY3", "string", "CLASSBODY4");
+        table.add("CLASSBODY3", "constructor", "CLASSBODYCONSTRUCTDECL CLASSBODY4");
         
         table.add("CLASSBODY4", "ident", "CLASSBODYMETHODDECL }");
-        table.add("CLASSBODY4", "}", "CLASSBODYMETHODDECL }");
+        table.add("CLASSBODY4", "}", "}");
         table.add("CLASSBODY4", "int", "CLASSBODYMETHODDECL }");
         table.add("CLASSBODY4", "string", "CLASSBODYMETHODDECL }");
         
@@ -79,11 +83,14 @@ public class TableBuilder {
         
         table.add("CLASSBODYCONSTRUCTDECL", "constructor", "CONSTRUCTDECL CLASSBODYCONSTRUCTDECL1");
         
-        table.add("CLASSBODYCONSTRUCTDECL1", "constructor", "CLASSBODYMETHODDECL");
+        table.add("CLASSBODYCONSTRUCTDECL1", "constructor", "CLASSBODYCONSTRUCTDECL");
         table.add("CLASSBODYCONSTRUCTDECL1", "}", "");
-        table.add("CLASSBODYCONSTRUCTDECL1", "int", "CLASSBODYMETHODDECL");
-        table.add("CLASSBODYCONSTRUCTDECL1", "string", "CLASSBODYMETHODDECL");
+        table.add("CLASSBODYCONSTRUCTDECL1", "ident", "");
+        table.add("CLASSBODYCONSTRUCTDECL1", "int", "");
+        table.add("CLASSBODYCONSTRUCTDECL1", "string", "");
         
+        //aqui
+        table.add("CLASSBODYCONSTRUCTDECL1", "constructor", "CLASSBODYCONSTRUCTDECL");
         
         table.add("VARDECL", "ident", "VARDECLTYPE ident VARDECL1");
         table.add("VARDECL", "int", "VARDECLTYPE ident VARDECL1");
