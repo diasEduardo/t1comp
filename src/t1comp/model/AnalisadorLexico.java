@@ -10,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import t1comp.model.TokenType;
+
 /**
  *
  * @author nathan
@@ -20,12 +21,10 @@ public class AnalisadorLexico {
     private final SymbolsTable sysmbolsTable;
     private int errorLen = 40;
     private String erroMessage = "";
-    
+
     public AnalisadorLexico() {
         this.sysmbolsTable = SymbolsTable.getInstance();
     }
-
-    
 
     private TokenType checkOperatorsToken(String token) {
 //        TODO NE CASE NOT CORRECT
@@ -119,6 +118,8 @@ public class AnalisadorLexico {
                 return TokenType.NEW;
             case "break":
                 return TokenType.BREAK;
+            case "end":
+                return TokenType.END;
             default:
                 return TokenType.ID;
 
@@ -160,7 +161,7 @@ public class AnalisadorLexico {
 
                     //insert on symbol table
                     int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
-                    tokenList.add(new Token(token,tokenIndex));
+                    tokenList.add(new Token(token, tokenIndex));
                     lastMatch = new ArrayList<TokenType>();
                     lexeme = "";
                     columnIndex = c;
@@ -184,7 +185,7 @@ public class AnalisadorLexico {
                 }
 
                 int tokenIndex = sysmbolsTable.addEntry(new TableEntry(token, lexeme, lineIndex, columnIndex));
-                tokenList.add(new Token(token,tokenIndex));
+                tokenList.add(new Token(token, tokenIndex));
             } else if ((lastMatch.size() != 1 && characters.length > 0) || (lastMatch.size() == 1 && lastMatch.get(0) == TokenType.SEMITOKEN)) {
                 System.out.println(error(lines, lineIndex, columnIndex, lines[l].length(), errorLen));
 
@@ -258,11 +259,10 @@ public class AnalisadorLexico {
                 pre = "\n" + sourceLines[line - i].substring(0, lastPos) + pre;
                 len -= lastPos;
                 i += 1;
-                
-                if (line -1 > 0) {
+
+                if (line - 1 > 0) {
                     lastPos = sourceLines[line - i].length();
                 }
-                
 
             }
         }
@@ -281,14 +281,14 @@ public class AnalisadorLexico {
 
             }
         }
-        erroMessage += "\nERROR\nlexical error founded at \n~~\n"+pre + msg + pos+"\n~~\nin line "+(line+1)+" and column "+(column+1)+"\n";
-        
+        erroMessage += "\nERROR\nlexical error founded at \n~~\n" + pre + msg + pos + "\n~~\nin line " + (line + 1) + " and column " + (column + 1) + "\n";
+
         return erroMessage;
     }
-    
+
 //    Set message as string to be displayed latter on the view
     public String getErrorMessage() {
-        
+
         return erroMessage;
     }
 }

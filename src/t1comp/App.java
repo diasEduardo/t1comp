@@ -10,6 +10,7 @@ package t1comp;
  * @author nathan
  */
 import t1comp.model.AnalisadorLexico;
+import t1comp.model.AnalisadorSintatico;
 import t1comp.model.LL1Table;
 import t1comp.model.SymbolsTable;
 import t1comp.model.TableBuilder;
@@ -19,6 +20,7 @@ public final class App {
 
     private View view;
     private AnalisadorLexico lex;
+    private AnalisadorSintatico parser;
 
     public static void main(String[] args) {
         new App();
@@ -27,6 +29,7 @@ public final class App {
     public App() {
         this.view = new View(this);
         lex = new AnalisadorLexico();
+        parser = new AnalisadorSintatico();
         analyzeSourceCode(view.getSourceCode());
         this.view.show(true);
     }
@@ -34,18 +37,9 @@ public final class App {
     public void analyzeSourceCode(String sourceCode) {
         SymbolsTable table = SymbolsTable.getInstance();
         lex.analyze(sourceCode);
-        boolean test = true;
-        if (test) {
-            while (lex.hasTokens()) {
-                lex.getNextToken();
-//                System.out.println(lex.getNextToken().toString());
-            }
-        }
+        parser.parse(lex);
         view.updateStatus("\n\n\nnew Analysis\n");
         view.updateStatus(table.toString());
         view.updateStatus(lex.getErrorMessage());
-        
-        LL1Table parseTable = TableBuilder.buildTable();
-        System.out.println(parseTable.toString());
     }
 }
