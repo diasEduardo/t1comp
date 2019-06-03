@@ -50,17 +50,17 @@ public class TableBuilder {
         table.add("CLASSBODY22", "obrack", "VARDECLBRACKETS ident METHODBODY CLASSBODYMETHODDECL1 cbrace");
 
         //rever isso
-        table.add("CLASSBODY23", "class", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "ident", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "cbrace", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "semicomma", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "int", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "string", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "obrack", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "comma", "VARDECL1 ; CLASSBODY2");
+        table.add("CLASSBODY23", "class", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "ident", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "cbrace", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "semicomma", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "int", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "string", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "obrack", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "comma", "VARDECL1 semicomma CLASSBODY2");
         table.add("CLASSBODY23", "opar", "METHODBODY CLASSBODYMETHODDECL1 cbrace");
-        table.add("CLASSBODY23", "", "VARDECL1 ; CLASSBODY2");
-        table.add("CLASSBODY23", "constructor", "VARDECL1 ; CLASSBODY2");
+        table.add("CLASSBODY23", "", "VARDECL1 semicomma CLASSBODY2");
+        table.add("CLASSBODY23", "constructor", "VARDECL1 semicomma CLASSBODY2");
 
         table.add("CLASSBODY3", "ident", "CLASSBODY4");
         table.add("CLASSBODY3", "cbrace", "CLASSBODY4");
@@ -73,9 +73,9 @@ public class TableBuilder {
         table.add("CLASSBODY4", "int", "CLASSBODYMETHODDECL cbrace");
         table.add("CLASSBODY4", "string", "CLASSBODYMETHODDECL cbrace");
 
-        table.add("CLASSBODYVARDELC", "ident", "VARDECL ; CLASSBODYVARDELC1");
-        table.add("CLASSBODYVARDELC", "int", "VARDECL ; CLASSBODYVARDELC1");
-        table.add("CLASSBODYVARDELC", "string", "VARDECL ; CLASSBODYVARDELC1");
+        table.add("CLASSBODYVARDELC", "ident", "VARDECL semicomma CLASSBODYVARDELC1");
+        table.add("CLASSBODYVARDELC", "int", "VARDECL semicomma CLASSBODYVARDELC1");
+        table.add("CLASSBODYVARDELC", "string", "VARDECL semicomma CLASSBODYVARDELC1");
 
         table.add("CLASSBODYVARDELC1", "ident", "CLASSBODYVARDELC");
         table.add("CLASSBODYVARDELC1", "int", "CLASSBODYVARDELC");
@@ -138,9 +138,9 @@ public class TableBuilder {
 
         table.add("METHODBODY", "opar", "opar METHODBODY1");
 
-        table.add("METHODBODY1", "ident", "PARAMLIST ) STATEMENT");
-        table.add("METHODBODY1", "int", "PARAMLIST ) STATEMENT");
-        table.add("METHODBODY1", "string", "PARAMLIST ) STATEMENT");
+        table.add("METHODBODY1", "ident", "PARAMLIST cpar STATEMENT");
+        table.add("METHODBODY1", "int", "PARAMLIST cpar STATEMENT");
+        table.add("METHODBODY1", "string", "PARAMLIST cpar STATEMENT");
         table.add("METHODBODY1", "cpar", "cpar STATEMENT");
 
         table.add("PARAMLIST", "ident", "VARDECLTYPE ident PARAMLIST12");
@@ -181,8 +181,8 @@ public class TableBuilder {
         table.add("ATRIBSTAT1", "new", "ALOCEXPRESSION");
         table.add("ATRIBSTAT1", "plus", "EXPRESSION");
         table.add("ATRIBSTAT1", "minus", "EXPRESSION");
-        table.add("ATRIBSTAT1", "int-constant", "EXPRESSION");
-        table.add("ATRIBSTAT1", "string-constant", "EXPRESSION");
+        table.add("ATRIBSTAT1", "intconst", "EXPRESSION");
+        table.add("ATRIBSTAT1", "stringconst", "EXPRESSION");
         table.add("ATRIBSTAT1", "null", "EXPRESSION");
 
         table.add("PRINTSTAT", "print", "print EXPRESSION");
@@ -196,8 +196,8 @@ public class TableBuilder {
         table.add("RETURNSTAT1", "opar", "EXPRESSION");
         table.add("RETURNSTAT1", "plus", "EXPRESSION");
         table.add("RETURNSTAT1", "minus", "EXPRESSION");
-        table.add("RETURNSTAT1", "int-constant", "EXPRESSION");
-        table.add("RETURNSTAT1", "string-constant", "EXPRESSION");
+        table.add("RETURNSTAT1", "intconst", "EXPRESSION");
+        table.add("RETURNSTAT1", "stringconst", "EXPRESSION");
         table.add("RETURNSTAT1", "null", "EXPRESSION");
 
         table.add("SUPERSTAT", "super", "super opar SUPERSTAT1");
@@ -207,11 +207,11 @@ public class TableBuilder {
         table.add("SUPERSTAT1", "cpar", "cpar");
         table.add("SUPERSTAT1", "plus", "ARGLIST cpar");
         table.add("SUPERSTAT1", "minus", "ARGLIST cpar");
-        table.add("SUPERSTAT1", "int-constant", "ARGLIST cpar");
-        table.add("SUPERSTAT1", "string-constant", "ARGLIST cpar");
+        table.add("SUPERSTAT1", "intconst", "ARGLIST cpar");
+        table.add("SUPERSTAT1", "stringconst", "ARGLIST cpar");
         table.add("SUPERSTAT1", "null", "ARGLIST cpar");
 
-        table.add("IFSTAT", "if", "if opar EXPRESSION ) STATEMENT IFSTAT1");
+        table.add("IFSTAT", "if", "if opar EXPRESSION cpar STATEMENT IFSTAT1");
 
         table.add("IFSTAT1", "else", "else STATEMENT end");
         table.add("IFSTAT1", "end", "end");
@@ -226,11 +226,11 @@ public class TableBuilder {
         table.add("FORSTAT2", "opar", "EXPRESSION semicomma FORSTAT3");
         table.add("FORSTAT2", "plus", "EXPRESSION semicomma FORSTAT3");
         table.add("FORSTAT2", "minus", "EXPRESSION semicomma FORSTAT3");
-        table.add("FORSTAT2", "int-constant", "EXPRESSION semicomma FORSTAT3");
-        table.add("FORSTAT2", "string-constant", "EXPRESSION semicomma FORSTAT3");
+        table.add("FORSTAT2", "intconst", "EXPRESSION semicomma FORSTAT3");
+        table.add("FORSTAT2", "stringconst", "EXPRESSION semicomma FORSTAT3");
         table.add("FORSTAT2", "null", "EXPRESSION semicomma FORSTAT3");
 
-        table.add("FORSTAT3", "ident", "ATRIBSTAT ) STATEMENT");
+        table.add("FORSTAT3", "ident", "ATRIBSTAT cpar STATEMENT");
         table.add("FORSTAT3", "cpar", "cpar STATEMENT");
 
         table.add("STATLIST", "ident", "STATEMENT STATLIST1");
@@ -329,8 +329,8 @@ public class TableBuilder {
         table.add("LVALUEEXPLIST3", "cpar", "cpar");
         table.add("LVALUEEXPLIST3", "plus", "ARGLIST cpar LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST3", "minus", "ARGLIST cpar LVALUEEXPLIST1");
-        table.add("LVALUEEXPLIST3", "int-constant", "ARGLIST cpar LVALUEEXPLIST1");
-        table.add("LVALUEEXPLIST3", "string-constant", "ARGLIST cpar LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "intconst", "ARGLIST cpar LVALUEEXPLIST1");
+        table.add("LVALUEEXPLIST3", "stringconst", "ARGLIST cpar LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST3", "null", "ARGLIST cpar LVALUEEXPLIST1");
 
         table.add("ALOCEXPRESSIONPLUS", "obrack", "obrack EXPRESSION cbrack ALOCEXPRESSIONPLUS1");
@@ -343,8 +343,8 @@ public class TableBuilder {
         table.add("EXPRESSION", "opar", "NUMEXPRESSION EXPRESSION1");
         table.add("EXPRESSION", "plus", "NUMEXPRESSION EXPRESSION1");
         table.add("EXPRESSION", "minus", "NUMEXPRESSION EXPRESSION1");
-        table.add("EXPRESSION", "int-constant", "NUMEXPRESSION EXPRESSION1");
-        table.add("EXPRESSION", "string-constant", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "intconst", "NUMEXPRESSION EXPRESSION1");
+        table.add("EXPRESSION", "stringconst", "NUMEXPRESSION EXPRESSION1");
         table.add("EXPRESSION", "null", "NUMEXPRESSION EXPRESSION1");
 
         table.add("EXPRESSION1", "lt", "EXPRESSIONCOMPARE NUMEXPRESSION");
@@ -355,6 +355,7 @@ public class TableBuilder {
         table.add("EXPRESSION1", "ne", "EXPRESSIONCOMPARE NUMEXPRESSION");
         table.add("EXPRESSION1", "cpar", "");
         table.add("EXPRESSION1", "comma", "");
+        table.add("EXPRESSION1", "semicomma", "");        
         table.add("EXPRESSION1", "cbrack", "");
         table.add("EXPRESSION1", "cpar", "");
 
@@ -366,8 +367,8 @@ public class TableBuilder {
         table.add("EXPRESSIONCOMPARE", "ne", "ne");
 
         table.add("NUMEXPRESSION", "null", "TERM NUMEXPRESSION1");
-        table.add("NUMEXPRESSION", "string-constant", "TERM NUMEXPRESSION1");
-        table.add("NUMEXPRESSION", "int-constant", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "stringconst", "TERM NUMEXPRESSION1");
+        table.add("NUMEXPRESSION", "intconst", "TERM NUMEXPRESSION1");
         table.add("NUMEXPRESSION", "minus", "TERM NUMEXPRESSION1");
         table.add("NUMEXPRESSION", "plus", "TERM NUMEXPRESSION1");
         table.add("NUMEXPRESSION", "ident", "TERM NUMEXPRESSION1");
@@ -389,8 +390,8 @@ public class TableBuilder {
         table.add("SUMMINUS", "plus", "plus");
 
         table.add("TERM", "null", "UNARYEXPR TERM3");
-        table.add("TERM", "string-constant", "UNARYEXPR TERM3");
-        table.add("TERM", "int-constant", "UNARYEXPR TERM3");
+        table.add("TERM", "stringconst", "UNARYEXPR TERM3");
+        table.add("TERM", "intconst", "UNARYEXPR TERM3");
         table.add("TERM", "minus", "UNARYEXPR TERM3");
         table.add("TERM", "plus", "UNARYEXPR TERM3");
         table.add("TERM", "opar", "UNARYEXPR TERM3");
@@ -425,12 +426,12 @@ public class TableBuilder {
         table.add("UNARYEXPR", "opar", "FACTOR");
         table.add("UNARYEXPR", "plus", "SUMMINUS FACTOR");
         table.add("UNARYEXPR", "minus", "SUMMINUS FACTOR");
-        table.add("UNARYEXPR", "int-constant", "FACTOR");
-        table.add("UNARYEXPR", "string-constant", "FACTOR");
+        table.add("UNARYEXPR", "intconst", "FACTOR");
+        table.add("UNARYEXPR", "stringconst", "FACTOR");
         table.add("UNARYEXPR", "null", "FACTOR");
         
-        table.add("FACTOR", "int-constant", "int-constant");
-        table.add("FACTOR", "string-constant", "string-constant");
+        table.add("FACTOR", "intconst", "intconst");
+        table.add("FACTOR", "stringconst", "stringconst");
         table.add("FACTOR", "null", "null");
         table.add("FACTOR", "opar", "opar EXPRESSION cpar");
         table.add("FACTOR", "ident", "LVALUE");
@@ -439,8 +440,8 @@ public class TableBuilder {
         table.add("ARGLIST", "opar", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "plus", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "minus", "EXPRESSION ARGLIST2");
-        table.add("ARGLIST", "int-constant", "EXPRESSION ARGLIST2");
-        table.add("ARGLIST", "string-constant", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "intconst", "EXPRESSION ARGLIST2");
+        table.add("ARGLIST", "stringconst", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "null", "EXPRESSION ARGLIST2");
         
         table.add("ARGLIST2", "cpar", "");

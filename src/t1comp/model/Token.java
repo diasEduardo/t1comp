@@ -32,4 +32,8 @@ public class Token {
      return "<"+type+","+tableIndex+">";
     }
     
+    public String getTypeName(){
+     return type+"";
+    }
+    
 }

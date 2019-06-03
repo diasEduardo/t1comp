@@ -22,32 +22,39 @@ public class AnalisadorSintatico {
 
     public boolean parse(AnalisadorLexico lex) {
         String error = "";
-        ArrayList<String> tokens = new ArrayList();
-        tokens.add("CLASS");
+//        ArrayList<String> tokens = new ArrayList();
+//        tokens.add("CLASS");
 //          tokens.add("BLANK");
-        tokens.add("IDENT");
-        tokens.add("OBRACE");
+//        tokens.add("IDENT");
+//        tokens.add("OBRACE");
 //          tokens.add("BLANK");
-        tokens.add("CBRACE");
-
-        String currentProduction = "PROGRAM";
-        while (!tokens.isEmpty()) {
-            String token = tokens.get(0);
-            String nextProduction = "";
-            nextProduction = parseTable.get(currentProduction, token.toLowerCase());
-            if (nextProduction == null) {
-                error = "Error on token: " + token;
+//        tokens.add("CBRACE");
+        ArrayList<String> stack = new ArrayList<String>();
+        stack.add("PROGRAM");
+        while (lex.hasTokens()) {
+            String token = lex.getNextToken().getTypeName();//tokens.get(0);
+            if ("BLANK".equals(token)) {
+                continue;
             }
-            String[] splited = nextProduction.split(" ");
-            for (String derivation : splited) {
-                if (tokens.get(0).toLowerCase().equals(derivation)) {
-                    tokens.remove(0);
-                    if (!tokens.isEmpty()) {
-                        token = tokens.get(0);
-                    }
+            boolean tokenMatch = false;
+            while (!tokenMatch) {
+                if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
+                    stack.remove(0);
+                    tokenMatch = true;
                 } else {
-                    currentProduction = derivation;
-                    break;
+                    String nextProduction = parseTable.get(stack.get(0), token.toLowerCase());
+                    if (nextProduction == null) {
+                        error += "\nError on token: " + token;
+                        continue;
+                    }
+                    String[] splited = nextProduction.split(" ");
+                    stack.remove(0);
+                    for (int i = splited.length - 1; i >= 0; i--) {
+                        if (splited[i].length() > 0) {
+                            stack.add(0, splited[i]);
+                        }
+
+                    }
                 }
             }
         }
