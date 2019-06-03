@@ -32,7 +32,11 @@ public class LL1Table {
     }
     
     public String get(String NonTerminal, String terminal) {
-        return table.get(NonTerminal).get(terminal);
+        try {
+            return table.get(NonTerminal).get(terminal);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
     
     @Override
