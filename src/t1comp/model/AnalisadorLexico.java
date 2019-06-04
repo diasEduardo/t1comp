@@ -121,7 +121,7 @@ public class AnalisadorLexico {
             case "end":
                 return TokenType.END;
             default:
-                return TokenType.ID;
+                return TokenType.IDENT;
 
         }
 
@@ -155,7 +155,7 @@ public class AnalisadorLexico {
                 if (match.size() == 0 && lastMatch.size() == 1 && lastMatch.get(0) != TokenType.SEMITOKEN) {
                     lexeme = lexeme.substring(0, lexeme.length() - 1);
                     TokenType token = lastMatch.get(0);
-                    if (token.equals(TokenType.ID)) {
+                    if (token.equals(TokenType.IDENT)) {
                         token = checkTokenType(lexeme);
                     }
 
@@ -180,7 +180,7 @@ public class AnalisadorLexico {
             }
             if (lastMatch.size() == 1 && lastMatch.get(0) != TokenType.SEMITOKEN) {
                 TokenType token = lastMatch.get(0);
-                if (token.equals(TokenType.ID)) {
+                if (token.equals(TokenType.IDENT)) {
                     token = checkTokenType(lexeme);
                 }
 
@@ -202,7 +202,7 @@ public class AnalisadorLexico {
         TokenType scopeAnalisys = checkScopeToken(lexeme);
 
         if (tokenMatch("^[a-zA-Z][a-zA-Z0-9]*$", lexeme)) {
-            response.add(TokenType.ID);
+            response.add(TokenType.IDENT);
         }
 
         if (tokenMatch("^\"[^\"]*\"$", lexeme)) {
