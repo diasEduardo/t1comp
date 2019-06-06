@@ -17,17 +17,17 @@ class bintree{
 
     int compara(data x){
       if (ano < x.ano) 
-        then return -1;
+         return -1;
       if (ano > x.ano)
-        then return 1;
+         return 1;
       if (mes < x.mes)
-        then return -1;
+         return -1;
       if (mes > x.mes)
-        then return 1;
+         return 1;
       if (dia < x.dia)
-        then return -1;
+         return -1;
       if (dia > x.dia)
-        then return 1;
+         return 1;
     }
 
   }
@@ -36,7 +36,7 @@ class bintree{
   bintree left, right;
 
   constructor(data x){
-    key = x
+    key = x;
     left = null;
     right = nul;
   }
@@ -44,15 +44,15 @@ class bintree{
   int insert(data k){
     int x;
     x = k.compara(key);
-    if (x < 0) then {
+    if (x < 0) {
       if (left != null){
-        then return left.insert(k);
+        return left.insert(k);
       left = new bintree(k);
       return 1;
     }
-    if (x > 0) then {
+    if (x > 0) {
       if (right != null){
-        then return right.insert(k);
+        return right.insert(k);
       right = new bintree(k);
       return 1;
     }
@@ -62,12 +62,12 @@ class bintree{
   int treeprint(int x){
     int i;
     if (left != null)
-      then i = left.treeprint(x+4);
+      i = left.treeprint(x+4);
     for (i = 0; i < x; i = i + 1)
       print " ";
     print key.dia + "/" + key.mes + "/" + key.ano + "\n";
     if (right != null)
-      then i = right.treeprint(x+4)
+      i = right.treeprint(x+4)
   }
 
   int start(){
@@ -94,7 +94,7 @@ class bintree{
    
       w = new data (d, m, a);
       if (t.insert(w) == 0)
-        then print "Elemento já existe\n";
+        print "Elemento já existe\n";
     }
     i = t.treeprint(0);
     return 0;

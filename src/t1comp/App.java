@@ -39,7 +39,7 @@ public final class App {
         lex.analyze(sourceCode);
         parser.parse(lex);
         view.updateStatus("\n\n\nnew Analysis\n");
-        view.updateStatus(table.toString());
-        view.updateStatus(lex.getErrorMessage());
+        view.updateStatus(lex.statusMessage());
+        view.updateStatus(parser.statusMessage());
     }
 }

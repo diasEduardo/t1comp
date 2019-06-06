@@ -34,6 +34,7 @@ public final class SymbolsTable {
         return tabela.size();
     }
     
+    
     public int addEntry(TableEntry newEntry) {
         tabela.add(newEntry);
         return tabela.size();

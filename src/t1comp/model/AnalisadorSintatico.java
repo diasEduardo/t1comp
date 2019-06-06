@@ -15,24 +15,24 @@ import t1comp.model.TableBuilder;
 public class AnalisadorSintatico {
 
     private LL1Table parseTable;
-
+    private String errorMessage;
+    
     public AnalisadorSintatico() {
         parseTable = TableBuilder.buildTable();
+        errorMessage = "";
     }
-
+    
+    public String statusMessage () {
+        return errorMessage.isEmpty() ? "Parser Analisis: Ok \n" : errorMessage;
+    }
+    
     public boolean parse(AnalisadorLexico lex) {
         String error = "";
-//        ArrayList<String> tokens = new ArrayList();
-//        tokens.add("CLASS");
-//          tokens.add("BLANK");
-//        tokens.add("IDENT");
-//        tokens.add("OBRACE");
-//          tokens.add("BLANK");
-//        tokens.add("CBRACE");
         ArrayList<String> stack = new ArrayList<String>();
         stack.add("PROGRAM");
         while (lex.hasTokens()) {
             String token = lex.getNextToken().getTypeName();//tokens.get(0);
+            
             if ("BLANK".equals(token)) {
                 continue;
             }
@@ -45,7 +45,7 @@ public class AnalisadorSintatico {
                     String nextProduction = parseTable.get(stack.get(0), token.toLowerCase());
                     if (nextProduction == null) {
                         error += "\nError on token: " + token;
-                        continue;
+                        break;
                     }
                     String[] splited = nextProduction.split(" ");
                     stack.remove(0);
@@ -62,14 +62,10 @@ public class AnalisadorSintatico {
         if (error.isEmpty()) {
             System.out.println("Parser Done: Code OK");
         } else {
+            errorMessage = error;
             System.err.println(error);
         }
-
-//        while (lex.hasTokens()) {
-//            Token token = lex.getNextToken();
-////            parseTable.get(null, null);
-//            System.out.println(token.toString());
-//        }
+        
         return true;
     }
 

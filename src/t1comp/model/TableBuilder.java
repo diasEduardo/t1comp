@@ -184,7 +184,9 @@ public class TableBuilder {
         table.add("ATRIBSTAT1", "intconst", "EXPRESSION");
         table.add("ATRIBSTAT1", "stringconst", "EXPRESSION");
         table.add("ATRIBSTAT1", "null", "EXPRESSION");
-
+//        ALOCEXPRESSION TODO
+        
+        table.add("ATRIBSTAT1", "new", "ALOCEXPRESSION");
         table.add("PRINTSTAT", "print", "print EXPRESSION");
 
         table.add("READSTAT", "read", "read LVALUE");
@@ -378,7 +380,7 @@ public class TableBuilder {
         table.add("NUMEXPRESSION1", "comma", "");
         table.add("NUMEXPRESSION1", "cpar", "");
         table.add("NUMEXPRESSION1", "lt", "");
-        table.add("NUMEXPRESSION1", ">", "");
+        table.add("NUMEXPRESSION1", "gt", "");
         table.add("NUMEXPRESSION1", "le", "");
         table.add("NUMEXPRESSION1", "ge", "");
         table.add("NUMEXPRESSION1", "eq", "");

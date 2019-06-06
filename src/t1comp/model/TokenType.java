@@ -13,7 +13,7 @@ public enum TokenType {
         CLASS, EXTENDS, INT, STRING, CONSTRUCTOR, PRINT, READ, RETURN, SUPER, IF,
         ELSE, FOR, NEW, BREAK, AT, EQ, GT, GE, LT, LE, NE, PLUS, MINUS, MUL, DIV, MOD,
         IDENT, INTCONST, STRINGCONST, OBRACE, CBRACE, OPAR, CPAR, OBRACK, CBRACK, SEMICOMMA,
-        COMMA, DOT, BLANK, ERROR, NULLTYPE, SEMITOKEN, END;
+        COMMA, DOT, BLANK, ERROR, NULLTYPE, SEMITOKEN, END, NULL;
 
         public static TokenType get(String typeName) {
             for (TokenType categoria : TokenType.values()) {
