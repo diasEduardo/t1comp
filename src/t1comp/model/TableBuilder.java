@@ -184,7 +184,7 @@ public class TableBuilder {
         table.add("ATRIBSTAT1", "intconst", "EXPRESSION");
         table.add("ATRIBSTAT1", "stringconst", "EXPRESSION");
         table.add("ATRIBSTAT1", "null", "EXPRESSION");
-//        ALOCEXPRESSION TODO
+
         
         table.add("ATRIBSTAT1", "new", "ALOCEXPRESSION");
         table.add("PRINTSTAT", "print", "print EXPRESSION");
@@ -334,7 +334,27 @@ public class TableBuilder {
         table.add("LVALUEEXPLIST3", "intconst", "ARGLIST cpar LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST3", "stringconst", "ARGLIST cpar LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST3", "null", "ARGLIST cpar LVALUEEXPLIST1");
-
+        
+        //        ALOCEXPRESSION TODO
+        
+        table.add("ALOCEXPRESSION", "new", "new ALOCEXPRESSION1");
+        
+        table.add("ALOCEXPRESSION1", "string", "string ALOCEXPRESSIONPLUS");
+        table.add("ALOCEXPRESSION1", "int", "int ALOCEXPRESSIONPLUS");
+        table.add("ALOCEXPRESSION1", "ident", "ident ALOCEXPRESSION2");
+        
+        table.add("ALOCEXPRESSION2", "obrack", "ALOCEXPRESSIONPLUS");
+        table.add("ALOCEXPRESSION2", "opar", "opar ALOCEXPRESSION3");
+        
+        table.add("ALOCEXPRESSION3", "null", "ARGLIST cpar");
+        table.add("ALOCEXPRESSION3", "stringconst", "ARGLIST cpar");
+        table.add("ALOCEXPRESSION3", "intconst", "ARGLIST cpar");
+        table.add("ALOCEXPRESSION3", "plus", "ARGLIST cpar");
+        table.add("ALOCEXPRESSION3", "minus", "ARGLIST cpar");
+        table.add("ALOCEXPRESSION3", "cpar", "cpar");
+        table.add("ALOCEXPRESSION3", "opar", "ARGLIST cpar");
+        table.add("ALOCEXPRESSION3", "ident", "ARGLIST cpar");
+        
         table.add("ALOCEXPRESSIONPLUS", "obrack", "obrack EXPRESSION cbrack ALOCEXPRESSIONPLUS1");
 
         table.add("ALOCEXPRESSIONPLUS1", "semicomma", "");

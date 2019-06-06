@@ -1,0 +1,113 @@
+class bintree{
+  
+  class data{
+    int dia, mes, ano;
+    
+    constructor(){
+      ano = 1900;
+      mes = 1;
+      dia = 1;
+    }
+
+    constructor(int d, int m, int a){
+      dia = d;
+      mes = m;
+      ano = a;
+    }
+
+    int compara(data x){
+        if (ano < x.ano) 
+           return -1;
+        end
+        if (ano > x.ano)
+           return 1;
+        end
+        if (mes < x.mes)
+           return -1;
+        end
+        if (mes > x.mes)
+           return 1;
+        end
+        if (dia < x.dia)
+           return -1;
+        end
+        if (dia > x.dia)
+           return 1;
+        end
+    }
+
+  }
+
+  data key;
+  bintree left, right;
+
+  constructor(data x){
+    key = x;
+    left = null;
+    right = nul;
+  }
+
+  int insert(data k){
+    int x;
+    x = k.compara(key);
+    if (x < 0) {
+      if (left != null){
+        return left.insert(k);
+      }end
+      left = new bintree(k);
+      return 1;
+    }end
+    if (x > 0) {
+      if (right != null){
+        return right.insert(k);
+      }end
+      right = new bintree(k);
+      return 1;
+    } end
+    return 0;
+  }
+
+  int treeprint(int x){
+    int i;
+    if (left != null)
+      i = left.treeprint(x+4);
+    end
+    for (i = 0; i < x; i = i + 1)
+      print " ";
+    print key.dia + "/" + key.mes + "/" + key.ano + "\n";
+    if (right != null)
+      i = right.treeprint(x+4);
+    end
+  }
+
+  int start(){
+    bintree t;
+    int i, d, m, a;
+    data w;
+    print "Digite o dia: ";
+    read d;
+    print "Digite o mes: ";
+    read m;
+    print "Digite o ano: ";
+    read a;
+    
+    w = new data (d, m, a);
+    t = new bintree(w);
+
+    for (i = 0; i < 10; i = i + 1) {
+      print "Digite o dia: ";
+      read d;
+      print "Digite o mes: ";
+      read m;
+      print "Digite o ano: ";
+      read a;
+   
+      w = new data (d, m, a);
+      if (t.insert(w) == 0)
+        print "Elemento já existe\n";
+      end
+    }
+    i = t.treeprint(0);
+    return 0;
+  }
+}
