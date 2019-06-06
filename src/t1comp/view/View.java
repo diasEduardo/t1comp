@@ -35,6 +35,10 @@ public class View extends javax.swing.JFrame {
     public String getSourceCode() {
         return sourceCodeArea.getText();
     }
+    
+    public void cleanStatus() {
+        statusTextArea.setText("");
+    }
 
     public void updateStatus(String status) {
         statusTextArea.setText(statusTextArea.getText()+status);

@@ -34,6 +34,17 @@ public final class SymbolsTable {
         return tabela.size();
     }
     
+    public int[] getLinesByIndex(int index) {
+        TableEntry entry = tabela.get(index);
+        
+        if (entry != null) {
+            int[] line = {entry.getLine(), entry.getColumn()};
+            
+            return line;
+        }
+       
+        return new int[2];
+    }
     
     public int addEntry(TableEntry newEntry) {
         tabela.add(newEntry);
