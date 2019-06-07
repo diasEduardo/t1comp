@@ -20,12 +20,15 @@ public class AnalisadorLexico {
     private ArrayList<Token> tokenList;
     private final SymbolsTable sysmbolsTable;
     private int errorLen = 40;
-    private String erroMessage = "";
+    private String errorMessage = "";
 
     public AnalisadorLexico() {
         this.sysmbolsTable = SymbolsTable.getInstance();
     }
 
+    public String statusMessage () {
+        return errorMessage.isEmpty() ? "Lexical Analisis: Ok \n" : errorMessage;
+    }
     private TokenType checkOperatorsToken(String token) {
 //        TODO NE CASE NOT CORRECT
         switch (token) {
@@ -120,6 +123,8 @@ public class AnalisadorLexico {
                 return TokenType.BREAK;
             case "end":
                 return TokenType.END;
+            case "null":
+                return TokenType.NULL;
             default:
                 return TokenType.IDENT;
 
@@ -133,7 +138,7 @@ public class AnalisadorLexico {
 
     public void analyze(String sourceCode) {
         sysmbolsTable.clean();
-        erroMessage = "";
+        errorMessage = "";
         int lineIndex = 0, columnIndex = 0;
         ArrayList<TokenType> lastMatch = new ArrayList<TokenType>();
         String lexeme = "";
@@ -281,14 +286,14 @@ public class AnalisadorLexico {
 
             }
         }
-        erroMessage += "\nERROR\nlexical error founded at \n~~\n" + pre + msg + pos + "\n~~\nin line " + (line + 1) + " and column " + (column + 1) + "\n";
+        errorMessage += "\nERROR\nlexical error founded at \n~~\n" + pre + msg + pos + "\n~~\nin line " + (line + 1) + " and column " + (column + 1) + "\n";
 
-        return erroMessage;
+        return errorMessage;
     }
 
 //    Set message as string to be displayed latter on the view
     public String getErrorMessage() {
 
-        return erroMessage;
+        return errorMessage;
     }
 }

@@ -38,8 +38,9 @@ public final class App {
         SymbolsTable table = SymbolsTable.getInstance();
         lex.analyze(sourceCode);
         parser.parse(lex);
-        view.updateStatus("\n\n\nnew Analysis\n");
-        view.updateStatus(table.toString());
-        view.updateStatus(lex.getErrorMessage());
+        view.cleanStatus();
+        view.updateStatus("\n\nNEW ANALISIS\n");
+        view.updateStatus(lex.statusMessage());
+        view.updateStatus(parser.statusMessage());
     }
 }

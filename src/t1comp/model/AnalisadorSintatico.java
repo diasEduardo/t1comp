@@ -15,24 +15,32 @@ import t1comp.model.TableBuilder;
 public class AnalisadorSintatico {
 
     private LL1Table parseTable;
-
+    private String errorMessage;
+    private SymbolsTable symbolsTable;
+    
     public AnalisadorSintatico() {
         parseTable = TableBuilder.buildTable();
+        errorMessage = "";
+        symbolsTable = SymbolsTable.getInstance();
     }
-
+    
+    public String statusMessage () {
+        return errorMessage.isEmpty() ? "Parser Analisis: Ok \n" : errorMessage;
+    }
+    
+    private void cleanErrorMessage() {
+        errorMessage = "";
+    }
+    
     public boolean parse(AnalisadorLexico lex) {
-        String error = "";
-//        ArrayList<String> tokens = new ArrayList();
-//        tokens.add("CLASS");
-//          tokens.add("BLANK");
-//        tokens.add("IDENT");
-//        tokens.add("OBRACE");
-//          tokens.add("BLANK");
-//        tokens.add("CBRACE");
+        cleanErrorMessage();
         ArrayList<String> stack = new ArrayList<String>();
         stack.add("PROGRAM");
         while (lex.hasTokens()) {
-            String token = lex.getNextToken().getTypeName();//tokens.get(0);
+            Token tokenObj = lex.getNextToken();
+            String token = tokenObj.getTypeName();//tokens.get(0);
+            int[] tokenLines = symbolsTable.getLinesByIndex(tokenObj.getTableIndex() - 1);;
+            
             if ("BLANK".equals(token)) {
                 continue;
             }
@@ -44,8 +52,10 @@ public class AnalisadorSintatico {
                 } else {
                     String nextProduction = parseTable.get(stack.get(0), token.toLowerCase());
                     if (nextProduction == null) {
-                        error += "\nError on token: " + token;
-                        continue;
+                        errorMessage += "\nError on token: " + token;
+                        errorMessage += "- Lines: " + String.valueOf(tokenLines[0]) 
+                                + ": " + String.valueOf(tokenLines[1]);
+                        break;
                     }
                     String[] splited = nextProduction.split(" ");
                     stack.remove(0);
@@ -59,17 +69,12 @@ public class AnalisadorSintatico {
             }
         }
 
-        if (error.isEmpty()) {
+        if (errorMessage.isEmpty()) {
             System.out.println("Parser Done: Code OK");
-        } else {
-            System.err.println(error);
+        } else {            
+            System.err.println(errorMessage);
         }
-
-//        while (lex.hasTokens()) {
-//            Token token = lex.getNextToken();
-////            parseTable.get(null, null);
-//            System.out.println(token.toString());
-//        }
+        
         return true;
     }
 
