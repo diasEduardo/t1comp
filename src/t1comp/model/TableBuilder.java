@@ -5,6 +5,12 @@
  */
 package t1comp.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import t1comp.model.semanticRules.atributeAssertion;
+import t1comp.model.semanticRules.newLeaf;
+import t1comp.model.semanticRules.newNode;
+
 /**
  *
  * @author nathangodinho OBS: Considerando "" como $
@@ -13,6 +19,7 @@ public class TableBuilder {
 
     public static LL1Table buildTable() {
         LL1Table table = new LL1Table();
+        SemanticTable semt = SemanticTable.getInstance();
 
         table.add("PROGRAM", "class", "CLASSLIST");
 
@@ -113,7 +120,8 @@ public class TableBuilder {
         table.add("VARDECLTYPE", "int", "int");
         table.add("VARDECLTYPE", "string", "string");
 
-        table.add("VARDECLBRACKETS", "obrack", "obrack cbrack VARDECLBRACKETS1");
+//        table.add("VARDECLBRACKETS", "obrack", "obrack cbrack VARDECLBRACKETS1");
+        table.add("VARDECLBRACKETS", "obrack", "obrack intconst cbrack VARDECLBRACKETS1");
 
         table.add("VARDECLBRACKETS1", "ident", "");
         table.add("VARDECLBRACKETS1", "semicomma", "");
@@ -438,11 +446,19 @@ public class TableBuilder {
         table.add("TERM3", "mod", "TERM2");
         table.add("TERM3", "div", "TERM2");
         table.add("TERM3", "mul", "TERM2");
+        semt.addRule("TERM3", "", new atributeAssertion("TERM3.sin", "TERM3.her"));
+        
+        semt.addRule("TERM3", "TERM2", 
+                new ArrayList<>(Arrays.asList(
+                        new atributeAssertion("TERM2.her", "TERM3.her"), 
+                        new atributeAssertion("TERM3.sin", "TERM2.node"))));
         
         table.add("MULDIVMOD", "mod", "mod");
         table.add("MULDIVMOD", "div", "div");
         table.add("MULDIVMOD", "mul", "mul");
-        
+        semt.addRule("MULDIVMOD", "mod", new newLeaf("MULDIVMOD.node", "%"));
+        semt.addRule("MULDIVMOD", "div", new newLeaf("MULDIVMOD.node", "/"));
+        semt.addRule("MULDIVMOD", "mul", new newLeaf("MULDIVMOD.node", "*"));
         
         table.add("UNARYEXPR", "ident", "FACTOR");
         table.add("UNARYEXPR", "opar", "FACTOR");
@@ -451,12 +467,18 @@ public class TableBuilder {
         table.add("UNARYEXPR", "intconst", "FACTOR");
         table.add("UNARYEXPR", "stringconst", "FACTOR");
         table.add("UNARYEXPR", "null", "FACTOR");
+        semt.addRule("UNARYEXPR", "FACTOR", new newNode("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node"));
+        semt.addRule("UNARYEXPR", "SUMMINUS FACTOR", new atributeAssertion("FACTOR.sin", "FACTOR.node"));
         
         table.add("FACTOR", "intconst", "intconst");
         table.add("FACTOR", "stringconst", "stringconst");
         table.add("FACTOR", "null", "null");
-        table.add("FACTOR", "opar", "opar EXPRESSION cpar");
+        table.add("FACTOR", "opar", "opar NUMEXPRESSION cpar");
         table.add("FACTOR", "ident", "LVALUE");
+        semt.addRule("FACTOR", "null", new newLeaf("FACTOR.node", "null"));
+        semt.addRule("FACTOR", "stringconst", new newLeaf("FACTOR.node","stringconst"));
+        semt.addRule("FACTOR", "intconst", new newLeaf("FACTOR.node", "intconst"));
+        
         
         table.add("ARGLIST", "ident", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "opar", "EXPRESSION ARGLIST2");
@@ -471,6 +493,9 @@ public class TableBuilder {
         
         table.add("ARGLISTEXP", "comma", "comma EXPRESSION ARGLIST2");
 
+        
+        semt.getRule("FACTOR", "intconst").get(0).action();
+        semt.getNode(0).toString();
         //Done
         return table;
     }
