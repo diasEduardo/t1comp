@@ -12,10 +12,11 @@ import t1comp.model.SemanticRule;
 public class newNode implements SemanticRule<Integer>{
 
     private String descriptor;
-    private String valueLeft;
+    private String parent, valueLeft, valueRight;
+    private int parentNode, leftNode, rightNode;
     private static int nodeID = 1;
     
-    public newNode(String receptor, String valueLeft, String valueRight) {
+    public newNode(String receptor, String parent, String valueLeft, String valueRight) {
         this.descriptor = descriptor;
         this.valueLeft = valueLeft;
     }
