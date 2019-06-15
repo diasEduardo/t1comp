@@ -16,7 +16,7 @@ import t1comp.model.TokenType;
 public class TableEntry {
 
     private TokenType token;
-    private String lexeme;
+    private String lexeme, dataType;
     private int line, column;
 
     public TableEntry(TokenType token, String lexeme, int line, int column) {
@@ -24,6 +24,7 @@ public class TableEntry {
         this.lexeme = lexeme;
         this.line = line;
         this.column = column;
+        this.dataType = "";
     }
 
     public TokenType getToken() {
