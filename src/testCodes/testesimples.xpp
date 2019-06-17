@@ -1,7 +1,7 @@
 class bintree{
   int a,b,c,d[5];
-
-    a * b / (c + d[4]);
-  
+    int test(){
+    return a * b / (c + d[4]);
+    }
 }
 
