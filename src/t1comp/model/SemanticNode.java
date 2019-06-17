@@ -38,7 +38,7 @@ public final class SemanticNode {
     }
     
     public void addChild(SemanticNode child) {
-        children.add(child);
+        children.add(0, child);
     }
     
     public SemanticNode getChild() {
