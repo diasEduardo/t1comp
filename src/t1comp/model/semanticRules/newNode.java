@@ -4,34 +4,47 @@
  * and open the template in the editor.
  */
 package t1comp.model.semanticRules;
+import t1comp.model.SemanticNode;
 import t1comp.model.SemanticRule;
+import t1comp.model.SemanticTable;
 /**
  *
  * @author nathangodinho
  */
 public class newNode implements SemanticRule<Integer>{
 
-    private String descriptor;
-    private String valueLeft;
-    private static int nodeID = 1;
+    private Integer id1;
+    private String attribute1;
+    private Integer id2;
+    private String attribute2;
+    private Integer id3;
+    private String attribute3;
+    private Integer id4;
+    private String attribute4;
+    private final SemanticTable table;
     
-    public newNode(String receptor, String valueLeft, String valueRight) {
-        this.descriptor = descriptor;
-        this.valueLeft = valueLeft;
-    }
-    
-    public newNode( String value) {
-        this.valueLeft = value;
-    }
+    public newNode(Integer i1,String a1,Integer i2, String a2,Integer i3,String a3) {
+        id1 = i1;
+        attribute1 = a1;
+        id2 = i2;
+        attribute2 = a2;
+        table = SemanticTable.getInstance();
+        id3 = i3;
+        attribute3 = a3;
 
-    private int getNewId() {
-        return nodeID++;
     }
-    
     @Override
     public Integer action() {
-        System.out.println("New node" + valueLeft);
-        return getNewId();
+        SemanticNode node1 = table.getNode(id1);
+        SemanticNode node2 = table.getNode(id2);
+        SemanticNode node3 = table.getNode(id3);
+  
+        
+        SemanticNode newNode = new SemanticNode(table.genId(),node2.getAttributeValue(attribute2),node3.getAttributeValue(attribute3));
+        table.addNode(newNode);
+        node1.addAtribute(attribute1, newNode);
+        
+        return 0;
     }
 
     

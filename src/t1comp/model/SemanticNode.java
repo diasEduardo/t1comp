@@ -16,20 +16,33 @@ public final class SemanticNode {
     private static int idTracker = 0;
     private final Integer id;
     private String name;
-    private HashMap<String, String> attributes;
+    private HashMap<String, SemanticNode> attributes;
     private boolean isLeaf;
     private ArrayList<SemanticNode> children;
     private SemanticNode parent;
+    private ArrayList<SemanticNode> node;
     
-    public SemanticNode(String name, SemanticNode parent) {
-        this.id = gentId();
+    
+    public SemanticNode(Integer i, String name, SemanticNode parent) {
+        this.id = i;
         this.name = name;
         attributes = new HashMap<>();
         children = new ArrayList<>();
+        node = new ArrayList<>();
         this.parent = parent;
         if (parent == null) {
             idTracker =  0;
         }
+//        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
+    }
+    public SemanticNode(Integer i, SemanticNode i2,SemanticNode i3) {
+        this.id = i;
+        attributes = new HashMap<>();
+        node = new ArrayList<>();
+        
+        node.add(i2);
+        node.add(i3);
+
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
     
@@ -63,11 +76,11 @@ public final class SemanticNode {
         return id;
     }
     
-    public void addAtribute(String name, String value) {
+    public void addAtribute(String name, SemanticNode value) {
         attributes.put(name, value);
     }
     
-    public String getAttributeValue(String name) {
+    public SemanticNode getAttributeValue(String name) {
         return attributes.get(name);
     } 
     

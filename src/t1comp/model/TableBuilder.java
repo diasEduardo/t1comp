@@ -446,19 +446,19 @@ public class TableBuilder {
         table.add("TERM3", "mod", "TERM2");
         table.add("TERM3", "div", "TERM2");
         table.add("TERM3", "mul", "TERM2");
-        semt.addRule("TERM3", "", new atributeAssertion("TERM3.sin", "TERM3.her"));
+        semt.addRule("TERM3", "", new atributeAssertion(0,"TERM3.sin", 1,"TERM3.her"));
         
         semt.addRule("TERM3", "TERM2", 
                 new ArrayList<>(Arrays.asList(
-                        new atributeAssertion("TERM2.her", "TERM3.her"), 
-                        new atributeAssertion("TERM3.sin", "TERM2.node"))));
+                        new atributeAssertion(0,"TERM2.her",1 , "TERM3.her"),  //("TERM2.her","TERM3.her") 
+                        new atributeAssertion(0,"TERM3.sin",1, "TERM2.node")))); //("TERM3.sin", "TERM2.node")
         
         table.add("MULDIVMOD", "mod", "mod");
         table.add("MULDIVMOD", "div", "div");
         table.add("MULDIVMOD", "mul", "mul");
-        semt.addRule("MULDIVMOD", "mod", new newLeaf("MULDIVMOD.node", "%"));
-        semt.addRule("MULDIVMOD", "div", new newLeaf("MULDIVMOD.node", "/"));
-        semt.addRule("MULDIVMOD", "mul", new newLeaf("MULDIVMOD.node", "*"));
+        semt.addRule("MULDIVMOD", "mod", new newLeaf(0,"node", "%")); //("MULDIVMOD.node", "%")
+        semt.addRule("MULDIVMOD", "div", new newLeaf(0,"node", "/")); //("MULDIVMOD.node", "/")
+        semt.addRule("MULDIVMOD", "mul", new newLeaf(0,"node", "*")); //("MULDIVMOD.node", "*")
         
         table.add("UNARYEXPR", "ident", "FACTOR");
         table.add("UNARYEXPR", "opar", "FACTOR");
@@ -467,17 +467,17 @@ public class TableBuilder {
         table.add("UNARYEXPR", "intconst", "FACTOR");
         table.add("UNARYEXPR", "stringconst", "FACTOR");
         table.add("UNARYEXPR", "null", "FACTOR");
-        semt.addRule("UNARYEXPR", "SUMMINUS FACTOR", new newNode("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node"));
-        semt.addRule("UNARYEXPR", "FACTOR", new atributeAssertion("FACTOR.sin", "FACTOR.node"));
+        semt.addRule("UNARYEXPR", "SUMMINUS FACTOR", new newNode(0,"node", 1,"node", 2 , "FACTOR")); //("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node")
+        semt.addRule("UNARYEXPR", "FACTOR", new atributeAssertion(0,"FACTOR.sin",1, "FACTOR.node"));
         
         table.add("FACTOR", "intconst", "intconst");
         table.add("FACTOR", "stringconst", "stringconst");
         table.add("FACTOR", "null", "null");
         table.add("FACTOR", "opar", "opar NUMEXPRESSION cpar");
         table.add("FACTOR", "ident", "LVALUE");
-        semt.addRule("FACTOR", "null", new newLeaf("FACTOR.node", "null"));
-        semt.addRule("FACTOR", "stringconst", new newLeaf("FACTOR.node","stringconst"));
-        semt.addRule("FACTOR", "intconst", new newLeaf("FACTOR.node", "intconst"));
+        semt.addRule("FACTOR", "null", new newLeaf(0,"FACTOR.node", "null")); //("FACTOR.node", "null")
+        semt.addRule("FACTOR", "stringconst", new newLeaf(0,"FACTOR.node","stringconst")); //("FACTOR.node","stringconst")
+        semt.addRule("FACTOR", "intconst", new newLeaf(0,"FACTOR.node", "intconst")); //("FACTOR.node", "intconst")
         
         
         table.add("ARGLIST", "ident", "EXPRESSION ARGLIST2");

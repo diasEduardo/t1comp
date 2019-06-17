@@ -18,11 +18,15 @@ public class AnalisadorSintatico {
     private LL1Table parseTable;
     private String errorMessage;
     private SymbolsTable symbolsTable;
+    private SemanticTable semanticTable;
+    
     SemanticNode rootNode;
+    
     public AnalisadorSintatico() {
         parseTable = TableBuilder.buildTable();
         errorMessage = "";
         symbolsTable = SymbolsTable.getInstance();
+        semanticTable = SemanticTable.getInstance();
     }
     
     public String statusMessage () {
@@ -38,7 +42,8 @@ public class AnalisadorSintatico {
         ArrayList<String> stack = new ArrayList<String>();
         ArrayList<SemanticNode> nodeTreeStack = new ArrayList<SemanticNode>();
         stack.add("PROGRAM");
-        rootNode = new SemanticNode("PROGRAM", null);
+        rootNode = new SemanticNode(semanticTable.genId(),"PROGRAM", null);
+        semanticTable.addNode(rootNode);
         nodeTreeStack.add(rootNode);
         SemanticNode current;
         while (lex.hasTokens()) {
@@ -76,7 +81,8 @@ public class AnalisadorSintatico {
                     for (int i = splited.length - 1; i >= 0; i--) {
                         if (splited[i].length() > 0) {
                             String name = splited[i];
-                            SemanticNode newNode = new SemanticNode(name, current);
+                            SemanticNode newNode = new SemanticNode(semanticTable.genId(),name, current);
+                            semanticTable.addNode(newNode);
                             stack.add(0, name);
                             current.addChild(newNode);
                             nodeTreeStack.add(0, newNode);                            
