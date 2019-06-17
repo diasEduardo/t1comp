@@ -17,7 +17,7 @@ public final class SemanticTable {
     private static final SemanticTable instance = new SemanticTable();
     private HashMap<Integer, SemanticNode> nodes;
     private static Integer idTracker = 0;
-    
+    public static int currentNode = 0;
     public SemanticTable() {
         table = new HashMap<>();
         nodes = new HashMap<>();

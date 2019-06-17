@@ -467,8 +467,8 @@ public class TableBuilder {
         table.add("UNARYEXPR", "intconst", "FACTOR");
         table.add("UNARYEXPR", "stringconst", "FACTOR");
         table.add("UNARYEXPR", "null", "FACTOR");
-        semt.addRule("UNARYEXPR", "FACTOR", new newNode("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node"));
-        semt.addRule("UNARYEXPR", "SUMMINUS FACTOR", new atributeAssertion("FACTOR.sin", "FACTOR.node"));
+        semt.addRule("UNARYEXPR", "SUMMINUS FACTOR", new newNode("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node"));
+        semt.addRule("UNARYEXPR", "FACTOR", new atributeAssertion("FACTOR.sin", "FACTOR.node"));
         
         table.add("FACTOR", "intconst", "intconst");
         table.add("FACTOR", "stringconst", "stringconst");
@@ -492,10 +492,6 @@ public class TableBuilder {
         table.add("ARGLIST2", "comma", "ARGLISTEXP");
         
         table.add("ARGLISTEXP", "comma", "comma EXPRESSION ARGLIST2");
-
-        
-        semt.getRule("FACTOR", "intconst").get(0).action();
-        semt.getNode(0).toString();
         //Done
         return table;
     }

@@ -28,12 +28,13 @@ public class newLeaf implements SemanticRule<Integer>{
     
     @Override
     public Integer action() {
-        System.out.println("Creating new leaf...\n");
-        SemanticNode newLeaf = new SemanticNode(st.genId(), receptor);
-        newLeaf.addAtribute(attribute, value);
-        st.addNode(newLeaf);
-        
-        return newLeaf.getId();
+//        System.out.println("Creating new leaf...\n");
+//        SemanticNode newLeaf = new SemanticNode(st.genId(), receptor);
+//        newLeaf.addAtribute(attribute, value);
+//        st.addNode(newLeaf);
+//        st.currentNode = newLeaf.getId();
+//        return newLeaf.getId();
+        return 0;
     }
     
 }
