@@ -67,7 +67,6 @@ public class AnalisadorSintatico {
                     tokenMatch = true;
                 } else {
                     String nextProduction = parseTable.get(stack.get(0), token.toLowerCase());
-//                    System.out.println(nextProduction);
                     if (nextProduction == null) {
                         errorMessage += "\nError on token: " + token;
                         errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
@@ -78,9 +77,6 @@ public class AnalisadorSintatico {
                     String[] splited = nextProduction.split(" ");
                     stack.remove(0);
                     current = nodeTreeStack.remove(0);
-//                    if (nextProduction == "EXPRESSION") {
-//                        System.out.println("!exp!");
-//                    }
 
                     for (int i = splited.length - 1; i >= 0; i--) {
                         if (splited[i].length() > 0) {
@@ -90,6 +86,10 @@ public class AnalisadorSintatico {
                             stack.add(0, name);
                             current.addChild(newNode);
                             nodeTreeStack.add(0, newNode);
+                        } else if (splited[i].equals("")) {
+                            SemanticNode newNode = new SemanticNode(semanticTable.genId(), "", current);
+                            semanticTable.addNode(newNode);
+                            current.addChild(newNode);
                         }
 
                     }
@@ -108,10 +108,24 @@ public class AnalisadorSintatico {
         return true;
     }
 
-    public void buildSemanticTable(SemanticNode root) {
+    
+    public void postOder(SemanticNode root) {
+        for (SemanticNode child : root.getChildren()) {
+            postOder(child);
+        }
+        
         root.toString();
+    }
+    
+    public void buildSemanticTable(SemanticNode root) {
+        root.toString(); 
+
 
         if (root.getName() == "TERM3") {
+
+        if (root.getName().equalsIgnoreCase("TERM3")) {
+
+
             root.getChildren().stream().forEach((child) -> {
                 if (child.getName() == "") {
                     semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
@@ -123,7 +137,7 @@ public class AnalisadorSintatico {
                 }
             });
 
-        } else if (root.getName() == "MULDIVMOD") {
+        } else if (root.getName().equalsIgnoreCase("MULDIVMOD")) {
             root.getChildren().stream().forEach((child) -> {
                 if (child.getName() == "mod") {
                     semanticTable.addRule(root.getId(), new newLeaf(root.getId(),"node", "%")); //("MULDIVMOD.node", "%")
@@ -133,13 +147,13 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(), new newLeaf(root.getId(),"node", "*")); //("MULDIVMOD.node", "*")
                 }
             });
-        } else if (root.getName() == "UNARYEXPR") {
+        } else if (root.getName().equalsIgnoreCase("UNARYEXPR")) {
             if(root.getChildren().size() > 1){
                 semanticTable.addRule(root.getId(), new newNode(root.getId(),"node", root.getChild(0).getId(),"node", root.getChild(1).getId() , "node")); //("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node")
             }else if(root.getChildren().size() == 1){   
                 semanticTable.addRule(root.getId(), new atributeAssertion(root.getChild(0).getId(),"sin",root.getChild(0).getId(), "node"));
             }
-        } else if (root.getName() == "FACTOR") {
+        } else if (root.getName().equalsIgnoreCase("FACTOR")) {
             root.getChildren().stream().forEach((child) -> {
                 if (child.getName() == "null") {
                     semanticTable.addRule(root.getId(), new newLeaf(root.getId(),"node", "null")); //("FACTOR.node", "null")
@@ -155,5 +169,6 @@ public class AnalisadorSintatico {
             buildSemanticTable(child);
         });
     }
-}
+    }
 
+}

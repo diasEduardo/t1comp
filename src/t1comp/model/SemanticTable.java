@@ -28,6 +28,7 @@ public final class SemanticTable {
     }
     
     public void addRule(Integer id, SemanticRule rule) {
+        System.out.println("" + nodes.get(id).getName());
         if(table.containsKey(id)){
             ArrayList<SemanticRule> rules = table.get(id);
             rules.add(rule);
@@ -39,6 +40,7 @@ public final class SemanticTable {
     }
     
     public void addRule(Integer id, ArrayList<SemanticRule> rules) {
+        System.out.println("" + nodes.get(id).getName());
         table.put(id, rules);
     }
     
