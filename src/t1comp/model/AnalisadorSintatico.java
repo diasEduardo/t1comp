@@ -144,11 +144,11 @@ public class AnalisadorSintatico {
                 }
             });
         } else if (root.getName().equalsIgnoreCase("UNARYEXPR")) {
-            if(root.getChildren().size() > 1){
-                semanticTable.addRule(root.getId(), new newNode(root.getId(),"node", root.getChild(0).getId(),"node", root.getChild(1).getId() , "node")); //("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node")
-            }else if(root.getChildren().size() == 1){   
+            if(root.getChild(0).getName().equalsIgnoreCase("FACTOR")){   
                 semanticTable.addRule(root.getId(), new atributeAssertion(root.getChild(0).getId(),"sin",root.getChild(0).getId(), "node"));
-            }
+            } else if(root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("FACTOR")){
+                semanticTable.addRule(root.getId(), new newNode(root.getId(),"node", root.getChild(0).getId(),"node", root.getChild(1).getId() , "node")); //("UNARYEXPR.node", "SUMMINUS.node", "FACTOR.node")
+            } 
         } else if (root.getName().equalsIgnoreCase("FACTOR")) {
             root.getChildren().stream().forEach((child) -> {
                 if (child.getName() == "null") {
