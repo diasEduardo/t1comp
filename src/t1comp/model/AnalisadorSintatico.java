@@ -112,7 +112,6 @@ public class AnalisadorSintatico {
         root.toString();
 
         if (root.getName() == "TERM3") {
-
             root.getChildren().stream().forEach((child) -> {
                 if (child.getName() == "") {
                     semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
