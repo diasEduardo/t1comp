@@ -19,6 +19,7 @@ public class newLeaf implements SemanticRule<Integer>{
     private String name;
     
     public newLeaf(Integer i0, String a0,String n) {
+        
         table = SemanticTable.getInstance();
         id0 = i0;
         this.attribute0 = a0;

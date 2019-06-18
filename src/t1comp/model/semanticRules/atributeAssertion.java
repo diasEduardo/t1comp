@@ -19,6 +19,8 @@ public class atributeAssertion implements SemanticRule<Integer>{
     
     
     public atributeAssertion(Integer i0,String a0,Integer i1, String a1) {
+        ids = new ArrayList<Integer>();
+        attributes = new ArrayList<String>();
         ids.add(i0);
         ids.add(i1);
         attributes.add(a0);
