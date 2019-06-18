@@ -1,0 +1,100 @@
+class bintree{
+  
+    class a{
+
+     int a1,a2,a3;
+     a instance;
+
+        constructor (int a1,int a2, int a3){
+            this.a1 = a1;
+            this.a2 = a2;
+            this.a3 = a3;
+            instance = this;
+        }
+
+        string toString(int data){
+            temp = ""+data;
+            return temp;
+        }
+
+        string toInteger(string data){
+            temp = Integer.parseInt(data);
+            return temp;
+        }
+        
+        int printAll(){
+            temp = this.toString(a1);
+            print temp;
+            temp = this.toString(a2);
+            print temp;
+            temp = this.toString(a3);
+            print temp;
+            return 0;
+        }
+
+        a getInstance(){
+            return instance;
+        }
+
+    }
+
+    class b extends a{
+
+        int aint,b,c,d[5];
+
+        constructor(int a1,int a2,int a3,int aint,int b,
+    int c, int d[5]){
+            super(a1,a2,a3);
+            this.aint = aint;
+            this.b = b;
+            this.c = c;
+            d = d;
+        }
+
+        int test(string varS){
+            var = this.toInteger(varS);
+
+            if(var == 0)
+                return aint * b / (c + d[4]);
+            end
+
+            aint=var;
+            b=var*var/b;
+            c= b+var;
+            int i;
+
+            for (i=0;i<d.lenght-1;i=i+1){
+                d[i]=d[i]/var+d[i+1]/var;
+            }
+            d[4] = d[4]/var+d[0]/var;
+
+            temp = aint * b / (c + d[4]);
+            tem2 = this.toString(temp);
+            print "\n"+temp;
+
+            return temp;
+        }
+    }
+
+    int main(object args){
+        obj = new a(args[0],args[1],args[2]);
+        obj2 = new b(args[0],args[1],args[2],1,2,3,d);
+
+        resp = obj.printAll();
+        ab = obj2.getinstance();
+        resp2 = ab.printAll();
+
+        if(resp == resp1){
+            print resp;
+
+        }else{
+            read value;
+            print resp;
+            print resp1;
+
+        }end
+    }
+
+}
+
+
