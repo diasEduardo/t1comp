@@ -30,6 +30,13 @@ public class View extends javax.swing.JFrame {
     public View(App app) {
         this.app = app;
         initComponents();
+        sourceCodeArea.setText("class bintree{\n" +
+"  int a;\n" +
+"\n" +
+" int sum() {\n" +
+"   a = 2 + 2;\n" +
+" }\n" +
+"}");
     }
     
     public String getSourceCode() {
