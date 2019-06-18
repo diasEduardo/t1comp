@@ -108,7 +108,6 @@ public class AnalisadorSintatico {
         return true;
     }
 
-    
     public void postOder(SemanticNode root) {
         for (SemanticNode child : root.getChildren()) {
             postOder(child);
@@ -119,8 +118,33 @@ public class AnalisadorSintatico {
     
     public void buildSemanticTable(SemanticNode root) {
         root.toString(); 
-
-        if (root.getName().equalsIgnoreCase("TERM3")) {
+        
+        if (root.getName().equalsIgnoreCase("EXPRESSION")) {
+            if (root.getChild(0).getName().equalsIgnoreCase("NUMEXPRESSION") && root.getChild(1).getName().equalsIgnoreCase("EXPRESSION1")){
+                semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                            new atributeAssertion(root.getId(), "her", root.getChild(0).getId(), "her"), //("TERM2.her","TERM3.her") 
+                                            new atributeAssertion(root.getId(), "sin", root.getChild(1).getId(), "node")))); //("TERM3.sin", "TERM2.node")
+            }
+            
+        } else if (root.getName().equalsIgnoreCase("EXPRESSION1")) {
+            if (root.getChild(0).getName().equalsIgnoreCase("EXPRESSIONCOMPARE") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")){
+//                semanticTable.addRule(root.getId(), new newNode(root.getId(),"node", 
+//                        root.getChild(0).getId(),"node", root.getChild(1).getId() , "node"));
+//                TODO MAKE WITH 3 PARAMS CONSTRUCTOR
+            }
+            
+        } else if (root.getName().equalsIgnoreCase("TERM2")) {
+            semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+//                                            new newNode(root.getId(),"node", root.getChild(0).getId(),"her", root.getChild(1).getId() , "sin"), //("TERM2.her","TERM3.her") 
+                                            new atributeAssertion(root.getChild(2).getId(), "her", root.getChild(1).getId(), "sin"))));
+        } else if (root.getName().equalsIgnoreCase("TERM")) {
+            semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                          new atributeAssertion(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"), //("TERM2.her","TERM3.her") 
+                                            new atributeAssertion(root.getId(), "sin", root.getChild(1).getId(), "sin")))); //("TERM3.sin", "TERM2.node") 
+        } else if (root.getName().equalsIgnoreCase("TERM3")) {
 
             root.getChildren().stream().forEach((child) -> {
                 if (child.getName() == "") {
