@@ -5,6 +5,12 @@
  */
 package t1comp.model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import t1comp.model.semanticRules.atributeAssertion;
+import t1comp.model.semanticRules.newLeaf;
+import t1comp.model.semanticRules.newNode;
+
 /**
  *
  * @author nathangodinho OBS: Considerando "" como $
@@ -13,6 +19,7 @@ public class TableBuilder {
 
     public static LL1Table buildTable() {
         LL1Table table = new LL1Table();
+        SemanticTable semt = SemanticTable.getInstance();
 
         table.add("PROGRAM", "class", "CLASSLIST");
 
@@ -113,7 +120,8 @@ public class TableBuilder {
         table.add("VARDECLTYPE", "int", "int");
         table.add("VARDECLTYPE", "string", "string");
 
-        table.add("VARDECLBRACKETS", "obrack", "obrack cbrack VARDECLBRACKETS1");
+//        table.add("VARDECLBRACKETS", "obrack", "obrack cbrack VARDECLBRACKETS1");
+        table.add("VARDECLBRACKETS", "obrack", "obrack intconst cbrack VARDECLBRACKETS1");
 
         table.add("VARDECLBRACKETS1", "ident", "");
         table.add("VARDECLBRACKETS1", "semicomma", "");
@@ -126,6 +134,7 @@ public class TableBuilder {
         table.add("VARDECLWITHCOMA1", "semicomma", "");
         table.add("VARDECLWITHCOMA1", "obrack", "VARDECLBRACKETS VARDECL2");
         table.add("VARDECLWITHCOMA1", "comma", "VARDECLWITHCOMA");
+        
 
         table.add("CONSTRUCTDECL", "constructor", "constructor METHODBODY");
 
@@ -185,7 +194,6 @@ public class TableBuilder {
         table.add("ATRIBSTAT1", "stringconst", "EXPRESSION");
         table.add("ATRIBSTAT1", "null", "EXPRESSION");
 
-        
         table.add("ATRIBSTAT1", "new", "ALOCEXPRESSION");
         table.add("PRINTSTAT", "print", "print EXPRESSION");
 
@@ -262,8 +270,13 @@ public class TableBuilder {
         table.add("STATLIST1", "if", "STATLIST");
         table.add("STATLIST1", "for", "STATLIST");
 
-        table.add("LVALUE", "ident", "ident LVALUE1");
-
+        //table.add("LVALUE", "ident", "ident LVALUE1");
+        table.add("LVALUE", "ident", "ident LVALUET2");
+        semt.addRule("LVALUE", "ident LVALUET2", 
+                new ArrayList<>(Arrays.asList(
+                        new newLeaf("LVALUE.node", "LVALUET2.sin"),
+                        new atributeAssertion("LVALUET2.her", "ident"))));
+        /*
         table.add("LVALUE1", "semicomma", "");
         table.add("LVALUE1", "obrack", "LVALUEEXPLIST");
         table.add("LVALUE1", "cbrack", "");
@@ -282,6 +295,31 @@ public class TableBuilder {
         table.add("LVALUE1", "mod", "");
         table.add("LVALUE1", "div", "");
         table.add("LVALUE1", "mul", "");
+         */
+        table.add("LVALUET2", "semicomma", "");
+        table.add("LVALUET2", "obrack", "obrack intconst cbrack LVALUET2");
+        table.add("LVALUET2", "cbrack", "");
+        table.add("LVALUET2", "comma", "");
+        table.add("LVALUET2", "cpar", "");
+        table.add("LVALUET2", "ne", "");
+        table.add("LVALUET2", "eq", "");
+        table.add("LVALUET2", "ge", "");
+        table.add("LVALUET2", "le", "");
+        table.add("LVALUET2", "gt", "");
+        table.add("LVALUET2", "lt", "");
+        table.add("LVALUET2", "plus", "");
+        table.add("LVALUET2", "minus", "");
+        table.add("LVALUET2", "mod", "");
+        table.add("LVALUET2", "div", "");
+        table.add("LVALUET2", "mul", "");
+        semt.addRule("LVALUET2", "obrack intconst cbrack LVALUET2", 
+                new ArrayList<>(Arrays.asList(
+                        new atributeAssertion("LVALUET2.sin", "LVALUET2.sin"),
+                        new atributeAssertion("LVALUET2.her", "array(intconst,LVALUET2.her)"))));
+        //no caso do array deve so ser tratado como uma entrada do tipo a[2] onde o .her é 'a' e 
+        //array vai retornar o valor 'a[2]'
+        semt.addRule("LVALUET2", "", 
+                        new atributeAssertion("LVALUET2.sin", "LVALUET2.her"));
 
         table.add("LVALUEEXPLIST", "obrack", "obrack EXPRESSION cbrack LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST", "dot", "dot ident LVALUEEXPLIST2");
@@ -334,18 +372,17 @@ public class TableBuilder {
         table.add("LVALUEEXPLIST3", "intconst", "ARGLIST cpar LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST3", "stringconst", "ARGLIST cpar LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST3", "null", "ARGLIST cpar LVALUEEXPLIST1");
-        
+
         //        ALOCEXPRESSION TODO
-        
         table.add("ALOCEXPRESSION", "new", "new ALOCEXPRESSION1");
-        
+
         table.add("ALOCEXPRESSION1", "string", "string ALOCEXPRESSIONPLUS");
         table.add("ALOCEXPRESSION1", "int", "int ALOCEXPRESSIONPLUS");
         table.add("ALOCEXPRESSION1", "ident", "ident ALOCEXPRESSION2");
-        
+
         table.add("ALOCEXPRESSION2", "obrack", "ALOCEXPRESSIONPLUS");
         table.add("ALOCEXPRESSION2", "opar", "opar ALOCEXPRESSION3");
-        
+
         table.add("ALOCEXPRESSION3", "null", "ARGLIST cpar");
         table.add("ALOCEXPRESSION3", "stringconst", "ARGLIST cpar");
         table.add("ALOCEXPRESSION3", "intconst", "ARGLIST cpar");
@@ -354,7 +391,7 @@ public class TableBuilder {
         table.add("ALOCEXPRESSION3", "cpar", "cpar");
         table.add("ALOCEXPRESSION3", "opar", "ARGLIST cpar");
         table.add("ALOCEXPRESSION3", "ident", "ARGLIST cpar");
-        
+
         table.add("ALOCEXPRESSIONPLUS", "obrack", "obrack EXPRESSION cbrack ALOCEXPRESSIONPLUS1");
 
         table.add("ALOCEXPRESSIONPLUS1", "semicomma", "");
@@ -377,7 +414,7 @@ public class TableBuilder {
         table.add("EXPRESSION1", "ne", "EXPRESSIONCOMPARE NUMEXPRESSION");
         table.add("EXPRESSION1", "cpar", "");
         table.add("EXPRESSION1", "comma", "");
-        table.add("EXPRESSION1", "semicomma", "");        
+        table.add("EXPRESSION1", "semicomma", "");
         table.add("EXPRESSION1", "cbrack", "");
         table.add("EXPRESSION1", "cpar", "");
 
@@ -394,6 +431,10 @@ public class TableBuilder {
         table.add("NUMEXPRESSION", "minus", "TERM NUMEXPRESSION1");
         table.add("NUMEXPRESSION", "plus", "TERM NUMEXPRESSION1");
         table.add("NUMEXPRESSION", "ident", "TERM NUMEXPRESSION1");
+        semt.addRule("NUMEXPRESSION", "TERM NUMEXPRESSION1",
+                new ArrayList<>(Arrays.asList(
+                        new atributeAssertion("NUMEXPRESSION.sin", "NUMEXPRESSION1.node"),
+                        new atributeAssertion("NUMEXPRESSION1.her", "TERM.sin"))));
 
         table.add("NUMEXPRESSION1", "semicomma", "");
         table.add("NUMEXPRESSION1", "cbrack", "");
@@ -407,9 +448,14 @@ public class TableBuilder {
         table.add("NUMEXPRESSION1", "ne", "");
         table.add("NUMEXPRESSION1", "plus", "SUMMINUS NUMEXPRESSION");
         table.add("NUMEXPRESSION1", "minus", "SUMMINUS NUMEXPRESSION");
+        semt.addRule("NUMEXPRESSION1", "", new atributeAssertion("NUMEXPRESSION1.node", "NUMEXPRESSION1.her"));
+        semt.addRule("NUMEXPRESSION1", "SUMMINUS NUMEXPRESSION",
+                new newNode("NUMEXPRESSION1.node", "SUMMINUS.node", "NUMEXPRESSION1.her", "NUMEXPRESSION.node"));
 
         table.add("SUMMINUS", "minus", "minus");
         table.add("SUMMINUS", "plus", "plus");
+        semt.addRule("SUMMINUS", "plus", new newLeaf("SUMMINUS.node", "+"));
+        semt.addRule("SUMMINUS", "minus", new newLeaf("SUMMINUS.node", "-"));
 
         table.add("TERM", "null", "UNARYEXPR TERM3");
         table.add("TERM", "stringconst", "UNARYEXPR TERM3");
@@ -418,11 +464,19 @@ public class TableBuilder {
         table.add("TERM", "plus", "UNARYEXPR TERM3");
         table.add("TERM", "opar", "UNARYEXPR TERM3");
         table.add("TERM", "ident", "UNARYEXPR TERM3");
-        
+        semt.addRule("TERM", "UNARYEXPR TERM3",
+                new ArrayList<>(Arrays.asList(
+                        new atributeAssertion("TERM3.her", "UNARYEXPR.sin"),
+                        new atributeAssertion("TERM.sin", "TERM3.sin"))));
+
         table.add("TERM2", "mod", "MULDIVMOD UNARYEXPR TERM3");
         table.add("TERM2", "div", "MULDIVMOD UNARYEXPR TERM3");
         table.add("TERM2", "mul", "MULDIVMOD UNARYEXPR TERM3");
-        
+        semt.addRule("TERM2", "MULDIVMOD UNARYEXPR TERM3",
+                new ArrayList<>(Arrays.asList(
+                        new newNode("TERM2.node", "MULDIVMOD.node", "TERM2.her", "TERM3.sin"),
+                        new atributeAssertion("TERM3.her", "UNARYEXPR.sin"))));
+
         table.add("TERM3", "semicomma", "");
         table.add("TERM3", "cbrack", "");
         table.add("TERM3", "comma", "");
@@ -438,12 +492,20 @@ public class TableBuilder {
         table.add("TERM3", "mod", "TERM2");
         table.add("TERM3", "div", "TERM2");
         table.add("TERM3", "mul", "TERM2");
-        
+        semt.addRule("TERM3", "", new atributeAssertion("TERM3.sin", "TERM3.her"));
+
+        semt.addRule("TERM3", "TERM2",
+                new ArrayList<>(Arrays.asList(
+                        new atributeAssertion("TERM2.her", "TERM3.her"),
+                        new atributeAssertion("TERM3.sin", "TERM2.node"))));
+
         table.add("MULDIVMOD", "mod", "mod");
         table.add("MULDIVMOD", "div", "div");
         table.add("MULDIVMOD", "mul", "mul");
-        
-        
+        semt.addRule("MULDIVMOD", "mod", new newLeaf("MULDIVMOD.node", "%"));
+        semt.addRule("MULDIVMOD", "div", new newLeaf("MULDIVMOD.node", "/"));
+        semt.addRule("MULDIVMOD", "mul", new newLeaf("MULDIVMOD.node", "*"));
+
         table.add("UNARYEXPR", "ident", "FACTOR");
         table.add("UNARYEXPR", "opar", "FACTOR");
         table.add("UNARYEXPR", "plus", "SUMMINUS FACTOR");
@@ -451,13 +513,21 @@ public class TableBuilder {
         table.add("UNARYEXPR", "intconst", "FACTOR");
         table.add("UNARYEXPR", "stringconst", "FACTOR");
         table.add("UNARYEXPR", "null", "FACTOR");
-        
+        semt.addRule("UNARYEXPR", "SUMMINUS FACTOR", new newNode("UNARYEXPR.sin", "SUMMINUS.node", "", "FACTOR.node"));
+        semt.addRule("UNARYEXPR", "FACTOR", new atributeAssertion("UNARYEXPR.sin", "FACTOR.node"));
+
         table.add("FACTOR", "intconst", "intconst");
         table.add("FACTOR", "stringconst", "stringconst");
         table.add("FACTOR", "null", "null");
-        table.add("FACTOR", "opar", "opar EXPRESSION cpar");
+        //table.add("FACTOR", "opar", "opar EXPRESSION cpar");
+        table.add("FACTOR", "opar", "opar NUMEXPRESSION cpar");
         table.add("FACTOR", "ident", "LVALUE");
-        
+        semt.addRule("FACTOR", "null", new newLeaf("FACTOR.node", "null"));
+        semt.addRule("FACTOR", "stringconst", new newLeaf("FACTOR.node", "stringconst"));
+        semt.addRule("FACTOR", "intconst", new newLeaf("FACTOR.node", "intconst"));
+        semt.addRule("FACTOR", "LVALUE", new atributeAssertion("FACTOR.node", "LVALUE.node"));
+        semt.addRule("FACTOR", "opar NUMEXPRESSION cpar", new atributeAssertion("FACTOR.node", "NUMEXPRESSION.sin"));
+
         table.add("ARGLIST", "ident", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "opar", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "plus", "EXPRESSION ARGLIST2");
@@ -465,12 +535,14 @@ public class TableBuilder {
         table.add("ARGLIST", "intconst", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "stringconst", "EXPRESSION ARGLIST2");
         table.add("ARGLIST", "null", "EXPRESSION ARGLIST2");
-        
+
         table.add("ARGLIST2", "cpar", "");
         table.add("ARGLIST2", "comma", "ARGLISTEXP");
-        
+
         table.add("ARGLISTEXP", "comma", "comma EXPRESSION ARGLIST2");
 
+        semt.getRule("FACTOR", "intconst").get(0).action();
+        semt.getNode(0).toString();
         //Done
         return table;
     }

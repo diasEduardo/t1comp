@@ -48,6 +48,7 @@ public class AnalisadorSintatico {
             while (!tokenMatch) {
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
                     stack.remove(0);
+//                    action()
                     tokenMatch = true;
                 } else {
                     String nextProduction = parseTable.get(stack.get(0), token.toLowerCase());
@@ -59,6 +60,7 @@ public class AnalisadorSintatico {
                     }
                     String[] splited = nextProduction.split(" ");
                     stack.remove(0);
+                    //                    action()
                     for (int i = splited.length - 1; i >= 0; i--) {
                         if (splited[i].length() > 0) {
                             stack.add(0, splited[i]);
