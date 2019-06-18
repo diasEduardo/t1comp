@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package t1comp.model.semanticRules;
+import java.util.ArrayList;
 import t1comp.model.SemanticNode;
 import t1comp.model.SemanticRule;
 import t1comp.model.SemanticTable;
@@ -12,28 +13,27 @@ import t1comp.model.SemanticTable;
  * @author nathangodinho
  */
 public class atributeAssertion implements SemanticRule<Integer>{
-    private Integer id1;
-    private String attribute1;
-    private Integer id2;
-    private String attribute2;
+    private ArrayList<Integer> ids;
+    private ArrayList<String> attributes;
     private final SemanticTable table;
     
     
-    public atributeAssertion(Integer i1,String a1,Integer i2, String a2) {
-        id1 = i1;
-        attribute1 = a1;
-        id2 = i2;
-        attribute2 = a2;
+    public atributeAssertion(Integer i0,String a0,Integer i1, String a1) {
+        ids.add(i0);
+        ids.add(i1);
+        attributes.add(a0);
+        attributes.add(a1);
         table = SemanticTable.getInstance();
     
     }
     
     @Override
     public Integer action() {
-        SemanticNode node1 = table.getNode(id1);
-        SemanticNode node2 = table.getNode(id2);
+        SemanticNode node0 = table.getNode(ids.get(0));
+        SemanticNode node1 = table.getNode(ids.get(1));
         
-        node1.addAtribute(attribute1, node2.getAttributeValue(attribute2));
+        node1.addAtribute(attributes.get(0), node1.getAttributeValue(attributes.get(1)));
+        table.addNode(node0);
 //        SemanticNode n
         return 0;
     }

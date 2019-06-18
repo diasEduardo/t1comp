@@ -14,24 +14,23 @@ import t1comp.model.SemanticNode;
  */
 public class newLeaf implements SemanticRule<Integer>{
     private SemanticTable table;
-    private Integer id1;
-    private String attribute1;
+    private Integer id0;
+    private String attribute0;
     private String name;
     
-    public newLeaf(Integer i1, String a1,String n) {
+    public newLeaf(Integer i0, String a0,String n) {
         table = SemanticTable.getInstance();
-        id1 = i1;
-        this.attribute1 = a1;
+        id0 = i0;
+        this.attribute0 = a0;
         this.name = n;
     }
     
     @Override
     public Integer action() {
-        SemanticNode node1 = table.getNode(id1);
-        SemanticNode node2 = new SemanticNode(table.genId(),name,null);
+        SemanticNode node0 = table.getNode(id0);
         
-        node1.addAtribute(attribute1, node2);
-        table.addNode(node2);
+        node0.addAtribute(attribute0, new SemanticNode(table.genId(),name,null));
+        table.addNode(node0);
 //        System.out.println("Creating new leaf...\n");
 //        SemanticNode newLeaf = new SemanticNode(st.genId(), receptor);
 //        newLeaf.addAtribute(attribute, value);

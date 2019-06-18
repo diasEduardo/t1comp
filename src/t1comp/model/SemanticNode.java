@@ -13,14 +13,13 @@ import java.util.HashMap;
  * @author nathangodinho
  */
 public final class SemanticNode {
-    private static int idTracker = 0;
     private final Integer id;
     private String name;
     private HashMap<String, SemanticNode> attributes;
     private boolean isLeaf;
     private ArrayList<SemanticNode> children;
     private SemanticNode parent;
-    private ArrayList<SemanticNode> node;
+    private ArrayList<SemanticNode> nodes;
     
     
     public SemanticNode(Integer i, String name, SemanticNode parent) {
@@ -28,27 +27,33 @@ public final class SemanticNode {
         this.name = name;
         attributes = new HashMap<>();
         children = new ArrayList<>();
-        node = new ArrayList<>();
+        nodes = new ArrayList<>();
         this.parent = parent;
-        if (parent == null) {
-            idTracker =  0;
-        }
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
     public SemanticNode(Integer i, SemanticNode i2,SemanticNode i3) {
         this.id = i;
         attributes = new HashMap<>();
-        node = new ArrayList<>();
+        nodes = new ArrayList<>();
         
-        node.add(i2);
-        node.add(i3);
+        nodes.add(i2);
+        nodes.add(i3);
 
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
     
-    public int gentId() {
-        return idTracker++;
+    public SemanticNode(Integer i, SemanticNode i1,SemanticNode i2,SemanticNode i3) {
+        this.id = i;
+        attributes = new HashMap<>();
+        nodes = new ArrayList<>();
+        
+        nodes.add(i1);
+        nodes.add(i2);
+        nodes.add(i3);
+
+//        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
+    
     
     public void addChild(SemanticNode child) {
         children.add(0, child);
