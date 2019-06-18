@@ -74,4 +74,10 @@ public final class SymbolsTable {
     public void display () {
 //        System.out.println(toString());
     }
+    
+//    TODO it is not a steing, need to check type before setting the return value
+//    public <E> getIdValue(String ident, String type) { <-- eg
+    public String getIdValue(String ident) {
+        return ident;
+    }
 }

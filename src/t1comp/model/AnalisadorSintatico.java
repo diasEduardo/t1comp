@@ -116,10 +116,29 @@ public class AnalisadorSintatico {
         root.toString();
     }
     
+   
     public void buildSemanticTable(SemanticNode root) {
         root.toString(); 
-        
-        if (root.getName().equalsIgnoreCase("EXPRESSION")) {
+        if (root.getName().equalsIgnoreCase("LVALUE")) {
+            if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
+                //LVALUET2.her = tabSimbolo(ident)
+                //LVALUET2.hertype = type(ident)
+                //LVALUE.node = new leaf(id, LVALUET2.sin)
+            }
+            
+        } else if (root.getName().equalsIgnoreCase("LVALUET2")) {
+            if (root.getChild(0).getName().equalsIgnoreCase("")) {
+                semanticTable.addRule(root.getId(), new atributeAssertion(root.getChild(1).getId(), "sin", root.getId(), "her"));
+            } else if (root.getChildren().size() >=4 &&
+                    root.getChild(0).getName().equalsIgnoreCase("obrace") && 
+                    root.getChild(0).getName().equalsIgnoreCase("instconst") && 
+                    root.getChild(0).getName().equalsIgnoreCase("cbrace") && 
+                    root.getChild(0).getName().equalsIgnoreCase("LVALUET2")) {
+                
+//                ?
+            }
+            
+        } else if (root.getName().equalsIgnoreCase("EXPRESSION")) {
             if (root.getChild(0).getName().equalsIgnoreCase("NUMEXPRESSION") && root.getChild(1).getName().equalsIgnoreCase("EXPRESSION1")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
@@ -134,7 +153,7 @@ public class AnalisadorSintatico {
 //                TODO MAKE WITH 3 PARAMS CONSTRUCTOR
             }
 
-        } else if (root.getName().equalsIgnoreCase("EXPRESSIONCOMPARE")) {
+        }  else if (root.getName().equalsIgnoreCase("EXPRESSIONCOMPARE")) {
 
             if (root.getChild(0).getName().equalsIgnoreCase("!=")) {
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "!=")); //("MULDIVMOD.node", "%")
@@ -150,11 +169,36 @@ public class AnalisadorSintatico {
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "<")); //("MULDIVMOD.node", "*")
             }
 
+        } else if (root.getName().equalsIgnoreCase("NUMEXPRESSION")) {
+        	if (root.getChild(0).getName().equalsIgnoreCase("TERM") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION1")) {
+        		semanticTable.addRule(root.getId(),
+                        new ArrayList<>(Arrays.asList(
+                                        new atributeAssertion(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"), //("TERM2.her","TERM3.her") 
+                                        new atributeAssertion(root.getId(), "sin", root.getChild(1).getId(), "node")))); //("TERM3.sin", "TERM2.node")
+        	}
+        } else if (root.getName().equalsIgnoreCase("NUMEXPRESSION1")) {
+        	if (root.getChild(0).getName().equalsIgnoreCase("")) {
+        		semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her")); //("MULDIVMOD.node", "*")
+        	} else if (root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")) {
+//                        semanticTable.addRule(root.getId(), new newNode(root.getId(),"node",  
+//                                root.getChild(0).getId(),"node", 
+//                                root.getId() , "her", 
+//                                root.getChild(1).getId(), "node"));
+//                    TODO!
+        	}
+
+        } else if (root.getName().equalsIgnoreCase("SUMMINUS")) {
+        	if (root.getChild(0).getName().equalsIgnoreCase("+")) {
+        		semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "+")); //("MULDIVMOD.node", "*")
+        	} else if (root.getChild(0).getName().equalsIgnoreCase("-")) {
+        		semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "-")); //("MULDIVMOD.node", "*")
+        	}
+
         } else if (root.getName().equalsIgnoreCase("TERM2")) {
             if (root.getChild(0).getName().equalsIgnoreCase("MULDIVMOD") && root.getChild(1).getName().equalsIgnoreCase("UNARYEXPR") && root.getChild(2).getName().equalsIgnoreCase("TERM3")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-                                        //                                            new newNode(root.getId(),"node", root.getChild(0).getId(),"her", root.getChild(1).getId() , "sin"), //("TERM2.her","TERM3.her") 
+                                        //    TODO newNode(3)                                        new newNode(root.getId(),"node", root.getChild(0).getId(),"her", root.getChild(1).getId() , "sin"), //("TERM2.her","TERM3.her") 
                                         new atributeAssertion(root.getChild(2).getId(), "her", root.getChild(1).getId(), "sin"))));
             }
         } else if (root.getName().equalsIgnoreCase("TERM")) {
