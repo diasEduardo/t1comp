@@ -89,4 +89,9 @@ public final class SemanticNode {
         System.out.println(name);
         return name;
     }
+
+    public String getName() {
+        return name;
+    }
+    
 }

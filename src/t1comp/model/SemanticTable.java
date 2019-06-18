@@ -13,7 +13,7 @@ import java.util.Arrays;
  * @author nathangodinho
  */
 public final class SemanticTable {
-    public HashMap<String, ArrayList<SemanticRule>> table;
+    public HashMap<Integer, ArrayList<SemanticRule>> table;
     private static final SemanticTable instance = new SemanticTable();
     private HashMap<Integer, SemanticNode> nodes;
     private static Integer idTracker = 0;
@@ -27,16 +27,23 @@ public final class SemanticTable {
         return instance;
     }
     
-    public void addRule(String production, String derivation, SemanticRule rule) {
-        table.put(production.concat(derivation), new ArrayList<>(Arrays.asList(rule)));
+    public void addRule(Integer id, SemanticRule rule) {
+        if(table.containsKey(id)){
+            ArrayList<SemanticRule> rules = table.get(id);
+            rules.add(rule);
+            table.put(id, rules);
+        }
+        else{
+            table.put(id, new ArrayList<>(Arrays.asList(rule)));
+        }
     }
     
-    public void addRule(String production, String derivation, ArrayList<SemanticRule> rules) {
-        table.put(production.concat(derivation), rules);
+    public void addRule(Integer id, ArrayList<SemanticRule> rules) {
+        table.put(id, rules);
     }
     
-    public ArrayList<SemanticRule> getRule(String production, String derivation) {
-        return table.get(production.concat(derivation));
+    public ArrayList<SemanticRule> getRule(Integer id) {
+        return table.get(id);
     }
     
     public void clean() {
