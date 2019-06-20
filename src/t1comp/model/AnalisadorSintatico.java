@@ -104,7 +104,7 @@ public class AnalisadorSintatico {
         }
 
         buildSemanticTable(rootNode);
-
+        postOder(rootNode);
         return true;
     }
 
@@ -112,13 +112,18 @@ public class AnalisadorSintatico {
         for (SemanticNode child : root.getChildren()) {
             postOder(child);
         }
-        
-        root.toString();
+       
+        ArrayList<SemanticRule> rules = semanticTable.getRule(root.getId());
+        if (null != rules) {
+            rules.forEach((rule) -> {
+                rule.action();
+            });
+        }
     }
     
    
     public void buildSemanticTable(SemanticNode root) {
-        root.toString(); 
+//        root.toString(); 
         if(root.getName().equalsIgnoreCase("VARDECL")){
 //VARDECL -> VARDECLTYPE ident VARDECL1
 //VARDECL1.her = VARDECLTYPE.type
