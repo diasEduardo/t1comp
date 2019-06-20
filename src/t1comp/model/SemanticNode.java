@@ -19,7 +19,6 @@ public final class SemanticNode {
     private boolean isLeaf;
     private ArrayList<SemanticNode> children;
     private SemanticNode parent;
-    private ArrayList<SemanticNode> nodes;
     
     
     public SemanticNode(Integer i, String name, SemanticNode parent) {
@@ -27,29 +26,32 @@ public final class SemanticNode {
         this.name = name;
         attributes = new HashMap<>();
         children = new ArrayList<>();
-        nodes = new ArrayList<>();
+        
         this.parent = parent;
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
-    public SemanticNode(Integer i, SemanticNode i2,SemanticNode i3) {
+    public SemanticNode(Integer i, SemanticNode i1,SemanticNode i2) {
         this.id = i;
+        this.name = "";
         attributes = new HashMap<>();
-        nodes = new ArrayList<>();
+        children = new ArrayList<>();
         
-        nodes.add(i2);
-        nodes.add(i3);
+        this.parent = i1;
+        this.addChild(i2);
 
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
     
     public SemanticNode(Integer i, SemanticNode i1,SemanticNode i2,SemanticNode i3) {
         this.id = i;
+        this.name = "";
         attributes = new HashMap<>();
-        nodes = new ArrayList<>();
+        children = new ArrayList<>();
+       
         
-        nodes.add(i1);
-        nodes.add(i2);
-        nodes.add(i3);
+        this.parent = i1;
+        this.addChild(i2);
+        this.addChild(i3);
 
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }

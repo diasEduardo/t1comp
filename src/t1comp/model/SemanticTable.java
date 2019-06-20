@@ -40,7 +40,7 @@ public final class SemanticTable {
     }
     
     public void addRule(Integer id, ArrayList<SemanticRule> rules) {
-        System.out.println("" + nodes.get(id).getName());
+        System.out.println("Semantic rule applied for " + nodes.get(id).getName());
         table.put(id, rules);
     }
     

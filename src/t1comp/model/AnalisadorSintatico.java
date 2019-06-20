@@ -119,7 +119,64 @@ public class AnalisadorSintatico {
    
     public void buildSemanticTable(SemanticNode root) {
         root.toString(); 
-        if (root.getName().equalsIgnoreCase("LVALUE")) {
+        if(root.getName().equalsIgnoreCase("VARDECL")){
+//VARDECL -> VARDECLTYPE ident VARDECL1
+//VARDECL1.her = VARDECLTYPE.type
+//addType(ident,VARDECL1.sin)
+        }
+        else if(root.getName().equalsIgnoreCase("VARDECL1")){
+//VARDECL1 -> VARDECLBRACKETS VARDECL2
+//VARDECLBRACKETS.her = VARDECL1.her
+//VARDECL2.her = VARDECL1.her
+//VARDECL1.sin = VARDECLBRACKETS.sin 
+//VARDECL1 -> VARDECL2
+//VARDECL2.her = VARDECL1.her
+//VARDECL1.sin = VARDECL2.sin
+        }
+        else if(root.getName().equalsIgnoreCase("VARDECL2")){
+//VARDECL2 -> VARDECLWITHCOMA
+//VARDECLWITHCOMA.her = VARDECL2.her
+//VARDECL2.sin = VARDECL2.her
+//VARDECL2 -> ''
+//VARDECL2.sin = VARDECL2.her
+        }
+        else if(root.getName().equalsIgnoreCase("VARDECLTYPE")){
+//VARDECLTYPE -> int 
+//VARDECLTYPE.type = ’int’ 
+//VARDECLTYPE -> string
+//VARDECLTYPE.type = ’string’
+//VARDECLTYPE -> ident
+//VARDECLTYPE.type = tabSimbolo(ident)
+        }
+        else if(root.getName().equalsIgnoreCase("VARDECLBRACKETS")){
+// VARDECLBRACKETS -> [ int-costant ] VARDECLBRACKETS1
+//VARDECLBRACKETS1.her = VARDECLBRACKETS.her
+//VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)
+        }
+        else if(root.getName().equalsIgnoreCase("VARDECLBRACKETS1")){
+//  VARDECLBRACKETS1 -> ''
+//VARDECLBRACKETS1.sin = VARDECLBRACKETS1.her 
+//VARDECLBRACKETS1 -> VARDECLBRACKETS
+//VARDECLBRACKETS.her = VARDECLBRACKETS1.her
+//VARDECLBRACKETS1.sin = VARDECLBRACKETS.sin
+        }
+        else if(root.getName().equalsIgnoreCase("VARDECLWITHCOMA")){
+//            VARDECLWITHCOMA ->  , ident VARDECLWITHCOMA1
+//VARDECLWITHCOMA1.her = VARDECLWITHCOMA.her
+//addType(ident,VARDECLWITHCOMA1.sin)
+        }
+        else if(root.getName().equalsIgnoreCase("VARDECLWITHCOMA1")){
+//           VARDECLWITHCOMA1 ->  VARDECLBRACKETS VARDECL2
+//VARDECLBRACKETS.her = VARDECLWITHCOMA1.her
+//VARDECLWITHCOMA1.sin = VARDECLBRACKETS.sin
+//VARDECL2.her = VARDECLWITHCOMA1.her
+//VARDECLWITHCOMA1 -> VARDECLWITHCOMA
+//VARDECLWITHCOMA.her = VARDECLWITHCOMA1.her
+//VARDECLWITHCOMA1.sin = VARDECLWITHCOMA1.her
+//VARDECLWITHCOMA1 -> '' 
+//VARDECLWITHCOMA1.sin = VARDECLWITHCOMA1.her 
+        }
+        else if (root.getName().equalsIgnoreCase("LVALUE")) {
             if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
                 //LVALUET2.her = tabSimbolo(ident)
                 //LVALUET2.hertype = type(ident)
@@ -192,9 +249,9 @@ public class AnalisadorSintatico {
         	}
 
         } else if (root.getName().equalsIgnoreCase("SUMMINUS")) {
-        	if (root.getChild(0).getName().equalsIgnoreCase("+")) {
+        	if (root.getChild(0).getName().equalsIgnoreCase("plus")) {
         		semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "+"));
-        	} else if (root.getChild(0).getName().equalsIgnoreCase("-")) {
+        	} else if (root.getChild(0).getName().equalsIgnoreCase("minus")) {
         		semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "-"));
         	}
 
@@ -247,8 +304,8 @@ public class AnalisadorSintatico {
             }
         }
 
-        root.getChildren().stream().forEach((child) -> {
-            buildSemanticTable(child);
-        });
+        for(int i = 0; i < root.getChildren().size();i++){
+            buildSemanticTable(root.getChild(i));
+        }
     }
 }
