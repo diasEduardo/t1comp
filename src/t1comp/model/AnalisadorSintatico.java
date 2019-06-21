@@ -171,17 +171,10 @@ public class AnalisadorSintatico {
             if (root.getChild(0).getName().equalsIgnoreCase("obrace") && root.getChild(1).getName().equalsIgnoreCase("intconst") && root.getChild(2).getName().equalsIgnoreCase("cbrace") && root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-<<<<<<< HEAD
-                                        new atributeAssertion(root.getChild(3).getId(), "her", root.getId(), "her")
-                                        //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)    
-                                        //, new newNode(root.getId(), "sin","array","tabSimbolo(int-constant)",root.getChild(3).getId(),"sin") )
-                                )));
-=======
                                 new atributeAssertion(root.getChild(3).getId(), "her", root.getId(), "her")
                         //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)    
                         //, new atributeAssertion(root.getId(), "sin",array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin) )
                         )));
->>>>>>> 0d5c7b84f216fcd6312b1bd96c99f83e828fd977
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
             if (root.getChild(0).getName().equalsIgnoreCase("")) {
