@@ -171,10 +171,10 @@ public class AnalisadorSintatico {
             if (root.getChild(0).getName().equalsIgnoreCase("obrace") && root.getChild(1).getName().equalsIgnoreCase("intconst") && root.getChild(2).getName().equalsIgnoreCase("cbrace") && root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-                                new atributeAssertion(root.getChild(3).getId(), "her", root.getId(), "her")
-                        //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)    
-                        //, new atributeAssertion(root.getId(), "sin",array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin) )
-                        )));
+                                        new atributeAssertion(root.getChild(3).getId(), "her", root.getId(), "her")
+                                        //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)    
+                                        //, new newNode(root.getId(), "sin","array","tabSimbolo(int-constant)",root.getChild(3).getId(),"sin") )
+                                )));
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
             if (root.getChild(0).getName().equalsIgnoreCase("")) {
@@ -215,12 +215,10 @@ public class AnalisadorSintatico {
             if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-                                //LVALUET2.her = tabSimbolo(ident)
-                                //                                      new atributeAssertion(root.getChild(1).getId(), "her", tabSimbolo(ident) ),
-                                //LVALUET2.hertype = type(ident)
-                                //                                      new atributeAssertion(root.getChild(1).getId(), "hertype", type(ident) ), 
-                                new newLeaf(root.getId(), "node", root.getChild(1).getAttributeValue("sin").getName())
-                        )));
+                                        //LVALUET2.her = tabSimbolo(ident)
+                                        //                                      new leaf(root.getChild(1).getId(), "her", tabSimbolo(ident) ),
+                                        new newLeaf(root.getId(), "node", root.getChild(1).getAttributeValue("sin").getName())
+                                )));
             }
 
         } else if (root.getName().equalsIgnoreCase("LVALUET2")) {
@@ -232,12 +230,10 @@ public class AnalisadorSintatico {
                     && root.getChild(3).getName().equalsIgnoreCase("LVALUET2")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-                                //LVALUET2.hertype = validate(LVALUET2.hertype,tabSimbolo(int-constant))
-                                //%Retorna o tipo interno no caso de array(2,array(3,integer)) retorna array(3,integer)
-                                //                                      new atributeAssertion(root.getId(), "hertype", validate(LVALUET2.hertype,tabSimbolo(int-constant) ),
-                                //LVALUET2’.her = LVALUET2.her+”[tabSimbolo(int-constant)]”
-                                //                                      new atributeAssertion(root.getChild(3).getId(), "her", LVALUET2.her+”[tabSimbolo(int-constant) ), 
-                                new atributeAssertion(root.getId(), "sin", root.getChild(3).getId(), "sin"))));
+//                                        LVALUET2’.her = LVALUET2.her + ”[" + tabSimbolo(int-constant) + "]”
+//                                        new newNode(root.getChild(3).getId(), "her","array","tabSimbolo(int-constant)",root.getId(),"her"), 
+                                        new atributeAssertion(root.getId(), "sin", root.getChild(3).getId(), "sin"))));
+
             }
 
         } else if (root.getName().equalsIgnoreCase("EXPRESSION")) {
