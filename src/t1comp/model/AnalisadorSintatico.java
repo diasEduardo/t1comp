@@ -46,14 +46,14 @@ public class AnalisadorSintatico {
         ArrayList<String> stack = new ArrayList<String>();
         ArrayList<SemanticNode> nodeTreeStack = new ArrayList<SemanticNode>();
         stack.add("PROGRAM");
-        rootNode = new SemanticNode(semanticTable.genId(), "PROGRAM", null);
+        rootNode = new SemanticNode(semanticTable.genId(), "PROGRAM", SemanticNode.NULL_PARENT);
         semanticTable.addNode(rootNode);
         nodeTreeStack.add(rootNode);
         SemanticNode current;
         while (lex.hasTokens()) {
             Token tokenObj = lex.getNextToken();
             String token = tokenObj.getTypeName();//tokens.get(0);
-            int[] tokenLines = symbolsTable.getLinesByIndex(tokenObj.getTableIndex() - 1);;
+            int[] tokenLines = symbolsTable.getLinesByIndex(tokenObj.getTableIndex() -1);;
 
             if ("BLANK".equals(token)) {
                 continue;
@@ -61,6 +61,12 @@ public class AnalisadorSintatico {
             boolean tokenMatch = false;
             while (!tokenMatch) {
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
+                    if (token.equalsIgnoreCase("ident")) {
+                        semanticTable.getNode(nodeTreeStack.get(0).getId()).setTableId(tokenObj.getTableIndex() - 1);
+                        System.out.println(symbolsTable.getSymbol(tokenObj.getTableIndex()  - 1));
+                        System.out.println(semanticTable.getNode(nodeTreeStack.get(0).getId()));
+//                        newNode.setTableId(tokenObj.getTableIndex());
+                    }
                     stack.remove(0);
                     nodeTreeStack.remove(0);
 //                    action()
@@ -81,15 +87,16 @@ public class AnalisadorSintatico {
                     for (int i = splited.length - 1; i >= 0; i--) {
                         if (splited[i].length() > 0) {
                             String name = splited[i];
-                            SemanticNode newNode = new SemanticNode(semanticTable.genId(), name, current);
+                            SemanticNode newNode = new SemanticNode(semanticTable.genId(), name, current.getId());
                             semanticTable.addNode(newNode);
                             stack.add(0, name);
-                            current.addChild(newNode);
+                            semanticTable.getNode(current.getId()).addChild(newNode.getId());
                             nodeTreeStack.add(0, newNode);
+                            
                         } else if (splited[i].equals("")) {
-                            SemanticNode newNode = new SemanticNode(semanticTable.genId(), "", current);
+                            SemanticNode newNode = new SemanticNode(semanticTable.genId(), "", current.getId());
                             semanticTable.addNode(newNode);
-                            current.addChild(newNode);
+                            semanticTable.getNode(current.getId()).addChild(newNode.getId());
                         }
 
                     }
@@ -122,7 +129,6 @@ public class AnalisadorSintatico {
     }
 
     public void buildSemanticTable(SemanticNode root) {
-        root.toString();
         if (root.getName().equalsIgnoreCase("VARDECL")) {
             if (root.getChild(0).getName().equalsIgnoreCase("VARDECLTYPE") && root.getChild(1).getName().equalsIgnoreCase("ident") && root.getChild(2).getName().equalsIgnoreCase("VARDECL1")) {
                 semanticTable.addRule(root.getId(),
@@ -162,6 +168,7 @@ public class AnalisadorSintatico {
             } else if (root.getChild(0).getName().equalsIgnoreCase("string")) {
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", "string"));
             } else if (root.getChild(0).getName().equalsIgnoreCase("ident")) {
+                System.out.println(symbolsTable.getSymbol(root.getTableId()));
                 //VARDECLTYPE.type = tabSimbolo(ident)
 //                semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "type", tabSimbolo(ident)));
             }
@@ -211,6 +218,7 @@ public class AnalisadorSintatico {
             }
         } else if (root.getName().equalsIgnoreCase("LVALUE")) {
             if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
+                System.out.println(symbolsTable.getSymbol(root.getTableId()));
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
                                 //LVALUET2.her = tabSimbolo(ident)

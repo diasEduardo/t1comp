@@ -75,6 +75,14 @@ public final class SymbolsTable {
 //        System.out.println(toString());
     }
     
+    public void addType(int index, String type) {
+        tabela.get(index).setType(type);
+    }
+    
+    public String getSymbol(int index) {
+        return tabela.get(index).toString();
+    }
+    
 //    TODO it is not a steing, need to check type before setting the return value
 //    public <E> getIdValue(String ident, String type) { <-- eg
     public String getIdValue(String ident) {

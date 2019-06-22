@@ -32,6 +32,7 @@ public class View extends javax.swing.JFrame {
         initComponents();
         sourceCodeArea.setText("class bintree{\n" +
 "  int a;\n" +
+"  bintree b;\n" +
 "\n" +
 " int sum() {\n" +
 "   a = 2 + 2;\n" +

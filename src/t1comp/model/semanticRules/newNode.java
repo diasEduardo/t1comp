@@ -55,12 +55,20 @@ public class newNode implements SemanticRule<Integer>{
         }
         
         if(ids.size() == 3){
-            SemanticNode newNode = new SemanticNode(table.genId(),nodes.get(1).getAttributeValue(attributes.get(1)),nodes.get(2).getAttributeValue(attributes.get(2))); 
+            SemanticNode newNode = new SemanticNode(
+                    table.genId(), nodes.get(1).getAttributeValue(attributes.get(1)).getId(), 
+                    nodes.get(2).getAttributeValue(attributes.get(2)).getId()); 
+            
             nodes.get(0).addAtribute(attributes.get(0), newNode);
             table.addNode(nodes.get(0));
             System.out.println("Novo nodo: "+ nodes.get(0).getName() + "-> "+ nodes.get(1).getName() + " &&" + nodes.get(2).getName());
         }else if(ids.size() == 4){
-            SemanticNode newNode = new SemanticNode(table.genId(),nodes.get(1).getAttributeValue(attributes.get(1)),nodes.get(2).getAttributeValue(attributes.get(2)),nodes.get(3).getAttributeValue(attributes.get(3))); 
+            System.out.println(nodes.get(1));
+            System.out.println(nodes.get(2).getAttributeValue(attributes.get(2)));
+            SemanticNode newNode = new SemanticNode(table.genId(),
+                    nodes.get(1).getAttributeValue(attributes.get(1)).getId(),
+                    nodes.get(2).getAttributeValue(attributes.get(2)).getId(),
+                    nodes.get(3).getAttributeValue(attributes.get(3)).getId()); 
             nodes.get(0).addAtribute(attributes.get(0), newNode);
             table.addNode(nodes.get(0));
             System.out.println("Novo nodo: "+ nodes.get(0).getName() + "-> " + nodes.get(1).getName() + " && " + nodes.get(2).getName()+" && " + nodes.get(3).getName());

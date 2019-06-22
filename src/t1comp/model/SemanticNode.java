@@ -17,11 +17,20 @@ public final class SemanticNode {
     private String name;
     private HashMap<String, SemanticNode> attributes;
     private boolean isLeaf;
-    private ArrayList<SemanticNode> children;
-    private SemanticNode parent;
+    private ArrayList<Integer> children;
+    private int parent;
+    private int tableId;
+    private SemanticTable smt = SemanticTable.getInstance();
+    public static final int NULL_PARENT = -1;
+    public int getTableId() {
+        return tableId;
+    }
+
+    public void setTableId(int tableId) {
+        this.tableId = tableId;
+    }
     
-    
-    public SemanticNode(Integer i, String name, SemanticNode parent) {
+    public SemanticNode(Integer i, String name, Integer parent) {
         this.id = i;
         this.name = name;
         attributes = new HashMap<>();
@@ -30,7 +39,7 @@ public final class SemanticNode {
         this.parent = parent;
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
-    public SemanticNode(Integer i, SemanticNode i1,SemanticNode i2) {
+    public SemanticNode(Integer i, Integer i1,Integer i2) {
         this.id = i;
         this.name = "";
         attributes = new HashMap<>();
@@ -42,7 +51,7 @@ public final class SemanticNode {
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
     }
     
-    public SemanticNode(Integer i, SemanticNode i1,SemanticNode i2,SemanticNode i3) {
+    public SemanticNode(Integer i, Integer i1, Integer i2, Integer i3) {
         this.id = i;
         this.name = "";
         attributes = new HashMap<>();
@@ -57,21 +66,38 @@ public final class SemanticNode {
     }
     
     
-    public void addChild(SemanticNode child) {
+    public void addChild(Integer child) {
         children.add(0, child);
     }
     
     public SemanticNode getChild() {
-        return children.get(0);
+        return smt.getNode(children.get(0));
     }
     
     public SemanticNode getChild(int index) {
+        return smt.getNode(children.get(index));
+    }
+    
+    public Integer getChildTableId() {
+        return children.get(0);
+    }
+    
+    public Integer getChildTableId(int index) {
         return children.get(index);
     }
     
     
-    public ArrayList<SemanticNode> getChildren() {
+    public ArrayList<Integer> getChildrenList() {
      return children;   
+    }
+    
+    public ArrayList<SemanticNode> getChildren() {
+        ArrayList<SemanticNode> children = new ArrayList<>();
+        for (Integer childId : getChildrenList()) {
+            children.add(smt.getNode(childId));
+        }
+        
+        return children;   
     }
     
     public SemanticNode(Integer id) {
@@ -101,4 +127,11 @@ public final class SemanticNode {
         return name;
     }
     
+    public int getParent() {
+        return parent;
+    }
+    
+    public boolean isRoot() {
+        return parent == NULL_PARENT;
+    }
 }
