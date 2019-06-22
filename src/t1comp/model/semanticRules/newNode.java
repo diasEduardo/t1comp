@@ -46,6 +46,19 @@ public class newNode implements SemanticRule<Integer>{
 
     }
     
+    public newNode(Integer i0,String a0, String a1,String a2, Integer i3,String a3) {
+        ids = new ArrayList<Integer>();
+        attributes = new ArrayList<String>();
+        ids.add(i0);
+        ids.add(i3);
+        attributes.add(a0);
+        attributes.add(a1);
+        attributes.add(a2);
+        attributes.add(a3);
+        table = SemanticTable.getInstance();
+
+    }
+    
     @Override
     public Integer action() {
         ArrayList<SemanticNode> nodes = new ArrayList<SemanticNode>();
@@ -53,12 +66,15 @@ public class newNode implements SemanticRule<Integer>{
         for(int i =0 ; i< ids.size();i++){  
             nodes.add(table.getNode(ids.get(i)));
         }
-        
-        if(ids.size() == 3){
-            SemanticNode newNode = new SemanticNode(
-                    table.genId(), nodes.get(1).getAttributeValue(attributes.get(1)).getId(), 
-                    nodes.get(2).getAttributeValue(attributes.get(2)).getId()); 
-            
+        if(ids.size() == 2){
+            SemanticNode father = new SemanticNode(table.genId(),attributes.get(1),nodes.get(0).getId());
+            SemanticNode child = new SemanticNode(table.genId(),attributes.get(2),father.getId());
+            SemanticNode newNode = new SemanticNode(table.genId(),father.getId(),child.getId(),nodes.get(1).getAttributeValue(attributes.get(3)).getId());
+            nodes.get(0).addAtribute(attributes.get(0), newNode);
+                    
+        }else if(ids.size() == 3){
+            SemanticNode newNode = new SemanticNode(table.genId(),
+                    nodes.get(1).getAttributeValue(attributes.get(1)).getId(),nodes.get(2).getAttributeValue(attributes.get(2)).getId()); 
             nodes.get(0).addAtribute(attributes.get(0), newNode);
             table.addNode(nodes.get(0));
             System.out.println("Novo nodo: "+ nodes.get(0).getName() + "-> "+ nodes.get(1).getName() + " &&" + nodes.get(2).getName());
