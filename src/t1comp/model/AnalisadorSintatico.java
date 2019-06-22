@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import t1comp.model.TableBuilder;
+import t1comp.model.semanticRules.addType;
 import t1comp.model.semanticRules.atributeAssertion;
 import t1comp.model.semanticRules.newLeaf;
 import t1comp.model.semanticRules.newNode;
@@ -127,12 +128,13 @@ public class AnalisadorSintatico {
     }
 
     public void buildSemanticTable(SemanticNode root) {
+        root.toString();
         if (root.getName().equalsIgnoreCase("VARDECL")) {
             if (root.getChild(0).getName().equalsIgnoreCase("VARDECLTYPE") && root.getChild(1).getName().equalsIgnoreCase("ident") && root.getChild(2).getName().equalsIgnoreCase("VARDECL1")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-                                new atributeAssertion(root.getChild(2).getId(), "her", root.getChild(0).getId(), "type")
-                        //                                        , addType(ident,VARDECL1.sin)
+                                new atributeAssertion(root.getChild(2).getId(), "her", root.getChild(0).getId(), "type"),
+                                new addType(semanticTable.getNode(root.getChild(1).getId()).getTableId(), root.getChild(2).getId(), "sin")
                         )));
             }
         } else if (root.getName().equalsIgnoreCase("VARDECL1")) {

@@ -22,6 +22,15 @@ public final class SemanticNode {
     private int tableId;
     private SemanticTable smt = SemanticTable.getInstance();
     public static final int NULL_PARENT = -1;
+    private String nodeValue;
+
+    public String getNodeValue() {
+        return nodeValue;
+    }
+
+    public void setNodeValue(String nodeValue) {
+        this.nodeValue = nodeValue;
+    }
     public int getTableId() {
         return tableId;
     }
