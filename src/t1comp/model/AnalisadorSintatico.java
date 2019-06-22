@@ -63,8 +63,6 @@ public class AnalisadorSintatico {
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
                     if (token.equalsIgnoreCase("ident")) {
                         semanticTable.getNode(nodeTreeStack.get(0).getId()).setTableId(tokenObj.getTableIndex() - 1);
-                        System.out.println(symbolsTable.getSymbol(tokenObj.getTableIndex()  - 1));
-                        System.out.println(semanticTable.getNode(nodeTreeStack.get(0).getId()));
 //                        newNode.setTableId(tokenObj.getTableIndex());
                     }
                     stack.remove(0);
@@ -170,7 +168,7 @@ public class AnalisadorSintatico {
                 //VARDECLTYPE.type = ’string’
 //                semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "type", "string"));
             } else if (root.getChild(0).getName().equalsIgnoreCase("ident")) {
-                System.out.println(symbolsTable.getSymbol(root.getTableId()));
+                System.out.println(symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId()));
                 //VARDECLTYPE.type = tabSimbolo(ident)
 //                semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "type", tabSimbolo(ident)));
             }
@@ -220,7 +218,7 @@ public class AnalisadorSintatico {
             }
         } else if (root.getName().equalsIgnoreCase("LVALUE")) {
             if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
-                System.out.println(symbolsTable.getSymbol(root.getTableId()));
+                System.out.println(symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId()));
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
                                         //LVALUET2.her = tabSimbolo(ident)
