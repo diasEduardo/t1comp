@@ -5,6 +5,7 @@
  */
 package t1comp.model.semanticRules;
 
+import t1comp.model.AllocationTable;
 import t1comp.model.SemanticRule;
 import t1comp.model.SemanticTable;
 import t1comp.model.SymbolsTable;
@@ -19,6 +20,8 @@ public class addType implements SemanticRule<Integer>{
     private String attribute;
     private SymbolsTable symbolTable = SymbolsTable.getInstance();
     private SemanticTable semanticTable = SemanticTable.getInstance();
+         
+    
     public addType(Integer symbolTableId, Integer nodeId, String attribute) {
         this.symbolTableId = symbolTableId;
         this.nodeId = nodeId;
@@ -28,8 +31,8 @@ public class addType implements SemanticRule<Integer>{
 //    Criei o attributo node value para portar os valores sineteziados dos atributos
     @Override
     public Integer action() {
-        symbolTable.addType(symbolTableId,semanticTable.getNode(semanticTable.getNode(nodeId)
-                .getAttributeValue(attribute)).getNodeValue());
+        String type = semanticTable.getNode(semanticTable.getNode(nodeId).getAttributeValue(attribute)).getNodeValue();
+        symbolTable.addType(symbolTableId, type);
         System.out.println("Adicionando tipo: " + semanticTable.getNode(nodeId).getName()+ "." + attribute);
         return 0;
     }
