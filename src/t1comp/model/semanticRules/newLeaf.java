@@ -30,6 +30,7 @@ public class newLeaf implements SemanticRule<Integer>{
     public Integer action() {
         SemanticNode node0 = table.getNode(id0);
         SemanticNode leaf = new SemanticNode(table.genId(),name,node0.getId());
+        leaf.setNodeValue(name);
         table.addNode(leaf);
         node0.addAtribute(attribute0, leaf.getId());
         table.addNode(node0);
