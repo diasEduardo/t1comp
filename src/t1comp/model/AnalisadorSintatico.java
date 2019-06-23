@@ -170,7 +170,6 @@ public class AnalisadorSintatico {
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", "int"));
             } else if (root.getChild(0).getName().equalsIgnoreCase("string")) {
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", "string"));
-                
             } else if (root.getChild(0).getName().equalsIgnoreCase("ident")) {
                 String tabsimbolIdent = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", tabsimbolIdent));

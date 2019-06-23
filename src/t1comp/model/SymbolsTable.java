@@ -57,14 +57,13 @@ public final class SymbolsTable {
     
     @Override
     public String toString() {
-        String printTable = "## Symbols Table: \n";
+        String printTable = "## Symbols Table:";
         for (TableEntry entry: tabela) {
             printTable = printTable.concat(
                 "Token: " + entry.getToken().toString() + 
                 " | Lexeme: " + entry.getLexeme() + 
                 " | Line: " + entry.getLine() +
                 " | Column: " + entry.getColumn()
-                    +"\n"
             );
         }
         
