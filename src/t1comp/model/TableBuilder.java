@@ -270,9 +270,10 @@ public class TableBuilder {
         table.add("STATLIST1", "if", "STATLIST");
         table.add("STATLIST1", "for", "STATLIST");
 
-        table.add("LVALUE", "ident", "ident LVALUE1");
+        //table.add("LVALUE", "ident", "ident LVALUE1");
+        table.add("LVALUE", "ident", "ident LVALUET2");
 
-        table.add("LVALUE1", "semicomma", "");
+        /*table.add("LVALUE1", "semicomma", "");
         table.add("LVALUE1", "obrack", "LVALUEEXPLIST");
         table.add("LVALUE1", "cbrack", "");
         table.add("LVALUE1", "comma", "");
@@ -290,7 +291,24 @@ public class TableBuilder {
         table.add("LVALUE1", "mod", "");
         table.add("LVALUE1", "div", "");
         table.add("LVALUE1", "mul", "");
-
+        */
+        table.add("LVALUET2", "semicomma", "");
+        table.add("LVALUET2", "obrack", "obrack intconst cbrack LVALUET2");
+        table.add("LVALUET2", "cbrack", "");
+        table.add("LVALUET2", "comma", "");
+        table.add("LVALUET2", "cpar", "");
+        table.add("LVALUET2", "ne", "");
+        table.add("LVALUET2", "eq", "");
+        table.add("LVALUET2", "ge", "");
+        table.add("LVALUET2", "le", "");
+        table.add("LVALUET2", "gt", "");
+        table.add("LVALUET2", "lt", "");
+        table.add("LVALUET2", "plus", "");
+        table.add("LVALUET2", "minus", "");
+        table.add("LVALUET2", "mod", "");
+        table.add("LVALUET2", "div", "");
+        table.add("LVALUET2", "mul", "");
+        
         table.add("LVALUEEXPLIST", "obrack", "obrack EXPRESSION cbrack LVALUEEXPLIST1");
         table.add("LVALUEEXPLIST", "dot", "dot ident LVALUEEXPLIST2");
 
