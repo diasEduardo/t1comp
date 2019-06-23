@@ -24,7 +24,7 @@ public class AnalisadorSintatico {
     private String errorMessage;
     private SymbolsTable symbolsTable;
     private SemanticTable semanticTable;
-
+    private AllocationTable allocTable;
     SemanticNode rootNode;
 
     public AnalisadorSintatico() {
@@ -32,10 +32,12 @@ public class AnalisadorSintatico {
         errorMessage = "";
         symbolsTable = SymbolsTable.getInstance();
         semanticTable = SemanticTable.getInstance();
+        allocTable = AllocationTable.getInstance();
     }
 
     public String statusMessage() {
-        return errorMessage.isEmpty() ? "Parser Analisis: Ok \n" : errorMessage;
+        String succesMsg = "Parser Analisis: Ok \n\n".concat(allocTable.getStatusMessage());
+        return errorMessage.isEmpty() ? succesMsg : errorMessage;
     }
 
     private void cleanErrorMessage() {
@@ -44,6 +46,7 @@ public class AnalisadorSintatico {
 
     public boolean parse(AnalisadorLexico lex) {
         cleanErrorMessage();
+        allocTable.cleanStatusMessage();
         ArrayList<String> stack = new ArrayList<String>();
         ArrayList<SemanticNode> nodeTreeStack = new ArrayList<SemanticNode>();
         stack.add("PROGRAM");
@@ -109,10 +112,13 @@ public class AnalisadorSintatico {
             System.out.println("Parser Done: Code OK");
         } else {
             System.err.println(errorMessage);
+            return false;
         }
 
         buildSemanticTable(rootNode);
         postOder(rootNode);
+        
+       
         return true;
     }
 
@@ -168,22 +174,27 @@ public class AnalisadorSintatico {
 //            CHECK THIS CASES
             if (root.getChild(0).getName().equalsIgnoreCase("int")) {
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", "int"));
+                allocTable.addAllocAction(root.getId(), "int");
+                
             } else if (root.getChild(0).getName().equalsIgnoreCase("string")) {
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", "string"));
+                allocTable.addAllocAction(root.getId(), "string");
             } else if (root.getChild(0).getName().equalsIgnoreCase("ident")) {
                 String tabsimbolIdent = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
                 semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", tabsimbolIdent));
+                allocTable.addAllocAction(root.getId(), "ident");
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLBRACKETS")) {
-            if (root.getChild(0).getName().equalsIgnoreCase("obrace") && root.getChild(1).getName().equalsIgnoreCase("intconst") && root.getChild(2).getName().equalsIgnoreCase("cbrace") && root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
+            if (root.getChild(0).getName().equalsIgnoreCase("obrack") && root.getChild(1).getName().equalsIgnoreCase("intconst") && root.getChild(2).getName().equalsIgnoreCase("cbrack") && root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
                 String tabsimbol = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
                                         new atributeAssertion(root.getChild(3).getId(), "her", root.getId(), "her"),
                                         //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)    
                                         new newNode(root.getId(), "sin","array",tabsimbol,root.getChild(3).getId(),"sin")
-                                        
                                 )));
+                allocTable.addAllocAction(root.getId(), "int", Integer.parseInt(tabsimbol));
+                
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
             if (root.getChild(0).getName().equalsIgnoreCase("")) {

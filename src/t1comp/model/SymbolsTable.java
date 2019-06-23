@@ -64,6 +64,7 @@ public final class SymbolsTable {
                 " | Lexeme: " + entry.getLexeme() + 
                 " | Line: " + entry.getLine() +
                 " | Column: " + entry.getColumn()
+                    +""
             );
         }
         
@@ -79,7 +80,7 @@ public final class SymbolsTable {
     }
     
     public String getSymbol(int index) {
-        return tabela.get(index).toString();
+        return tabela.get(index).getLexeme();
     }
     
 //    TODO it is not a steing, need to check type before setting the return value
