@@ -165,16 +165,23 @@ public class AnalisadorSintatico {
                 semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLTYPE")) {
+//            CHECK THIS CASES
             if (root.getChild(0).getName().equalsIgnoreCase("int")) {
-                //VARDECLTYPE.type = ’int’
-//                semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "type", "int"));
+                SemanticNode typeValue = new SemanticNode(semanticTable.genId());
+                typeValue.setNodeValue("int");
+                semanticTable.addNode(typeValue);
+                semanticTable.getNode(root.getId()).addAtribute("type", typeValue.getId());
             } else if (root.getChild(0).getName().equalsIgnoreCase("string")) {
-                //VARDECLTYPE.type = ’string’
-//                semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "type", "string"));
+                SemanticNode typeValue = new SemanticNode(semanticTable.genId());
+                typeValue.setNodeValue("string");
+                semanticTable.addNode(typeValue);
+                semanticTable.getNode(root.getId()).addAtribute("type", typeValue.getId());
             } else if (root.getChild(0).getName().equalsIgnoreCase("ident")) {
-                System.out.println(symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId()));
-                //VARDECLTYPE.type = tabSimbolo(ident)
-//                semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "type", tabSimbolo(ident)));
+                SemanticNode typeValue = new SemanticNode(semanticTable.genId());
+                String tabsimbolIdent = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
+                typeValue.setNodeValue(tabsimbolIdent);
+                semanticTable.addNode(typeValue);
+                semanticTable.getNode(root.getId()).addAtribute("type", typeValue.getId());
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLBRACKETS")) {
             if (root.getChild(0).getName().equalsIgnoreCase("obrace") && root.getChild(1).getName().equalsIgnoreCase("intconst") && root.getChild(2).getName().equalsIgnoreCase("cbrace") && root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
@@ -196,11 +203,12 @@ public class AnalisadorSintatico {
                         )));
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLWITHCOMA")) {
+//            Check this case
             if (root.getChild(0).getName().equalsIgnoreCase("comma") && root.getChild(1).getName().equalsIgnoreCase("ident") && root.getChild(2).getName().equalsIgnoreCase("VARDECLWITHCOMA1")) {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-                                new atributeAssertion(root.getChild(2).getId(), "her", root.getId(), "her")
-                        ///                                   addType(ident,VARDECLWITHCOMA1.sin)
+                                new atributeAssertion(root.getChild(2).getId(), "her", root.getId(), "her"),
+                                new addType(semanticTable.getNode(root.getChild(1).getId()).getTableId(), root.getChild(2).getId(), "sin")
                         )));
             }
         } else if (root.getName().equalsIgnoreCase("VARDECLWITHCOMA1")) {
@@ -222,11 +230,15 @@ public class AnalisadorSintatico {
             }
         } else if (root.getName().equalsIgnoreCase("LVALUE")) {
             if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
-                System.out.println(symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId()));
+                String tabsimbolIdent = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
+                SemanticNode newTabSimNode = new SemanticNode(semanticTable.genId());
+                newTabSimNode.setNodeValue(tabsimbolIdent);
+                semanticTable.addNode(newTabSimNode);
+                root.getChild(1).addAtribute("her", newTabSimNode.getId()); //LVALUET2.her = tabSimbolo(ident)
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
-                                        //LVALUET2.her = tabSimbolo(ident)
-                                        //                                      new leaf(root.getChild(1).getId(), "her", tabSimbolo(ident) ),
+                                        
+                                        new newLeaf((root.getChild(1).getId()), "her", tabsimbolIdent),
                                         new newLeaf(root.getId(), "node", semanticTable.getNode(root.getChild(1).getAttributeValue("sin")).getName())
                                 )));
             }
