@@ -64,7 +64,7 @@ public class AnalisadorSintatico {
             boolean tokenMatch = false;
             while (!tokenMatch) {
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
-                    if (token.equalsIgnoreCase("ident")) {
+                    if (token.equalsIgnoreCase("ident") || token.equalsIgnoreCase("intconst")) {
                         semanticTable.getNode(nodeTreeStack.get(0).getId()).setTableId(tokenObj.getTableIndex() - 1);
 //                        newNode.setTableId(tokenObj.getTableIndex());
                     }
@@ -221,7 +221,7 @@ public class AnalisadorSintatico {
                 semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
             }
         } else if (root.getName().equalsIgnoreCase("LVALUE")) {
-                System.out.println(root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2"));
+                
             if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
                 String tabsimbolIdent = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
                 semanticTable.addRule(root.getId(),
@@ -239,6 +239,7 @@ public class AnalisadorSintatico {
                     && root.getChild(2).getName().equalsIgnoreCase("cbrack")
                     && root.getChild(3).getName().equalsIgnoreCase("LVALUET2")) {
                 String tabsimbolIdent = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
+                Integer id = root.getChild(1).getId();
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
 //                                        LVALUET2’.her = LVALUET2.her + ”[" + tabSimbolo(int-constant) + "]”
