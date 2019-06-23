@@ -30,8 +30,7 @@ public class addType implements SemanticRule<Integer>{
     public Integer action() {
         symbolTable.addType(symbolTableId,semanticTable.getNode(semanticTable.getNode(nodeId)
                 .getAttributeValue(attribute)).getNodeValue());
+        System.out.println("Adicionando tipo: " + semanticTable.getNode(nodeId).getName()+ "." + attribute);
         return 0;
     }
-    
-   
 }
