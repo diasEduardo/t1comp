@@ -47,6 +47,8 @@ public class AnalisadorSintatico {
         ArrayList<String> stack = new ArrayList<String>();
         ArrayList<SemanticNode> nodeTreeStack = new ArrayList<SemanticNode>();
         stack.add("PROGRAM");
+        SemanticNode nullNode = new SemanticNode(semanticTable.genId(), "null", SemanticNode.NULL_PARENT);
+        semanticTable.addNode(nullNode);
         rootNode = new SemanticNode(semanticTable.genId(), "PROGRAM", SemanticNode.NULL_PARENT);
         semanticTable.addNode(rootNode);
         nodeTreeStack.add(rootNode);
@@ -225,7 +227,7 @@ public class AnalisadorSintatico {
                         new ArrayList<>(Arrays.asList(
                                         //LVALUET2.her = tabSimbolo(ident)
                                         //                                      new leaf(root.getChild(1).getId(), "her", tabSimbolo(ident) ),
-                                        new newLeaf(root.getId(), "node", root.getChild(1).getAttributeValue("sin").getName())
+                                        new newLeaf(root.getId(), "node", semanticTable.getNode(root.getChild(1).getAttributeValue("sin")).getName())
                                 )));
             }
 

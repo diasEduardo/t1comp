@@ -15,7 +15,7 @@ import java.util.HashMap;
 public final class SemanticNode {
     private final Integer id;
     private String name;
-    private HashMap<String, SemanticNode> attributes;
+    private HashMap<String, Integer> attributes;
     private boolean isLeaf;
     private ArrayList<Integer> children;
     private int parent;
@@ -118,12 +118,15 @@ public final class SemanticNode {
         return id;
     }
     
-    public void addAtribute(String name, SemanticNode value) {
+    public void addAtribute(String name, Integer value) {
         attributes.put(name, value);
     }
     
-    public SemanticNode getAttributeValue(String name) {
-        return attributes.get(name);
+    public Integer getAttributeValue(String name) {
+        if(attributes.containsKey(name)){
+            return attributes.get(name);
+        }
+        return null;
     } 
     
     @Override

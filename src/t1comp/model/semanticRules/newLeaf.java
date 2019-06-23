@@ -29,10 +29,11 @@ public class newLeaf implements SemanticRule<Integer>{
     @Override
     public Integer action() {
         SemanticNode node0 = table.getNode(id0);
-        
-        node0.addAtribute(attribute0, new SemanticNode(table.genId(),name,node0.getId()));
+        SemanticNode leaf = new SemanticNode(table.genId(),name,node0.getId());
+        table.addNode(leaf);
+        node0.addAtribute(attribute0, leaf.getId());
         table.addNode(node0);
-        System.out.println("Nova folha: "+ node0.getName() + "-> " + name);
+        System.out.println("Nova folha: "+ node0.getName()+"."+ attribute0 + " <- " + name);
 //        System.out.println("Creating new leaf...\n");
 //        SemanticNode newLeaf = new SemanticNode(st.genId(), receptor);
 //        newLeaf.addAtribute(attribute, value);

@@ -28,8 +28,8 @@ public class addType implements SemanticRule<Integer>{
 //    Criei o attributo node value para portar os valores sineteziados dos atributos
     @Override
     public Integer action() {
-        symbolTable.addType(symbolTableId, semanticTable.getNode(nodeId)
-                .getAttributeValue(attribute).getNodeValue());
+        symbolTable.addType(symbolTableId,semanticTable.getNode(semanticTable.getNode(nodeId)
+                .getAttributeValue(attribute)).getNodeValue());
         return 0;
     }
     
