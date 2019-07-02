@@ -244,7 +244,16 @@ public class AnalisadorLexico {
     public Token getNextToken() {
         return tokenList.remove(0);
     }
-
+    
+    public boolean verifyIdent(){
+        String name = tokenList.get(0).getTypeName();
+        int i = 0;
+        while(name.equalsIgnoreCase("blank")){
+            name = tokenList.get(i).getTypeName();
+            i++;
+        }
+        return name.equalsIgnoreCase("ident");
+    }
     public boolean hasTokens() {
         return !tokenList.isEmpty();
     }

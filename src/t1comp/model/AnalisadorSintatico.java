@@ -13,7 +13,7 @@ import t1comp.model.semanticRules.addType;
 import t1comp.model.semanticRules.atributeAssertion;
 import t1comp.model.semanticRules.newLeaf;
 import t1comp.model.semanticRules.newNode;
-
+import t1comp.model.Scope;
 /**
  *
  * @author nathangodinho
@@ -55,7 +55,10 @@ public class AnalisadorSintatico {
         rootNode = new SemanticNode(semanticTable.genId(), "PROGRAM", SemanticNode.NULL_PARENT);
         semanticTable.addNode(rootNode);
         nodeTreeStack.add(rootNode);
-        SemanticNode current;
+        SemanticNode current = null;
+        ArrayList<Scope> scopeStack = new ArrayList<Scope>();
+        Scope current_scope = new Scope(false);
+        boolean nextFor = false;
         while (lex.hasTokens()) {
             Token tokenObj = lex.getNextToken();
             String token = tokenObj.getTypeName();//tokens.get(0);
@@ -66,11 +69,55 @@ public class AnalisadorSintatico {
             }
             boolean tokenMatch = false;
             while (!tokenMatch) {
+                
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
                     if (token.equalsIgnoreCase("ident") || token.equalsIgnoreCase("intconst")) {
                         semanticTable.getNode(nodeTreeStack.get(0).getId()).setTableId(tokenObj.getTableIndex() - 1);
 //                        newNode.setTableId(tokenObj.getTableIndex());
                     }
+                    
+                    if (token.equalsIgnoreCase("FOR")) {
+                        nextFor = true;
+                    }
+                    
+                    if (token.equalsIgnoreCase("OBRACE")) {
+                        System.out.println("Mudanca de escopo");
+                        if(nextFor){
+                            current_scope = new Scope(nextFor);
+                            nextFor = false;
+                        } else{
+                            scopeStack.add(0,current_scope);
+                            current_scope = new Scope(current_scope.insideFor);
+                        }
+                    }
+                    
+                    if (token.equalsIgnoreCase("CBRACE")) {
+                        current_scope = scopeStack.remove(0);
+                    }
+                    
+                    if (token.equalsIgnoreCase("BREAK")) {
+                        if(!current_scope.insideFor){
+                            errorMessage += "\nError on token (break outside loop): " + token;
+                            errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
+                                + ": " + String.valueOf(tokenLines[1]);
+                            break;
+                        }
+                        System.out.println("Comando break dentro do loop");
+                        
+                    }
+                    
+                    if (token.equalsIgnoreCase("IDENT") && !lex.verifyIdent()) {
+                        String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() -1);
+                        if (current_scope.hasVariable(tokenName)) {
+                            errorMessage += "\nError, ident has already been declared: " + token+ ": "+ tokenName ;
+                            errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
+                                + ": " + String.valueOf(tokenLines[1]);
+                            break;
+                        }
+                        System.out.println("Variável adicionada ao escopo: " + tokenName);
+                        current_scope.addVariable(tokenName);
+                    }
+                    
                     stack.remove(0);
                     nodeTreeStack.remove(0);
 //                    action()
@@ -376,4 +423,6 @@ public class AnalisadorSintatico {
             buildSemanticTable(root.getChild(i));
         }
     }
+    
+    
 }
