@@ -70,6 +70,7 @@ public class AnalisadorSintatico {
             }
             boolean tokenMatch = false;
             while (!tokenMatch) {
+                System.out.println(token + " - " + stack.get(0));
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
                     if (token.equalsIgnoreCase("ident") || token.equalsIgnoreCase("intconst")) {
                         semanticTable.getNode(nodeTreeStack.get(0).getId()).setTableId(tokenObj.getTableIndex() - 1);
@@ -119,8 +120,8 @@ public class AnalisadorSintatico {
             return false;
         }
 
-        buildSemanticTable(rootNode);
-        postOder(rootNode);
+//        buildSemanticTable(rootNode);
+//        postOder(rootNode);
         
        
         return true;

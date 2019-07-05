@@ -22,8 +22,8 @@ public class TableBuilder {
         SemanticTable semt = SemanticTable.getInstance();
 
         table.add("PROGRAM", "ident", "STATEMENT");
-        table.add("PROGRAM", "SEMICOMMA", "STATEMENT");
-        table.add("PROGRAM", "OBRACE", "STATEMENT");
+        table.add("PROGRAM", "semicomma", "STATEMENT");
+        table.add("PROGRAM", "obrace", "STATEMENT");
         table.add("PROGRAM", "break", "STATEMENT");
         table.add("PROGRAM", "int", "STATEMENT");
         table.add("PROGRAM", "string", "STATEMENT");
