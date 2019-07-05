@@ -26,6 +26,7 @@ public class AnalisadorSintatico {
     private SemanticTable semanticTable;
     private AllocationTable allocTable;
     SemanticNode rootNode;
+    
 
     public AnalisadorSintatico() {
         parseTable = TableBuilder.buildTable();
@@ -59,6 +60,7 @@ public class AnalisadorSintatico {
         ArrayList<Scope> scopeStack = new ArrayList<Scope>();
         Scope current_scope = new Scope(false);
         boolean nextFor = false;
+        String lastToken= "";
         while (lex.hasTokens()) {
             Token tokenObj = lex.getNextToken();
             String token = tokenObj.getTypeName();//tokens.get(0);
@@ -81,30 +83,33 @@ public class AnalisadorSintatico {
                     }
                     
                     if (token.equalsIgnoreCase("OBRACE")) {
-                        System.out.println("Mudanca de escopo");
+                        System.out.println("Escopo criado");
+                        scopeStack.add(0,current_scope);
                         if(nextFor){
                             current_scope = new Scope(nextFor);
                             nextFor = false;
                         } else{
-                            scopeStack.add(0,current_scope);
                             current_scope = new Scope(current_scope.insideFor);
                         }
                     }
                     
                     if (token.equalsIgnoreCase("CBRACE")) {
                         current_scope = scopeStack.remove(0);
+                        System.out.println("Escopo fechado");
                     }
                     
                     if (token.equalsIgnoreCase("BREAK")) {
-                        if(!current_scope.insideFor){
+                        if((lastToken.equalsIgnoreCase("CPAR") && nextFor) || current_scope.insideFor){
+                            System.out.println("Comando break dentro do loop");
+                        }
+                        else{
                             errorMessage += "\nError on token (break outside loop): " + token;
                             errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
                                 + ": " + String.valueOf(tokenLines[1]);
                             break;
                         }
-                        System.out.println("Comando break dentro do loop");
-                        
                     }
+                    lastToken = token;
                     
                     if (token.equalsIgnoreCase("IDENT") && !lex.verifyIdent()) {
                         String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() -1);
@@ -423,6 +428,5 @@ public class AnalisadorSintatico {
             buildSemanticTable(root.getChild(i));
         }
     }
-    
     
 }
