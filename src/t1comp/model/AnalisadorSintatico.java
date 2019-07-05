@@ -25,14 +25,18 @@ public class AnalisadorSintatico {
     private SymbolsTable symbolsTable;
     private SemanticTable semanticTable;
     private AllocationTable allocTable;
+    
+    private ArrayList<String> generatedInterCode;
     SemanticNode rootNode;
 
+    
     public AnalisadorSintatico() {
         parseTable = TableBuilder.buildTable();
         errorMessage = "";
         symbolsTable = SymbolsTable.getInstance();
         semanticTable = SemanticTable.getInstance();
         allocTable = AllocationTable.getInstance();
+        generatedInterCode = new ArrayList();
     }
 
     public String statusMessage() {
