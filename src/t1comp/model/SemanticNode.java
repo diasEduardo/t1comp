@@ -23,7 +23,7 @@ public final class SemanticNode {
     private SemanticTable smt = SemanticTable.getInstance();
     public static final int NULL_PARENT = -1;
     private String nodeValue;
-    public String code, addr;
+    public String code, addr, addrher;
 
     public String getNodeValue() {
         return nodeValue;

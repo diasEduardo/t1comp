@@ -40,8 +40,6 @@ public class atributeAssertion implements SemanticRule<Integer>{
     @Override
     public Integer action() {
         SemanticNode node0 = table.getNode(ids.get(0));
-        SemanticNode node1 = table.getNode(ids.get(1));
-        
         
         if (attValue != null) {
             
@@ -52,7 +50,11 @@ public class atributeAssertion implements SemanticRule<Integer>{
             } else if (attributes.get(0) == "code") {
                 node0.code = attValue;
             }
+            
+            System.out.println("Atribuindo: " 
+                + node0.getName() + "." + attributes.get(0).toString() + " <- " + attValue);
         } else {
+            SemanticNode node1 = table.getNode(ids.get(1));
             
             if (attributes.get(0) == "addr") {
                 if (attributes.get(1) == "addr") {
@@ -73,12 +75,13 @@ public class atributeAssertion implements SemanticRule<Integer>{
             } else {
                 node1.addAtribute(attributes.get(0), node1.getAttributeValue(attributes.get(1)));
             }
+            
+            System.out.println("Atribuindo: " 
+                + node0.getName() + "." + attributes.get(0).toString() + " <- " 
+                + node1.getName()+ "." + attributes.get(1).toString());
         }
         
         table.addNode(node0);
-        System.out.println("Atribuindo: " 
-                + node0.getName() + "." + attributes.get(0).toString() + " <- " 
-                + node1.getName()+ "." + attributes.get(1).toString());
         
       
         return 0;
