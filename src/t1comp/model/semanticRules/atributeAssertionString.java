@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import t1comp.model.SemanticNode;
 import t1comp.model.SemanticRule;
 import t1comp.model.SemanticTable;
+import t1comp.model.semanticRules.assertionString.StringAssertionBundle;
 /**
  *
  * @author nathangodinho
@@ -17,7 +18,8 @@ public class atributeAssertionString implements SemanticRule<Integer>{
     private ArrayList<String> attributes;
     private final SemanticTable table;
     private String attValue;
-    
+    private ArrayList<StringAssertionBundle> bundle;
+      
     public atributeAssertionString(Integer i0,String a0,Integer i1, String a1) {
         ids = new ArrayList<Integer>();
         attributes = new ArrayList<String>();
@@ -37,9 +39,32 @@ public class atributeAssertionString implements SemanticRule<Integer>{
         table = SemanticTable.getInstance();
     }
     
+    public atributeAssertionString(Integer i0,String a0, ArrayList<StringAssertionBundle> bundle) {
+        ids = new ArrayList<Integer>();
+        attributes = new ArrayList<String>();
+        ids.add(i0);
+        attributes.add(a0);
+        this.bundle = bundle;
+        table = SemanticTable.getInstance();
+    }
+    
     @Override
     public Integer action() {
         SemanticNode node0 = table.getNode(ids.get(0));
+        
+        if (bundle != null) {
+            String stringBundleValue = "";
+            
+            for (StringAssertionBundle sab : bundle) {
+                stringBundleValue += sab.getValue();
+            }
+            
+            node0.stringAttributes.put(attributes.get(0), stringBundleValue);
+            
+            table.addNode(node0);
+            
+            return 0;
+        } 
         
         if (attValue != null) {
             node0.stringAttributes.put(attributes.get(0), attValue);

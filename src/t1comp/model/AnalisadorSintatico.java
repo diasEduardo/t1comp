@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import t1comp.model.TableBuilder;
 import t1comp.model.semanticRules.addType;
+import t1comp.model.semanticRules.assertionString.StringAssertionBundle;
+import t1comp.model.semanticRules.assertionString.generatorStringeAssertionBundle;
+import t1comp.model.semanticRules.assertionString.simpleStringAssertionBundle;
 import t1comp.model.semanticRules.atributeAssertion;
 import t1comp.model.semanticRules.atributeAssertionString;
 import t1comp.model.semanticRules.newLeaf;
@@ -443,13 +446,18 @@ public class AnalisadorSintatico {
                                     new atributeAssertionString(root.getId(), "addr", root.getChild(0).getId(), "addr"),
                                     new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("FACTOR")) {
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(root.getChild(1).getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(root.getId(), 
+                            "addr", "=", root.getChild(0).getId(), "addr",
+                            root.getChild(1).getId(), "addr"));
+                    
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getChild(1).getId(), "node"),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
-                                    new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "code"))));
-// TODO
-//                    gen(UNARYEXPR.addr ‘=’ SUMMINUS.addr FACTOR.addr)//ou seja temp = +/- factor 
+                                    new atributeAssertionString(root.getId(), "code", bundle))));
                 }
                 break;
             case "FACTOR":
