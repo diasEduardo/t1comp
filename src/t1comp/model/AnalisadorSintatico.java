@@ -385,12 +385,20 @@ public class AnalisadorSintatico {
                 break;
             case "TERM2":
                 if (root.getChild(0).getName().equalsIgnoreCase("MULDIVMOD") && root.getChild(1).getName().equalsIgnoreCase("UNARYEXPR") && root.getChild(2).getName().equalsIgnoreCase("TERM3")) {
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(root.getChild(1).getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(root.getId(), 
+                            "addr", "=", root.getId(), "addrher",
+                            root.getChild(0).getId(), "addr", root.getChild(1).getId(), "addr"));
+                    bundle.add(new simpleStringAssertionBundle(root.getChild(2).getId(), "code"));
+                    
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getId(), "her", root.getChild(2).getId(), "sin"),
                                     new atributeAssertion(root.getChild(2).getId(), "her", root.getChild(1).getId(), "sin"),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
-                                    new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "code"),
+                                    new atributeAssertionString(root.getId(), "code", bundle),
                                     new atributeAssertionString(root.getChild(2).getId(), "addrher", root.getId(), "addr"))));
 //      TERM3.code ?              
 //      gen(TERM2.addr ‘=’ TERM2.addrher MULDIVMOD.addr UNARYEXPR.addr)?
