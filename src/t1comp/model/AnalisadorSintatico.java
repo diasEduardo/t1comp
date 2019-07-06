@@ -264,13 +264,21 @@ public class AnalisadorSintatico {
                 semanticTable.addRule(root.getId(),
                         new ArrayList<>(Arrays.asList(
                                         new newLeaf((root.getChild(1).getId()), "her", tabsimbolIdent),
-                                        new atributeAssertion(root.getId(), "node", root.getChild(1).getId(), "sin")
+                                        new atributeAssertion(root.getId(), "node", root.getChild(1).getId(), "sin"),
+                                        new atributeAssertion(root.getId(), "addher", tabsimbolIdent),
+                                        new atributeAssertion(root.getId(), "code", root.getChild(1).getId(), "code"),
+                                        new atributeAssertion(root.getId(), "addr", root.getChild(1).getId(), "addr")
                                 )));
             }
                 break;
             case "LVALUET2":
                 if (root.getChild(0).getName().equalsIgnoreCase("")) {
-                    semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
+                    semanticTable.addRule(root.getId(), 
+                            new ArrayList<>(Arrays.asList(
+                                new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
+                                new atributeAssertion(root.getId(), "code", ""),
+                                new atributeAssertion(root.getId(), "addr", root.getId(), "addher"))));
+                    
                 } else if (root.getChild(0).getName().equalsIgnoreCase("obrack")
                         && root.getChild(1).getName().equalsIgnoreCase("intconst")
                         && root.getChild(2).getName().equalsIgnoreCase("cbrack")
@@ -281,9 +289,14 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
     //                                        LVALUET2’.her = LVALUET2.her + ”[" + tabSimbolo(int-constant) + "]”
                                             new newNode(root.getChild(3).getId(), "her","array",tabsimbolIdent,root.getId(),"her"), 
-                                            new atributeAssertion(root.getId(), "sin", root.getChild(3).getId(), "sin"))));
+                                            new atributeAssertion(root.getId(), "sin", root.getChild(3).getId(), "sin"),
+                                            new atributeAssertion(root.getId(), "addr", newTemp()),
+                                            new atributeAssertion(root.getId(), "local", newTemp()),
+//                                            LVALUE2.code = gen(LVALUE2.local ‘=’ tabSimbolo(int-constant) ‘*’ ‘4’) || gen(LVALUE2.addr ‘=’ LVALUE2.addrher ‘+’ LVALUE2.local ) || LVALUE2’.code
 
-                }
+                                            new atributeAssertion(root.getId(), "addher", root.getId(), "addr"))));
+
+                } 
                 break;
                   
             case "NUMEXPRESSION":
@@ -291,26 +304,45 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
-                                    new atributeAssertion(root.getId(), "sin", root.getChild(1).getId(), "node"))));
+                                    new atributeAssertion(root.getId(), "sin", root.getChild(1).getId(), "node"),
+                                    new atributeAssertion(root.getId(), "code", root.getChild(0).getId(), "code"),
+//                                    || NUMEXPRESSION.CODE
+                                    new atributeAssertion(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
+                                    new atributeAssertion(root.getId(), "addr", root.getChild(1).getId(), "addr")
+                                    )));
                 }
                 break;
                
             case "NUMEXPRESSION1":
                     if (root.getChild(0).getName().equalsIgnoreCase("")) {
-                    semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
+                    semanticTable.addRule(root.getId(), 
+                            new ArrayList<>(Arrays.asList(
+                                new atributeAssertion(root.getId(), "node", root.getId(), "her"),
+                                new atributeAssertion(root.getId(), "addr", root.getId(), "addrher"),
+                                new atributeAssertion(root.getId(), "code", "addrher"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")) {
-                    semanticTable.addRule(root.getId(), new newNode(root.getId(), "node",
-                            root.getChild(0).getId(), "node",
-                            root.getId(), "her",
-                            root.getChild(1).getId(), "node"));
+                    semanticTable.addRule(root.getId(), 
+                            new ArrayList<>(Arrays.asList(
+                                new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getId(), "her", root.getChild(1).getId(), "node"),
+                                new atributeAssertion(root.getId(), "addr", newTemp()),
+                                new atributeAssertion(root.getId(), "code", root.getChild(1).getId(), "addrher")
+// ||                                   gen(NUMEXPRESSION1.addr ‘=’ NUMEXPRESSION1.addrher SUMMINUS.addr NUMEXPRESSION.addr)
+
+                            )));
                 }
                 break;
               
             case "SUMMINUS":
                 if (root.getChild(0).getName().equalsIgnoreCase("plus")) {
-                    semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "+"));
+                    semanticTable.addRule(root.getId(), 
+                            new ArrayList<>(Arrays.asList(
+                                new newLeaf(root.getId(), "node", "+"),
+                                new atributeAssertion(root.getId(), "addr", "+"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("minus")) {
-                    semanticTable.addRule(root.getId(), new newLeaf(root.getId(), "node", "-"));
+                    semanticTable.addRule(root.getId(), 
+                            new ArrayList<>(Arrays.asList(
+                                new newLeaf(root.getId(), "node", "-"),
+                                new atributeAssertion(root.getId(), "addr", "-"))));
                 }
                 break;
               
@@ -400,21 +432,22 @@ public class AnalisadorSintatico {
                 break;
             case "FACTOR":
                 if (root.getChild(0).getName().equalsIgnoreCase("null")) {
-                String tableValue = "";
+                String tableValue = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
                 semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", tableValue),
                                     new atributeAssertion(root.getId(), "addr", tableValue),
                                     new atributeAssertion(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("stringconst")) {
-                    String tableValue = "";
+                    String tableValue = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", tableValue),
                                     new atributeAssertion(root.getId(), "addr", tableValue),
                                     new atributeAssertion(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("intconst")) {
-                    String tableValue = "";
+                    String tableValue = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
+                    
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", tableValue),
