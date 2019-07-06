@@ -11,6 +11,7 @@ import java.util.Iterator;
 import t1comp.model.TableBuilder;
 import t1comp.model.semanticRules.addType;
 import t1comp.model.semanticRules.atributeAssertion;
+import t1comp.model.semanticRules.atributeAssertionString;
 import t1comp.model.semanticRules.newLeaf;
 import t1comp.model.semanticRules.newNode;
 
@@ -25,7 +26,7 @@ public class AnalisadorSintatico {
     private SymbolsTable symbolsTable;
     private SemanticTable semanticTable;
     private AllocationTable allocTable;
-    
+    private int tempIdCounter = 0;
     private ArrayList<String> generatedInterCode;
     SemanticNode rootNode;
 
@@ -253,10 +254,31 @@ public class AnalisadorSintatico {
             case "IFSTAT1":
                 break;
             case "FORSTAT":
+//                TODO
                 break;
-            case "STATLIST":   
+            case "STATLIST":
+                if (root.getChild(0).getName().equalsIgnoreCase("STATEMENT") && root.getChild(0).getName().equalsIgnoreCase("STATLIST1")) {
+                    semanticTable.addRule(root.getId(),
+                        new ArrayList<>(Arrays.asList(
+                                        new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code")
+//                                || STATLIST1.code
+                                )));
+                }
                 break;
-            case "STATLIST1":  
+            case "STATLIST1":
+                if (root.getChild(0).getName().equalsIgnoreCase("")) {
+                    semanticTable.addRule(root.getId(),
+                        new ArrayList<>(Arrays.asList(
+                                        new atributeAssertionString(root.getId(), "code", "")
+                                )));
+                } else if (root.getChild(0).getName().equalsIgnoreCase("STATLIST")) {
+                    semanticTable.addRule(root.getId(),
+                        new ArrayList<>(Arrays.asList(
+                                        new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code")
+                                )));
+                    
+                }
+                
                 break;
             case "LVALUE":
                 if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("LVALUET2")) {
@@ -265,9 +287,9 @@ public class AnalisadorSintatico {
                         new ArrayList<>(Arrays.asList(
                                         new newLeaf((root.getChild(1).getId()), "her", tabsimbolIdent),
                                         new atributeAssertion(root.getId(), "node", root.getChild(1).getId(), "sin"),
-                                        new atributeAssertion(root.getId(), "addher", tabsimbolIdent),
-                                        new atributeAssertion(root.getId(), "code", root.getChild(1).getId(), "code"),
-                                        new atributeAssertion(root.getId(), "addr", root.getChild(1).getId(), "addr")
+                                        new atributeAssertionString(root.getId(), "addher", tabsimbolIdent),
+                                        new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "code"),
+                                        new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addr")
                                 )));
             }
                 break;
@@ -276,8 +298,8 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                 new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
-                                new atributeAssertion(root.getId(), "code", ""),
-                                new atributeAssertion(root.getId(), "addr", root.getId(), "addher"))));
+                                new atributeAssertionString(root.getId(), "code", ""),
+                                new atributeAssertionString(root.getId(), "addr", root.getId(), "addher"))));
                     
                 } else if (root.getChild(0).getName().equalsIgnoreCase("obrack")
                         && root.getChild(1).getName().equalsIgnoreCase("intconst")
@@ -290,8 +312,8 @@ public class AnalisadorSintatico {
     //                                        LVALUET2’.her = LVALUET2.her + ”[" + tabSimbolo(int-constant) + "]”
                                             new newNode(root.getChild(3).getId(), "her","array",tabsimbolIdent,root.getId(),"her"), 
                                             new atributeAssertion(root.getId(), "sin", root.getChild(3).getId(), "sin"),
-                                            new atributeAssertion(root.getId(), "addr", newTemp()),
-                                            new atributeAssertion(root.getId(), "local", newTemp()),
+                                            new atributeAssertionString(root.getId(), "addr", newTemp()),
+                                            new atributeAssertionString(root.getId(), "local", newTemp()),
 //                                            LVALUE2.code = gen(LVALUE2.local ‘=’ tabSimbolo(int-constant) ‘*’ ‘4’) || gen(LVALUE2.addr ‘=’ LVALUE2.addrher ‘+’ LVALUE2.local ) || LVALUE2’.code
 
                                             new atributeAssertion(root.getId(), "addher", root.getId(), "addr"))));
@@ -305,10 +327,10 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
                                     new atributeAssertion(root.getId(), "sin", root.getChild(1).getId(), "node"),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(0).getId(), "code"),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"),
 //                                    || NUMEXPRESSION.CODE
-                                    new atributeAssertion(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertion(root.getId(), "addr", root.getChild(1).getId(), "addr")
+                                    new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
+                                    new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addr")
                                     )));
                 }
                 break;
@@ -318,14 +340,14 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                 new atributeAssertion(root.getId(), "node", root.getId(), "her"),
-                                new atributeAssertion(root.getId(), "addr", root.getId(), "addrher"),
-                                new atributeAssertion(root.getId(), "code", "addrher"))));
+                                new atributeAssertionString(root.getId(), "addr", root.getId(), "addrher"),
+                                new atributeAssertionString(root.getId(), "code", "addrher"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                 new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getId(), "her", root.getChild(1).getId(), "node"),
-                                new atributeAssertion(root.getId(), "addr", newTemp()),
-                                new atributeAssertion(root.getId(), "code", root.getChild(1).getId(), "addrher")
+                                new atributeAssertionString(root.getId(), "addr", newTemp()),
+                                new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "addrher")
 // ||                                   gen(NUMEXPRESSION1.addr ‘=’ NUMEXPRESSION1.addrher SUMMINUS.addr NUMEXPRESSION.addr)
 
                             )));
@@ -337,12 +359,12 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                 new newLeaf(root.getId(), "node", "+"),
-                                new atributeAssertion(root.getId(), "addr", "+"))));
+                                new atributeAssertionString(root.getId(), "addr", "+"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("minus")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                 new newLeaf(root.getId(), "node", "-"),
-                                new atributeAssertion(root.getId(), "addr", "-"))));
+                                new atributeAssertionString(root.getId(), "addr", "-"))));
                 }
                 break;
               
@@ -352,10 +374,10 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
                                 new atributeAssertion(root.getId(), "sin", root.getChild(1).getId(), "sin"),
-                                    new atributeAssertion(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(0).getId(), "code"),
+                                    new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"),
 //                                    || TERM3.code
-                                    new atributeAssertion(root.getId(), "addr", root.getChild(1).getId(), "addr"))));
+                                    new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addr"))));
                 }
                 break;
             case "TERM2":
@@ -364,9 +386,9 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
                                     new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getId(), "her", root.getChild(2).getId(), "sin"),
                                     new atributeAssertion(root.getChild(2).getId(), "her", root.getChild(1).getId(), "sin"),
-                                    new atributeAssertion(root.getId(), "addr", newTemp()),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(1).getId(), "code"),
-                                    new atributeAssertion(root.getChild(2).getId(), "addrher", root.getId(), "addr"))));
+                                    new atributeAssertionString(root.getId(), "addr", newTemp()),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "code"),
+                                    new atributeAssertionString(root.getChild(2).getId(), "addrher", root.getId(), "addr"))));
 //      TERM3.code ?              
 //      gen(TERM2.addr ‘=’ TERM2.addrher MULDIVMOD.addr UNARYEXPR.addr)?
                 }
@@ -377,16 +399,16 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
-                                    new atributeAssertion(root.getId(), "addr", root.getId(), "addrher"),
-                                    new atributeAssertion(root.getId(), "code", ""))));
+                                    new atributeAssertionString(root.getId(), "addr", root.getId(), "addrher"),
+                                    new atributeAssertionString(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("TERM2")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
                                     new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "node"),
-                                    new atributeAssertion(root.getChild(0).getId(), "addrher", root.getId(), "addrher"),
-                                    new atributeAssertion(root.getId(), "addr", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(0).getId(), "code"))));
+                                    new atributeAssertionString(root.getChild(0).getId(), "addrher", root.getId(), "addrher"),
+                                    new atributeAssertionString(root.getId(), "addr", root.getChild(0).getId(), "addr"),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"))));
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
@@ -399,17 +421,17 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", "%"),
-                                    new atributeAssertion(root.getId(), "addr", "%"))));
+                                    new atributeAssertionString(root.getId(), "addr", "%"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("div")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", "/"),
-                                    new atributeAssertion(root.getId(), "addr", "/"))));
+                                    new atributeAssertionString(root.getId(), "addr", "/"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("mul")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", "*"),
-                                    new atributeAssertion(root.getId(), "addr", "*"))));
+                                    new atributeAssertionString(root.getId(), "addr", "*"))));
                     
                 }
                 break;
@@ -418,14 +440,14 @@ public class AnalisadorSintatico {
                 semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "node"),
-                                    new atributeAssertion(root.getId(), "addr", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(0).getId(), "code"))));
+                                    new atributeAssertionString(root.getId(), "addr", root.getChild(0).getId(), "addr"),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("FACTOR")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getChild(1).getId(), "node"),
-                                    new atributeAssertion(root.getId(), "addr", newTemp()),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(1).getId(), "code"))));
+                                    new atributeAssertionString(root.getId(), "addr", newTemp()),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "code"))));
 // TODO
 //                    gen(UNARYEXPR.addr ‘=’ SUMMINUS.addr FACTOR.addr)//ou seja temp = +/- factor 
                 }
@@ -436,36 +458,36 @@ public class AnalisadorSintatico {
                 semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", tableValue),
-                                    new atributeAssertion(root.getId(), "addr", tableValue),
-                                    new atributeAssertion(root.getId(), "code", ""))));
+                                    new atributeAssertionString(root.getId(), "addr", tableValue),
+                                    new atributeAssertionString(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("stringconst")) {
                     String tableValue = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", tableValue),
-                                    new atributeAssertion(root.getId(), "addr", tableValue),
-                                    new atributeAssertion(root.getId(), "code", ""))));
+                                    new atributeAssertionString(root.getId(), "addr", tableValue),
+                                    new atributeAssertionString(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("intconst")) {
                     String tableValue = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
                     
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new newLeaf(root.getId(), "node", tableValue),
-                                    new atributeAssertion(root.getId(), "addr", tableValue),
-                                    new atributeAssertion(root.getId(), "code", ""))));
+                                    new atributeAssertionString(root.getId(), "addr", tableValue),
+                                    new atributeAssertionString(root.getId(), "code", ""))));
                     
                 } else if (root.getChild(0).getName().equalsIgnoreCase("LVALUE")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getId(), "node", root.getChild(0).getId(), "node"),
-                                    new atributeAssertion(root.getId(), "addr", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(0).getId(), "code"))));
+                                    new atributeAssertionString(root.getId(), "addr", root.getChild(0).getId(), "addr"),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("OPAR") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION") && root.getChild(2).getName().equalsIgnoreCase("CPAR")) {
                     semanticTable.addRule(root.getId(), 
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getId(), "node", root.getChild(1).getId(), "sin"),
-                                    new atributeAssertion(root.getId(), "addr", root.getChild(1).getId(), "addr"),
-                                    new atributeAssertion(root.getId(), "code", root.getChild(1).getId(), "code"))));
+                                    new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addr"),
+                                    new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "code"))));
                 }
                 break;  
         }
@@ -476,6 +498,7 @@ public class AnalisadorSintatico {
     }
     
     private String newTemp() {
-        return "t1";
+        tempIdCounter++;
+        return "t" + tempIdCounter;
     }
  }
