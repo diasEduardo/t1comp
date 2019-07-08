@@ -30,6 +30,7 @@ public class AnalisadorSintatico {
     private SemanticTable semanticTable;
     private AllocationTable allocTable;
     private int tempIdCounter = 0;
+    private int labelIdCounter = 0;
     private ArrayList<String> generatedInterCode;
     SemanticNode rootNode;
 
@@ -329,16 +330,43 @@ public class AnalisadorSintatico {
                 break;
 
             case "ATRIBSTAT":
-                if (root.getChild(0).getName().equalsIgnoreCase("LVALUE") && root.getChild(1).getName().equalsIgnoreCase("at") && root.getChild(2).getName().equalsIgnoreCase("NUMEXPRESSION")) {
+                if (root.getChild(0).getName().equalsIgnoreCase("LVALUE") && root.getChild(1).getName().equalsIgnoreCase("at")
+                        && root.getChild(2).getName().equalsIgnoreCase("NUMEXPRESSION")) {
 //                    ATRIBSTAT.addr = LVALUE.addr
-//                    ATRIBSTAT.code = NUMEXPRESSION.code || LVALUE.code  || gen(LVALUE.addr ‘=’NUMEXPRESSION.addr)
+//                    ATRIBSTAT.code = NUMEXPRESSION.code || LVALUE.code  || gen(LVALUE.addr ‘=’NUMEXPRESSION.addr) DONE
+                    SemanticNode ATRIBSTAT = root, 
+                            LVALUE = root.getChild(0),
+                            NUMEXPRESSION = root.getChild(2);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(LVALUE.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(LVALUE.getId(), "addr", "=", NUMEXPRESSION.getId(), "addr"));
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(ATRIBSTAT.getId(), "addr", LVALUE.getId(), "addr"),
+                                    new atributeAssertionString(ATRIBSTAT.getId(), "code", bundle)
+                            )));
 
                 }
                 break;
 
             case "PRINTSTAT":
-                if (root.getChild(0).getName().equalsIgnoreCase("print") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")) {
-//                    PRINTSTAT.code = NUMEXPRESSION.code || gen(‘out’ NUMEXPRESSION.addr) 
+                if (root.getChild(0).getName().equalsIgnoreCase("print") 
+                        && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")) {
+//                    PRINTSTAT.code = NUMEXPRESSION.code || gen(‘out’ NUMEXPRESSION.addr)  DONE
+                    SemanticNode PRINTSTAT = root, NUMEXPRESSION = root.getChild(1);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("out", NUMEXPRESSION.getId(), "addr"));
+
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(PRINTSTAT.getId(), "code", bundle)
+                            )));
 
                 }
                 break;
@@ -346,11 +374,35 @@ public class AnalisadorSintatico {
             case "READSTAT":
                 if (root.getChild(0).getName().equalsIgnoreCase("read") && root.getChild(1).getName().equalsIgnoreCase("LVALUE")) {
 //                    READSTAT.code = LVALUE.code || gen(‘in’ LVALUE.addr) 
+                    SemanticNode READSTAT = root, LVALUE = root.getChild(1);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(LVALUE.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("out", LVALUE.getId(), "addr"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(READSTAT.getId(), "code", bundle)
+                            )));
                 }
                 break;
 
             case "RETURNSTAT":
-                if (root.getChild(0).getName().equalsIgnoreCase("return") && root.getChild(1).getName().equalsIgnoreCase("RETURNSTAT1")) {
+                if (root.getChild(0).getName().equalsIgnoreCase("return") 
+                        && root.getChild(1).getName().equalsIgnoreCase("RETURNSTAT1")) {
+                    SemanticNode RETURNSTAT = root, RETURNSTAT1 = root.getChild(1);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(RETURNSTAT1.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("goto", RETURNSTAT1.getId(), "addr"));
+                    
+//                     gen(‘goto’ STATEMENT.return) DONE?
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(RETURNSTAT1.getId(), "code", bundle)
+                            )));
 //                RETURNSTAT.code = RETURNSTAT1.code || gen(‘goto’ STATEMENT.return)
 
                 }
@@ -358,21 +410,64 @@ public class AnalisadorSintatico {
 
             case "RETURNSTAT1":
                 if (root.getChild(0).getName().equalsIgnoreCase("NUMEXPRESSION")) {
-//                    RETURNSTAT1.code = NUMEXPRESSION.code
+                    SemanticNode RETURNSTAT1 = root, 
+                            NUMEXPRESSION = root.getChild(0);
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(RETURNSTAT1.getId(), "code", NUMEXPRESSION.getId(), "code")
+                            )));
+//                    RETURNSTAT1.code = NUMEXPRESSION.code DONE
                 } else if (root.getChild(0).getName().equalsIgnoreCase("")) {
-//                    RETURNSTAT1.code = ‘’ 
+                    SemanticNode RETURNSTAT1 = root;
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(RETURNSTAT1.getId(), "code", "")
+                            )));
+                            
+//                    RETURNSTAT1.code = ‘’ DONE
 
                 }
                 break;
 
             case "IFSTAT":
-                if (root.getChild(0).getName().equalsIgnoreCase("if") && root.getChild(1).getName().equalsIgnoreCase("opar") && root.getChild(2).getName().equalsIgnoreCase("NUMEXPRESSION") && root.getChild(3).getName().equalsIgnoreCase("cpar") && root.getChild(4).getName().equalsIgnoreCase("STATEMENT") && root.getChild(5).getName().equalsIgnoreCase("IFSTAT1")) {
+                if (root.getChild(0).getName().equalsIgnoreCase("if") 
+                        && root.getChild(1).getName().equalsIgnoreCase("opar")
+                        && root.getChild(2).getName().equalsIgnoreCase("NUMEXPRESSION") 
+                        && root.getChild(3).getName().equalsIgnoreCase("cpar") 
+                        && root.getChild(4).getName().equalsIgnoreCase("STATEMENT") 
+                        && root.getChild(5).getName().equalsIgnoreCase("IFSTAT1")) {
 //                    NUMEXPRESSION.true = newLabel();
 //                    NUMEXPRESSION.false = newLabel();
 //                    STATEMENT.next = IFSTAT.next
 //                    IFSTAT1.next = IFSTAT.next
 //                    IFSTAT.code = NUMEXPRESSION.code || gen(if NUMEXPRESSION.addr ‘!=’ ‘0’ ‘goto’ NUMEXPRESSION.true)|| label(NUMEXPRESSION.false) ||IFSTAT.code
-//                    || label(NUMEXPRESSION.true) ||STATEMENT.code || gen(‘goto’ STATEMENT.next)
+//                    || label(NUMEXPRESSION.true) ||STATEMENT.code || gen(‘goto’ STATEMENT.next) DONE
+                    
+                    SemanticNode IFSTAT = root, 
+                            NUMEXPRESSION = root.getChild(2),
+                            STATEMENT = root.getChild(4),
+                            IFSTAT1 = root.getChild(5);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("if", NUMEXPRESSION.getId(), "addr", " != 0 ", "goto", NUMEXPRESSION.getId(), "true"));
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "false"));
+                    bundle.add(new simpleStringAssertionBundle(IFSTAT.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "true"));
+                    bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("goto", STATEMENT.getId(), "next"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(NUMEXPRESSION.getId(), "true", newLabel()),
+                                    new atributeAssertionString(NUMEXPRESSION.getId(), "false", newLabel()),
+                                    new atributeAssertionString(STATEMENT.getId(), "next", IFSTAT.getId(), "next"),
+                                    new atributeAssertionString(IFSTAT1.getId(), "next", IFSTAT.getId(), "next"),
+                                    new atributeAssertionString(IFSTAT.getId(), "code", bundle)
+                            )));
 
                 }
                 break;
@@ -380,15 +475,51 @@ public class AnalisadorSintatico {
             case "IFSTAT1":
                 if (root.getChild(0).getName().equalsIgnoreCase("else") && root.getChild(1).getName().equalsIgnoreCase("STATEMENT") && root.getChild(2).getName().equalsIgnoreCase("end")) {
 //                    STATEMENT.next = IFSTAT1.next
-//                    IFSTAT1.code = STATEMENT.code || gen(‘goto’ STATEMENT.next)
+//                    IFSTAT1.code = STATEMENT.code || gen(‘goto’ STATEMENT.next) DONE
+                    SemanticNode IFSTAT1 = root, STATEMENT = root.getChild(1);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("goto", STATEMENT.getId(), "next"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(STATEMENT.getId(), "next", IFSTAT1.getId(), "next"),
+                                    new atributeAssertionString(IFSTAT1.getId(), "code", bundle)
+                            )));
 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("end")) {
-//                    IFSTAT1.code = gen(‘goto’ IFSTAT1.next)
+                    SemanticNode IFSTAT1 = root;
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    bundle.add(new generatorStringeAssertionBundle("goto", IFSTAT1.getId(), "next"));
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(IFSTAT1.getId(), "code", bundle)
+                            )));
+
+//                    IFSTAT1.code = gen(‘goto’ IFSTAT1.next) DONE
 
                 }
                 break;
             case "FORSTAT":
-                if (root.getChild(0).getName().equalsIgnoreCase("for") && root.getChild(1).getName().equalsIgnoreCase("opar") && root.getChild(2).getName().equalsIgnoreCase("ATRIBSTAT") && root.getChild(3).getName().equalsIgnoreCase("semicomma") && root.getChild(4).getName().equalsIgnoreCase("NUMEXPRESSION") && root.getChild(5).getName().equalsIgnoreCase("semicomma") && root.getChild(6).getName().equalsIgnoreCase("ATRIBSTAT") && root.getChild(7).getName().equalsIgnoreCase("cpar") && root.getChild(8).getName().equalsIgnoreCase("STATEMENT")) {
+                if (root.getChild(0).getName().equalsIgnoreCase("for") && 
+                        root.getChild(1).getName().equalsIgnoreCase("opar") && 
+                        root.getChild(2).getName().equalsIgnoreCase("ATRIBSTAT") && 
+                        root.getChild(3).getName().equalsIgnoreCase("semicomma") && 
+                        root.getChild(4).getName().equalsIgnoreCase("NUMEXPRESSION") && 
+                        root.getChild(5).getName().equalsIgnoreCase("semicomma") && 
+                        root.getChild(6).getName().equalsIgnoreCase("ATRIBSTAT") && 
+                        root.getChild(7).getName().equalsIgnoreCase("cpar") && 
+                        root.getChild(8).getName().equalsIgnoreCase("STATEMENT")) {
+                    
+                    SemanticNode FORSTAT = root, 
+                            ATRIBSTAT = root.getChild(2),
+                            NUMEXPRESSION = root.getChild(3),
+                            ATRIBSTAT_ = root.getChild(6),
+                            STATEMENT = root.getChild(8);
+                    
 //                    NUMEXPRESSION.true = newLabel();
 //                    NUMEXPRESSION.false = FORSTAT.next;
 //                    FORSTAT.end = newLabel();
@@ -405,16 +536,51 @@ public class AnalisadorSintatico {
 //                    || STATEMENT.code
 //                    || label(FORSTAT.end) 
 //                    || ATRIBSTAT’.code
-//                    || gen(‘goto’ FORSTAT.begin)
+//                    || gen(‘goto’ FORSTAT.begin) DONE
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(ATRIBSTAT.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(FORSTAT.getId(), "label"));
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("if", NUMEXPRESSION.getId(), "addr", " != 0 ", "goto", NUMEXPRESSION.getId(), "true"));
+                    bundle.add(new generatorStringeAssertionBundle("goto", NUMEXPRESSION.getId(), "false"));
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "true"));
+                    bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(FORSTAT.getId(), "end"));
+                    bundle.add(new simpleStringAssertionBundle(ATRIBSTAT.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle("goto", FORSTAT.getId(), "begin"));
+
+                    
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(NUMEXPRESSION.getId(), "true", newLabel()),
+                                    new atributeAssertionString(NUMEXPRESSION.getId(), "false", FORSTAT.getId(), "next"),
+                                    new atributeAssertionString(FORSTAT.getId(), "begin", newLabel()),
+                                    new atributeAssertionString(FORSTAT.getId(), "temp", newTemp()),
+                                    new atributeAssertionString(STATEMENT.getId(), "next", FORSTAT.getId(), "end"),
+                                    new atributeAssertionString(STATEMENT.getId(), "break", FORSTAT.getId(), "next"),
+                                    new atributeAssertionString(FORSTAT.getId(), "code", bundle)
+                            )));
 
                 }
                 break;
             case "STATLIST":
-                if (root.getChild(0).getName().equalsIgnoreCase("STATEMENT") && root.getChild(0).getName().equalsIgnoreCase("STATLIST1")) {
+                if (root.getChild(0).getName().equalsIgnoreCase("STATEMENT") && root.getChild(1).getName().equalsIgnoreCase("STATLIST1")) {
+//                     DONE
+                    SemanticNode STATLIST = root, 
+                            STATEMENT = root.getChild(0),
+                            STATLIST1 = root.getChild(1);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(STATLIST1.getId(), "code"));
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code")
-//                            STATLIST.code  = STATEMENT.code || STATLIST1.code
+                                    new atributeAssertionString(root.getId(), "code", bundle)
                             )));
                 }
                 break;
@@ -424,14 +590,14 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "code", "")
                             )));
-//                    STATLIST1.code = ''
+//                    STATLIST1.code = '' DONE
 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("STATLIST")) {
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code")
                             )));
-//                    STATLIST1.code = STATLIST.code
+//                    STATLIST1.code = STATLIST.code DONE
 
                 }
 
@@ -463,6 +629,16 @@ public class AnalisadorSintatico {
                         && root.getChild(3).getName().equalsIgnoreCase("LVALUET2")) {
                     String tabsimbolIdent = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
                     Integer id = root.getChild(1).getId();
+                    SemanticNode LVALUTE2 = root;
+                    SemanticNode LVALUTE2_ = root.getChild(3);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    bundle.add(new generatorStringeAssertionBundle(LVALUTE2.getId(),
+                            "local", "=", tabsimbolIdent.concat(" * 4")));
+                    bundle.add(new generatorStringeAssertionBundle(LVALUTE2.getId(),
+                            "addr", "=", LVALUTE2.getId(), "addrher", "+",
+                            LVALUTE2.getId(), "local"));
+                    bundle.add(new simpleStringAssertionBundle(LVALUTE2_.getId(), "code"));
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     //                                        LVALUET2’.her = LVALUET2.her + ”[" + tabSimbolo(int-constant) + "]”
@@ -470,8 +646,7 @@ public class AnalisadorSintatico {
                                     new atributeAssertion(root.getId(), "sin", root.getChild(3).getId(), "sin"),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
                                     new atributeAssertionString(root.getId(), "local", newTemp()),
-//                                    LVALUE2.code = gen(LVALUE2.local ‘=’ tabSimbolo(int-constant) ‘*’ ‘4’) || gen(LVALUE2.addr ‘=’ LVALUE2.addrher ‘+’ LVALUE2.local ) || LVALUE2’.code
-
+                                    new atributeAssertionString(root.getId(), "code", bundle),
                                     new atributeAssertion(root.getId(), "addher", root.getId(), "addr"))));
 
                 }
@@ -553,8 +728,6 @@ public class AnalisadorSintatico {
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
                                     new atributeAssertionString(root.getId(), "code", bundle),
                                     new atributeAssertionString(root.getChild(2).getId(), "addrher", root.getId(), "addr"))));
-//      TERM3.code ?              
-//      gen(TERM2.addr ‘=’ TERM2.addrher MULDIVMOD.addr UNARYEXPR.addr)?
                 }
                 break;
 
@@ -668,6 +841,11 @@ public class AnalisadorSintatico {
 
     private String newTemp() {
         tempIdCounter++;
-        return "t" + tempIdCounter;
+        return "T" + tempIdCounter;
+    }
+    
+    private String newLabel() {
+        labelIdCounter++;
+        return "L" + tempIdCounter + ":";
     }
 }
