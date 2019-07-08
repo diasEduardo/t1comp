@@ -264,65 +264,203 @@ public class AnalisadorSintatico {
                 }
                 break;
 
-            case "STATEMENT":
-                if (root.getChild(0).getName().equalsIgnoreCase("PRINTSTAT") && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+            case "STATEMENT" : {
+                SemanticNode STATEMENT = root;
+                
+                if (root.getChild(0).getName().equalsIgnoreCase("PRINTSTAT") 
+                        && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
 //                  PRINTSTAT.next = STATEMENT.next
 //                  STATEMENT.code = PRINTSTAT.code +"\n"+ label(PRINTSTAT.next) +"\n"
-                } else if (root.getChild(0).getName().equalsIgnoreCase("READSTAT") && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+                } else if (root.getChild(0).getName().equalsIgnoreCase("READSTAT") 
+                        && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
 //                    READSTAT.next = STATEMENT.next
 //                    STATEMENT.code = READSTAT.code || label(READSTAT.next) 
-                } else if (root.getChild(0).getName().equalsIgnoreCase("RETURNSTAT") && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+                } else if (root.getChild(0).getName().equalsIgnoreCase("RETURNSTAT") 
+                        && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
 //                    STATEMENT.code = RETURNSTAT.code
                 } else if (root.getChild(0).getName().equalsIgnoreCase("IFSTAT")) {
 //                    IFSTAT.next = STATEMENT.next
 //                    STATEMENT.code = IFSTAT.code || label(IFSTAT.next)
 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("FORSTAT")) {
+                    SemanticNode STATLIST = root.getChild(1);
 //                    FORSTAT.next = FORSTAT.next
-//                    STATEMENT.code = FORSTAT.code || label(FORSTAT.next)
-
-                } else if (root.getChild(0).getName().equalsIgnoreCase("obrace") && root.getChild(1).getName().equalsIgnoreCase("STATLIST") && root.getChild(2).getName().equalsIgnoreCase("cbrace")) {
-//                    STATEMENT.code = STATLIST.code
-                } else if (root.getChild(0).getName().equalsIgnoreCase("break") && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+//                    STATEMENT.code = FORSTAT.code || label(FORSTAT.next) DONE
+                    SemanticNode FORSTAT = root.getChild(0);
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(FORSTAT.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle(FORSTAT.getId(),"next"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(FORSTAT.getId(), "next", FORSTAT.getId(), "next"),
+                                    new atributeAssertionString(STATEMENT.getId(), "code", bundle)
+                    )));
+                } else if (root.getChild(0).getName().equalsIgnoreCase("obrace") 
+                        && root.getChild(1).getName().equalsIgnoreCase("STATLIST") 
+                        && root.getChild(2).getName().equalsIgnoreCase("cbrace")) {
+                    SemanticNode STATLIST = root.getChild(1);
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(STATEMENT.getId(), "code", STATLIST.getId(), "code")
+                            )));
+//                    STATEMENT.code = STATLIST.code DONE
+                } else if (root.getChild(0).getName().equalsIgnoreCase("break") 
+                        && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new generatorStringeAssertionBundle("goto ", STATEMENT.getId(), "break"));
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(STATEMENT.getId(), "addr", bundle)
+                            )));
 //                    STATEMENT.code = gen(‘goto’ STATEMENT.break) 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("semicomma")) {
+                     semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    //                    STATEMENT1.addr = getName(STATEMENT1.her)
+                                    new atributeAssertionString(STATEMENT.getId(), "code", "")
+                            )));
 //                    STATEMENT.code = ‘’         
-                } else if (root.getChild(0).getName().equalsIgnoreCase("int") && root.getChild(1).getName().equalsIgnoreCase("ident") && root.getChild(2).getName().equalsIgnoreCase("VARDECL1") && root.getChild(3).getName().equalsIgnoreCase("semicomma")) {
-//                    VARDECL1.her =  new leaf(id,"int")
+                } else if (root.getChild(0).getName().equalsIgnoreCase("int") 
+                        && root.getChild(1).getName().equalsIgnoreCase("ident") 
+                        && root.getChild(2).getName().equalsIgnoreCase("VARDECL1") 
+                        && root.getChild(3).getName().equalsIgnoreCase("semicomma")) {
+//                   
+                    SemanticNode VARDECL1 = root.getChild(2);
+                    
+                    String tableValue = symbolsTable
+                            .getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(VARDECL1.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(STATEMENT.getId(), 
+                            "addr", "=", STATEMENT.getId(), "width", "*", VARDECL1.getId(), "width"));
+                    bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), STATEMENT.getId(), "aloc"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    //                    STATEMENT1.addr = getName(STATEMENT1.her)
+                                    new newLeaf(VARDECL1.getId(), "her", "int"),
+//                                    addType
+                                    new atributeAssertionString(STATEMENT.getId(), "width", "4"),
+                                    new atributeAssertionString(STATEMENT.getId(), "aloc", newTemp()),
+                                    new atributeAssertionString(STATEMENT.getId(), "code", bundle)
+                            )));
+                    
+//                     VARDECL1.her =  new leaf(id,"int")
+//                    addType(ident,VARDECL1.sin)
+//                    STATEMENT.width = ‘4’
+//                    STATEMENT.aloc = newTemp()
+//                    STATEMENT.code = VARDECL1.code 
+//                    || gen(STATEMENT.aloc ‘=’ STATEMENT.width ‘*’ VARDECL1.width)
+//                    || gen(aloc tabSimbolo(ident) STATEMENT.aloc ) 
+                } else if (root.getChild(0).getName().equalsIgnoreCase("string") 
+                        && root.getChild(1).getName().equalsIgnoreCase("ident") 
+                        && root.getChild(2).getName().equalsIgnoreCase("VARDECL1") 
+                        && root.getChild(3).getName().equalsIgnoreCase("semicomma")) {
+
+                    SemanticNode VARDECL1 = root.getChild(2);
+                    
+                    String tableValue = symbolsTable
+                            .getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(VARDECL1.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(STATEMENT.getId(), 
+                            "addr", "=", STATEMENT.getId(), "width", "*", VARDECL1.getId(), "width"));
+                    bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), STATEMENT.getId(), "aloc"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new newLeaf(VARDECL1.getId(), "her", "string"),
+//                                    addType
+                                    new atributeAssertionString(VARDECL1.getId(), "addr", VARDECL1.getId(), "her"),
+                                    new atributeAssertionString(STATEMENT.getId(), "width", "4"),
+                                    new atributeAssertionString(STATEMENT.getId(), "aloc", newTemp()),
+                                    new atributeAssertionString(STATEMENT.getId(), "code", bundle)
+                            )));
+                    //                    VARDECL1.her = new leaf(id,"string") 
 //                    addType(ident,VARDECL1.sin)
 //                    STATEMENT.width = ‘4’
 //                    STATEMENT.aloc = newTemp()
 //                    STATEMENT.code = VARDECL1.code 
 //                    || gen(STATEMENT.aloc ‘=’ STATEMENT.width ‘*’ VARDECL1.width)
 //                    || gen(aloc tabSimbolo(ident) STATEMENT.aloc )
-
-                } else if (root.getChild(0).getName().equalsIgnoreCase("string") && root.getChild(1).getName().equalsIgnoreCase("ident") && root.getChild(2).getName().equalsIgnoreCase("VARDECL1") && root.getChild(3).getName().equalsIgnoreCase("semicomma")) {
-//                    VARDECL1.her = new leaf(id,"string") 
-//                    addType(ident,VARDECL1.sin)
-//                    STATEMENT.width = ‘4’
-//                    STATEMENT.aloc = newTemp()
-//                    STATEMENT.code = VARDECL1.code 
-//                    || gen(STATEMENT.aloc ‘=’ STATEMENT.width ‘*’ VARDECL1.width)
-//                    || gen(aloc tabSimbolo(ident) STATEMENT.aloc )
-
-                } else if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("STATEMENT")) {
+                } else if (root.getChild(0).getName().equalsIgnoreCase("ident") 
+                        && root.getChild(1).getName().equalsIgnoreCase("STATEMENT1")) {
+                    SemanticNode STATEMENT1 = root.getChild(1);
+                    String tableValue = symbolsTable
+                            .getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new newLeaf(STATEMENT.getId(), "her", tableValue),
+                                    new atributeAssertionString(STATEMENT.getId(), "code", STATEMENT.getId(), "code")
+                            )));
 //                    STATEMENT1.her = new leaf(id,tabSimbolo(ident))
 //                    STATEMENT.code = STATEMENT1.code
+                    
 
                 }
                 break;
-
+            }
             case "STATEMENT1":
-                if (root.getChild(0).getName().equalsIgnoreCase("ident") && root.getChild(1).getName().equalsIgnoreCase("VARDECL1") && root.getChild(2).getName().equalsIgnoreCase("semicomma")) {
+                if (root.getChild(0).getName().equalsIgnoreCase("ident") && 
+                        root.getChild(1).getName().equalsIgnoreCase("VARDECL1") && 
+                        root.getChild(2).getName().equalsIgnoreCase("semicomma")) {
+                    
+                    SemanticNode STATEMENT1 = root, 
+                            VARDECL1 = root.getChild(1);
+                    
+                    String tableValue = symbolsTable
+                            .getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(VARDECL1.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(STATEMENT1.getId(), 
+                            "addr", "=", STATEMENT1.getId(), "width", "*", VARDECL1.getId(), "width"));
+                    bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), STATEMENT1.getId(), "aloc"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    //                    STATEMENT1.addr = getName(STATEMENT1.her)
+                                    new atributeAssertionString(VARDECL1.getId(), "addr", VARDECL1.getId(), "her"),
+//                                    addType
+                                    new atributeAssertionString(STATEMENT1.getId(), "width", "4"),
+                                    new atributeAssertionString(STATEMENT1.getId(), "aloc", newTemp()),
+                                    new atributeAssertionString(STATEMENT1.getId(), "code", bundle)
+                            )));
 //                    VARDECL1.her = STATEMENT1.her
 //                    addType(ident,VARDECL1.sin)
 //                    STATEMENT1.width = ‘4’
 //                    STATEMENT1.aloc = newTemp()
 //                    STATEMENT1.code = VARDECL1.code 
 //                    || gen(STATEMENT1.aloc ‘=’ STATEMENT1.width ‘*’ VARDECL1.width)
-//                    || gen(aloc tabSimbolo(ident) STATEMENT1.aloc )
+//                    || gen(aloc tabSimbolo(ident) STATEMENT1.aloc ) DONE
 
-                } else if (root.getChild(0).getName().equalsIgnoreCase("at") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION") && root.getChild(2).getName().equalsIgnoreCase("semicomma")) {
+                } else if (root.getChild(0).getName().equalsIgnoreCase("at") && 
+                        root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION") 
+                        && root.getChild(2).getName().equalsIgnoreCase("semicomma")) {
+                    
+                    SemanticNode STATEMENT1 = root, 
+                            NUMEXPRESSION = root.getChild(1);
+                      
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(STATEMENT1.getId(), "addr", "=", NUMEXPRESSION.getId(), "addr"));
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    //                    STATEMENT1.addr = getName(STATEMENT1.her)
+                                    new atributeAssertionString(STATEMENT1.getId(), "addr", STATEMENT1.getId(), "her"),
+                                    new atributeAssertionString(NUMEXPRESSION.getId(), "code", bundle)
+                            )));
 //                    STATEMENT1.addr = getName(STATEMENT1.her)
 //                    STATEMENT1.code = NUMEXPRESSION.code || gen(STATEMENT1.addr ‘=’NUMEXPRESSION.addr)
 
@@ -373,13 +511,13 @@ public class AnalisadorSintatico {
 
             case "READSTAT":
                 if (root.getChild(0).getName().equalsIgnoreCase("read") && root.getChild(1).getName().equalsIgnoreCase("LVALUE")) {
-//                    READSTAT.code = LVALUE.code || gen(‘in’ LVALUE.addr) 
+//                    READSTAT.code = LVALUE.code || gen(‘in’ LVALUE.addr)  DONE
                     SemanticNode READSTAT = root, LVALUE = root.getChild(1);
                     
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     
                     bundle.add(new simpleStringAssertionBundle(LVALUE.getId(), "code"));
-                    bundle.add(new generatorStringeAssertionBundle("out", LVALUE.getId(), "addr"));
+                    bundle.add(new generatorStringeAssertionBundle("in", LVALUE.getId(), "addr"));
                     
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
