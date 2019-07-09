@@ -13,15 +13,24 @@ import t1comp.model.SemanticTable;
  */
 public class simpleStringAssertionBundle implements StringAssertionBundle{
         public int rootid;
-        public String att;
+        public String att, singleString;
         private final SemanticTable table = SemanticTable.getInstance();
+        
         
         public simpleStringAssertionBundle(Integer rootid, String att) {
             this.rootid = rootid;
             this.att = att;
         }
         
+        public simpleStringAssertionBundle(String singleString) {
+            this.singleString = singleString;
+        }
+        
         public String getValue() {
+            if (singleString != null) {
+                return singleString;
+            }
+            
             return table.getNode(rootid).stringAttributes.get(att);
         }
 }

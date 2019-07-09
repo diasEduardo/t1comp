@@ -148,52 +148,109 @@ public class AnalisadorSintatico {
 
         switch (rootName.toUpperCase()) {
             case "PROGRAM":
+                
+                if (root.getChild(0).getName().equalsIgnoreCase("STATEMENT")) {
+                    SemanticNode PROGRAM = root, 
+                            STATEMENT = root.getChild(0);
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(),"next"));
+                    bundle.add(new simpleStringAssertionBundle(" exit "));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(STATEMENT.getId(), "next" , newLabel()),
+                                    new atributeAssertionString(STATEMENT.getId(), "return" , STATEMENT.getId(), "next"),
+                                    new atributeAssertionString(PROGRAM.getId(), "code", bundle)
+                            )));
+                }
 //                STATEMENT.next = newLabel();
 //                STATEMENT.return = STATEMENT.next
-//                PROGRAM.code = STATEMENT.code + label(STATEMENT.next)+gen(exit)
+//                PROGRAM.code = STATEMENT.code + label(STATEMENT.next)+gen(exit) DONE
                 break;
 
-            case "VARDECL1":
-                if (root.getChild(0).getName().equalsIgnoreCase("VARDECLBRACKETS") && root.getChild(1).getName().equalsIgnoreCase("VARDECL2")) {
+            case "VARDECL1": {
+                SemanticNode VARDECL1 = root;
+                
+                if (root.getChild(0).getName().equalsIgnoreCase("VARDECLBRACKETS") 
+                        && root.getChild(1).getName().equalsIgnoreCase("VARDECL2")) {
+                    SemanticNode VARDECLBRACKETS = root.getChild(0);
+                    SemanticNode VARDECL2 = root.getChild(1);
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(VARDECL2.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle(VARDECLBRACKETS.getId(),"code"));
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
                                     new atributeAssertion(root.getChild(1).getId(), "her", root.getId(), "her"),
-                                    new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "sin")
+                                    new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "sin"),
+                                    new atributeAssertionString(VARDECL1.getId(), "width" , VARDECLBRACKETS.getId(), "width"),
+                                    new atributeAssertionString(VARDECL1.getId(), "code", bundle)
                             )));
 //                    VARDECL1.code = VARDECL2.code + VARDECLBRACKETS.code
 //                    VARDECL1.width = VARDECLBRACKETS.width
                 } else if (root.getChild(0).getName().equalsIgnoreCase("VARDECL2")) {
+                    SemanticNode VARDECL2 = root.getChild(0);
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
-                                    new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "sin")
+                                    new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "sin"),
+                                    new atributeAssertionString(VARDECL1.getId(), "code", VARDECL2.getId(), "code"),
+                                    new atributeAssertionString(VARDECL1.getId(), "width", "1")
                             )));
 //                    VARDECL1.code = VARDECL2.code 
-//                    VARDECL1.width = 1
+//                    VARDECL1.width = 1 DONE
                 }
                 break;
-            case "VARDECL2":
+            } case "VARDECL2": {
+                SemanticNode VARDECL2 = root;
                 if (root.getChild(0).getName().equalsIgnoreCase("VARDECLWITHCOMA")) {
+                    SemanticNode VARDECLWITHCOMA = root.getChild(0);
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
-                                    new atributeAssertion(root.getId(), "sin", root.getId(), "her")
+                                    new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
+                                    new atributeAssertionString(VARDECL2.getId(), "code", VARDECLWITHCOMA.getId(), "code")
                             )));
 //                    VARDECL1.code = VARDECLWITHCOMA.code 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("")) {
-                    semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
+                                    new atributeAssertionString(VARDECL2.getId(), "code", "")
+                            )));
 //                    VARDECL2.code = ''
                 }
                 break;
-            case "VARDECLBRACKETS":
-                if (root.getChild(0).getName().equalsIgnoreCase("obrack") && root.getChild(1).getName().equalsIgnoreCase("intconst") && root.getChild(2).getName().equalsIgnoreCase("cbrack") && root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
+            } case "VARDECLBRACKETS":
+                if (root.getChild(0).getName().equalsIgnoreCase("obrack") && 
+                        root.getChild(1).getName().equalsIgnoreCase("intconst") && 
+                        root.getChild(2).getName().equalsIgnoreCase("cbrack") && 
+                        root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
+                    
                     String tabsimbol = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
+                    SemanticNode VARDECLBRACKETS = root;
+                    SemanticNode VARDECLBRACKETS1 = root.getChild(3);
+                    
+                      
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(VARDECLBRACKETS1.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle("\n"));
+                    bundle.add(new generatorStringeAssertionBundle(VARDECLBRACKETS.getId(),"width", "=", 
+                            VARDECLBRACKETS1.getId(), "width".concat(" * " + tabsimbol)));
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(3).getId(), "her", root.getId(), "her"),
                                     //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)    
-                                    new newNode(root.getId(), "sin", "array", tabsimbol, root.getChild(3).getId(), "sin")
+                                    new newNode(root.getId(), "sin", "array", tabsimbol, root.getChild(3).getId(), "sin"),
+                                    new atributeAssertionString(VARDECLBRACKETS.getId(), "width", newTemp()),
+                                    new atributeAssertionString(VARDECLBRACKETS.getId(), "code", bundle)
                             )));
                     allocTable.addAllocAction(root.getId(), "int", Integer.parseInt(tabsimbol));
 //                    VARDECLBRACKETS.width = newTemp()
@@ -205,29 +262,61 @@ public class AnalisadorSintatico {
 
             case "VARDECLBRACKETS1":
                 if (root.getChild(0).getName().equalsIgnoreCase("")) {
-                    semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
+                    SemanticNode VARDECLBRACKETS1 = root;
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
+                                    new atributeAssertionString(VARDECLBRACKETS1.getId(), "width", "1"),
+                                    new atributeAssertionString(VARDECLBRACKETS1.getId(), "code", "")
+                            )));
 //                    VARDECLBRACKETS1.width = '1'
-//                    VARDECLBRACKETS1.code = ''
+//                    VARDECLBRACKETS1.code = '' DONE
 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("VARDECLBRACKETS")) {
+                    SemanticNode VARDECLBRACKETS1 = root;
+                    SemanticNode VARDECLBRACKETS = root.getChild(0);
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
-                                    new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "sin")
+                                    new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "sin"),
+                                    new atributeAssertionString(VARDECLBRACKETS1.getId(), "width", VARDECLBRACKETS.getId(), "width"),
+                                    new atributeAssertionString(VARDECLBRACKETS1.getId(), "code", VARDECLBRACKETS.getId(), "code")
                             )));
 //                    VARDECLBRACKETS1.width = VARDECLBRACKETS.width
-//                    VARDECLBRACKETS1.code = VARDECLBRACKETS.code
+//                    VARDECLBRACKETS1.code = VARDECLBRACKETS.code DONE
 
                 }
                 break;
 
             case "VARDECLWITHCOMA":
-                if (root.getChild(0).getName().equalsIgnoreCase("comma") && root.getChild(1).getName().equalsIgnoreCase("ident") && root.getChild(2).getName().equalsIgnoreCase("VARDECLWITHCOMA1")) {
+                if (root.getChild(0).getName().equalsIgnoreCase("comma") 
+                        && root.getChild(1).getName().equalsIgnoreCase("ident") 
+                        && root.getChild(2).getName().equalsIgnoreCase("VARDECLWITHCOMA1")) {
+                    SemanticNode VARDECLWITHCOMA = root;
+                    SemanticNode VARDECLWITHCOMA1 = root.getChild(2);
+                    
+                    String tableValue = symbolsTable
+                            .getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
+                     
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(VARDECLWITHCOMA1.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle("\n"));
+                    bundle.add(new generatorStringeAssertionBundle(VARDECLWITHCOMA.getId(),"aloc", "=", 
+                            VARDECLWITHCOMA.getId(), "width", "*", VARDECLWITHCOMA1.getId(), "width"));
+                    bundle.add(new simpleStringAssertionBundle("\n"));
+                    bundle.add(new generatorStringeAssertionBundle("aloc".concat(tableValue), 
+                            VARDECLWITHCOMA.getId(), "aloc"));
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(2).getId(), "her", root.getId(), "her"),
-                                    new addType(semanticTable.getNode(root.getChild(1).getId()).getTableId(), root.getChild(2).getId(), "sin")
-                            )));
+                                    new addType(semanticTable.getNode(root.getChild(1).getId()).getTableId(), root.getChild(2).getId(), "sin"),
+                                    new atributeAssertionString(VARDECLWITHCOMA.getId(), "width", "4"),
+                                    new atributeAssertionString(VARDECLWITHCOMA.getId(), "aloc", newTemp()),
+                                    new atributeAssertionString(VARDECLWITHCOMA.getId(), "code", bundle)
+                    )));
 //                    VARDECLWITHCOMA.width = ‘4’
 //                    VARDECLWITHCOMA.aloc = newTemp()
 //                    VARDECLWITHCOMA.code = VARDECLWITHCOMA1.code +"\n"+
@@ -238,47 +327,111 @@ public class AnalisadorSintatico {
                 }
                 break;
 
-            case "VARDECLWITHCOMA1":
-                if (root.getChild(0).getName().equalsIgnoreCase("VARDECLBRACKETS") && root.getChild(1).getName().equalsIgnoreCase("VARDECL2")) {
+            case "VARDECLWITHCOMA1": {
+                SemanticNode VARDECLWITHCOMA1 = root;
+                if (root.getChild(0).getName().equalsIgnoreCase("VARDECLBRACKETS") 
+                        && root.getChild(1).getName().equalsIgnoreCase("VARDECL2")) {
+                    
+                    SemanticNode VARDECLBRACKETS = root.getChild(0),
+                            VARDECL2 = root.getChild(1);
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(VARDECL2.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle("\n"));
+                    bundle.add(new simpleStringAssertionBundle(VARDECLBRACKETS.getId(),"code"));
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
                                     new atributeAssertion(root.getId(), "sin", root.getChild(0).getId(), "sin"),
-                                    new atributeAssertion(root.getChild(1).getId(), "her", root.getId(), "her")
+                                    new atributeAssertion(root.getChild(1).getId(), "her", root.getId(), "her"),
+                                    new atributeAssertionString(VARDECLWITHCOMA1.getId(), "code", bundle),
+                                    new atributeAssertionString(VARDECLWITHCOMA1.getId(), "width", VARDECLBRACKETS.getId(), "width")
                             )));
 //                    VARDECLWITHCOMA1.code = VARDECL2.code +"\n"+ VARDECLBRACKETS.code 
 //                    VARDECLWITHCOMA1.width = VARDECLBRACKETS.width
 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("VARDECLWITHCOMA")) {
+                    SemanticNode VARDECLWITHCOMA = root.getChild(0);
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertion(root.getChild(0).getId(), "her", root.getId(), "her"),
-                                    new atributeAssertion(root.getId(), "sin", root.getId(), "her")
+                                    new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
+                                    new atributeAssertionString(VARDECLWITHCOMA1.getId(), "code", VARDECLWITHCOMA.getId(), "code"),
+                                    new atributeAssertionString(VARDECLWITHCOMA1.getId(), "width", "1")
                             )));
 //                    VARDECLWITHCOMA1.code = VARDECLWITHCOMA.code
 //                    VARDECLWITHCOMA1.width = ‘1’                    
-                } else if (root.getChild(0).getName().equalsIgnoreCase("")) {
-                    semanticTable.addRule(root.getId(), new atributeAssertion(root.getId(), "sin", root.getId(), "her"));
+                } else if (root.getChild(0).getName().equalsIgnoreCase("")) { 
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertion(root.getId(), "sin", root.getId(), "her"),
+                                    new atributeAssertionString(VARDECLWITHCOMA1.getId(), "code", ""),
+                                    new atributeAssertionString(VARDECLWITHCOMA1.getId(), "width", "1")
+                                            
+                    )));
 //                    VARDECLWITHCOMA1.code = ''
-//                    VARDECLWITHCOMA1.width = ‘1’                 
+//                    VARDECLWITHCOMA1.width = ‘1’     DONE            
                 }
                 break;
-
+            }
             case "STATEMENT" : {
                 SemanticNode STATEMENT = root;
                 
                 if (root.getChild(0).getName().equalsIgnoreCase("PRINTSTAT") 
                         && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+                    SemanticNode PRINTSTAT = root.getChild(0);
 //                  PRINTSTAT.next = STATEMENT.next
 //                  STATEMENT.code = PRINTSTAT.code +"\n"+ label(PRINTSTAT.next) +"\n"
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(PRINTSTAT.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle("\n"));
+                    bundle.add(new simpleStringAssertionBundle(PRINTSTAT.getId(),"next"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(PRINTSTAT.getId(), "next", PRINTSTAT.getId(), "next"),
+                                    new atributeAssertionString(STATEMENT.getId(), "code", bundle)
+                    )));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("READSTAT") 
                         && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+                    SemanticNode READSTAT = root.getChild(0);
 //                    READSTAT.next = STATEMENT.next
 //                    STATEMENT.code = READSTAT.code || label(READSTAT.next) 
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(READSTAT.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle(READSTAT.getId(),"next"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(READSTAT.getId(), "next", READSTAT.getId(), "next"),
+                                    new atributeAssertionString(STATEMENT.getId(), "code", bundle)
+                    )));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("RETURNSTAT") 
                         && root.getChild(1).getName().equalsIgnoreCase("semicomma")) {
+                    SemanticNode RETURNSTAT = root.getChild(0);
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(STATEMENT.getId(), "code", RETURNSTAT.getId(), "code")
+                    )));
 //                    STATEMENT.code = RETURNSTAT.code
                 } else if (root.getChild(0).getName().equalsIgnoreCase("IFSTAT")) {
+                    SemanticNode IFSTAT = root.getChild(0);
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    
+                    bundle.add(new simpleStringAssertionBundle(IFSTAT.getId(),"code"));
+                    bundle.add(new simpleStringAssertionBundle(IFSTAT.getId(),"next"));
+                    
+                    semanticTable.addRule(root.getId(),
+                            new ArrayList<>(Arrays.asList(
+                                    new atributeAssertionString(IFSTAT.getId(), "next", STATEMENT.getId(), "next"),
+                                    new atributeAssertionString(STATEMENT.getId(), "code", bundle)
+                    )));
 //                    IFSTAT.next = STATEMENT.next
 //                    STATEMENT.code = IFSTAT.code || label(IFSTAT.next)
 
