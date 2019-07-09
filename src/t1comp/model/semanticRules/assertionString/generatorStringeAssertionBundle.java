@@ -5,6 +5,7 @@
  */
 package t1comp.model.semanticRules.assertionString;
 
+import t1comp.model.SemanticNode;
 import t1comp.model.SemanticTable;
 
 /**
@@ -96,7 +97,8 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
         public String getValue() {
             String returnValue = "";
             
-            returnValue = table.getNode(receiver).stringAttributes.get(receiveAtt)
+            SemanticNode node = table.getNode(receiver);
+            returnValue = node.stringAttributes.get(receiveAtt)
                         .concat(" " + operator + " ");
 
             if (command != null) {
