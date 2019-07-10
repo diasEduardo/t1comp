@@ -134,7 +134,7 @@ public final class SemanticNode {
     
     @Override
     public String toString() {
-        System.out.println(name);
+//        System.out.println(name);
         return name;
     }
 
