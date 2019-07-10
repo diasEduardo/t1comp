@@ -55,6 +55,7 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
                 this.receiveAtt = receiveAtt;
                 this.operator = operator;
                 this.sender1 = sender1;
+                this.sender1Att = sender1Att;
                 this.singleAtt = true;
         }
         
@@ -98,6 +99,10 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
             String returnValue = "";
             
             SemanticNode node = table.getNode(receiver);
+            
+            if (node.getName().equalsIgnoreCase("STATEMENT1")) {
+                System.out.print("");
+            } 
             returnValue = node.getStringAttributes(receiveAtt)
                         .concat(" " + operator + " ");
 

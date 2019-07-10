@@ -798,7 +798,7 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
 //                                    new newLeaf(STATEMENT.getId(), "her", tableValue),
-                                    new atributeAssertionString(STATEMENT.getId(), "code", STATEMENT.getId(), "code")
+                                    new atributeAssertionString(STATEMENT.getId(), "code", STATEMENT1.getId(), "code")
                             )));
 //                    STATEMENT1.her = new leaf(id,tabSimbolo(ident))
 //                    STATEMENT.code = STATEMENT1.code
@@ -853,11 +853,12 @@ public class AnalisadorSintatico {
                     
                     bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
                     bundle.add(new generatorStringeAssertionBundle(STATEMENT1.getId(), "addr", "=", NUMEXPRESSION.getId(), "addr"));
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     //                    STATEMENT1.addr = getName(STATEMENT1.her)
                                     new atributeAssertionString(STATEMENT1.getId(), "addr", STATEMENT1.getId(), "her"),
-                                    new atributeAssertionString(NUMEXPRESSION.getId(), "code", bundle)
+                                    new atributeAssertionString(STATEMENT1.getId(), "code", bundle)
                             )));
 //                    STATEMENT1.addr = getName(STATEMENT1.her)
 //                    STATEMENT1.code = NUMEXPRESSION.code || gen(STATEMENT1.addr ‘=’NUMEXPRESSION.addr)
@@ -1213,7 +1214,7 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "node", root.getId(), "her"),
                                     new atributeAssertionString(root.getId(), "addr", root.getId(), "addrher"),
-                                    new atributeAssertionString(root.getId(), "code", "addrher"))));
+                                    new atributeAssertionString(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")) {
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
