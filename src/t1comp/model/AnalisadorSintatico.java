@@ -491,7 +491,7 @@ public class AnalisadorSintatico {
                     
                     bundle.add(new simpleStringAssertionBundle(VARDECL1.getId(), "code"));
                     bundle.add(new generatorStringeAssertionBundle(STATEMENT.getId(), 
-                            "addr", "=", STATEMENT.getId(), "width", "*", VARDECL1.getId(), "width"));
+                            "aloc", "=", STATEMENT.getId(), "width", "*", VARDECL1.getId(), "width"));
                     bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), STATEMENT.getId(), "aloc"));
                     
                     semanticTable.addRule(root.getId(),
@@ -525,7 +525,7 @@ public class AnalisadorSintatico {
                     
                     bundle.add(new simpleStringAssertionBundle(VARDECL1.getId(), "code"));
                     bundle.add(new generatorStringeAssertionBundle(STATEMENT.getId(), 
-                            "addr", "=", STATEMENT.getId(), "width", "*", VARDECL1.getId(), "width"));
+                            "aloc", "=", STATEMENT.getId(), "width", "*", VARDECL1.getId(), "width"));
                     bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), STATEMENT.getId(), "aloc"));
                     
                     semanticTable.addRule(root.getId(),
