@@ -125,7 +125,9 @@ public class AnalisadorSintatico {
 
         buildSemanticTable(rootNode);
         postOder(rootNode);
-
+        String interCode = semanticTable.getNode(rootNode.getId())
+                .getStringAttributes("code");
+        System.out.println("## CODE ##\n".concat(interCode));
         return true;
     }
 
@@ -143,7 +145,6 @@ public class AnalisadorSintatico {
     }
 
     public void buildSemanticTable(SemanticNode root) {
-        root.toString();
         String rootName = root.getName().toLowerCase();
 
         switch (rootName.toUpperCase()) {
@@ -525,7 +526,7 @@ public class AnalisadorSintatico {
                     
                     bundle.add(new simpleStringAssertionBundle(VARDECL1.getId(), "code"));
                     bundle.add(new generatorStringeAssertionBundle(STATEMENT.getId(), 
-                            "aloc", "=", STATEMENT.getId(), "width", "*", VARDECL1.getId(), "width"));
+                            "aloc", "=", STATEMENT.getId(), "width", " * ", VARDECL1.getId(), "width"));
                     bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), STATEMENT.getId(), "aloc"));
                     
                     semanticTable.addRule(root.getId(),
