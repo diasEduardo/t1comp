@@ -1,0 +1,23 @@
+{
+    int a,b,d[4],var;
+    Object  ob;
+    a=2;
+    b=4;
+    int i;
+    for(i=0;10-i;i=i+1){
+        b = d[4]/var+d[0]/var;
+        int j;
+        for(j=10;0-j;j=j-2){
+            if (i+9/3) 
+               return -1;
+            end
+            if ((i+9)/2)
+               return 1;
+            end
+
+            var= a*b;
+
+        }
+    }
+    return ob;
+}
