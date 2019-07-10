@@ -5,6 +5,7 @@
  */
 package t1comp.model.semanticRules.assertionString;
 
+import t1comp.model.SemanticNode;
 import t1comp.model.SemanticTable;
 
 /**
@@ -96,7 +97,8 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
         public String getValue() {
             String returnValue = "";
             
-            returnValue = table.getNode(receiver).stringAttributes.get(receiveAtt)
+            SemanticNode node = table.getNode(receiver);
+            returnValue = node.getStringAttributes(receiveAtt)
                         .concat(" " + operator + " ");
 
             if (command != null) {
@@ -105,20 +107,21 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
                             .concat(table.getNode(sender1).stringAttributes.get(sender1Att));
                 }
                 
-                return command.concat(" " + table.getNode(receiver).stringAttributes.get(receiveAtt));
+                return command.concat(" " + table.getNode(receiver).getStringAttributes(receiveAtt));
                 
             }
             if (simpleStringGen != null) {
                 return returnValue.concat(simpleStringGen);
             }
-            
-            returnValue = returnValue.concat(table.getNode(sender1).stringAttributes.get(sender1Att));
+            SemanticNode node2 = table.getNode(sender1);
+            returnValue = returnValue.concat(node2.getStringAttributes(sender1Att));
             
             if (operator2 != null) {
-                returnValue = returnValue.concat(table.getNode(sender2).stringAttributes.get(sender2Att));
+                SemanticNode node3 = table.getNode(sender2);
+                returnValue = returnValue.concat(operator2).concat(node3.getStringAttributes(sender2Att));
             } else if (sender3 != null && sender3Att != null) {
                 returnValue = returnValue
-                            .concat(table.getNode(sender3).stringAttributes.get(sender3Att));
+                            .concat(table.getNode(sender3).getStringAttributes(sender3Att));
             } 
             
             return returnValue;

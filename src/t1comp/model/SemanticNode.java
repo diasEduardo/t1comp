@@ -149,4 +149,16 @@ public final class SemanticNode {
     public boolean isRoot() {
         return parent == NULL_PARENT;
     }
+    
+    public String getStringAttributes(String key) {
+        try {
+            String result = stringAttributes.get(key);
+            if (result == null) 
+                return "";
+            
+            return result;
+        } catch (NullPointerException e) {
+            return "";
+        }
+    }
 }

@@ -56,7 +56,7 @@ public class atributeAssertionString implements SemanticRule<Integer>{
             String stringBundleValue = "";
             
             for (StringAssertionBundle sab : bundle) {
-                stringBundleValue += sab.getValue();
+                stringBundleValue += sab.getValue() + "\n";
             }
             
             node0.stringAttributes.put(attributes.get(0), stringBundleValue);
@@ -73,12 +73,14 @@ public class atributeAssertionString implements SemanticRule<Integer>{
                 + node0.getName() + "." + attributes.get(0).toString() + " <- " + attValue);
         } else {
             SemanticNode node1 = table.getNode(ids.get(1));
-            
             node0.stringAttributes.put(attributes.get(0), node1.stringAttributes.get(attributes.get(1)));
             System.out.println("Value: " + node0.stringAttributes.get(attributes.get(0)));
             System.out.println("Atribuindo: " 
                 + node0.getName() + "." + attributes.get(0).toString() + " <- " 
-                + node1.getName()+ "." + attributes.get(1).toString());
+                + node1.getName()+ "." + attributes.get(1).toString()
+            + "\n" + node0.stringAttributes.get(ids));
+            
+            
         }
         
         table.addNode(node0);
