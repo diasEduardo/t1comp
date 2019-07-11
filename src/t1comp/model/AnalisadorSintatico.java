@@ -85,7 +85,8 @@ public class AnalisadorSintatico {
             boolean tokenMatch = false;
             while (!tokenMatch) {
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
-                    if (token.equalsIgnoreCase("ident") || token.equalsIgnoreCase("intconst")) {
+                    if (token.equalsIgnoreCase("ident") || token.equalsIgnoreCase("intconst") 
+                            || token.equalsIgnoreCase("stringconst")) {
                         semanticTable.getNode(nodeTreeStack.get(0).getId()).setTableId(tokenObj.getTableIndex() - 1);
 //                        newNode.setTableId(tokenObj.getTableIndex());
                     }
@@ -1356,7 +1357,8 @@ public class AnalisadorSintatico {
                                     new atributeAssertionString(root.getId(), "addr", tableValue),
                                     new atributeAssertionString(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("stringconst")) {
-                    String tableValue = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(0).getId()).getTableId());
+                    SemanticNode node = semanticTable.getNode(root.getChild(0).getId());
+                    String tableValue = symbolsTable.getSymbol(node.getTableId());
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "node", tableValue),
