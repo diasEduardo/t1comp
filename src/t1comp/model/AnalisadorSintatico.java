@@ -7,7 +7,7 @@ package t1comp.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashMap;  
 import java.util.Iterator;
 import t1comp.model.TableBuilder;
 import t1comp.model.semanticRules.addType;
@@ -143,7 +143,8 @@ public class AnalisadorSintatico {
                     if (token.equalsIgnoreCase("IDENT"))  {
                         
                         if (  !lex.verifyIdent() && lastToken.equalsIgnoreCase("OBRACE") ||
-                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("COMMA")
+                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("COMMA") ||
+                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("IDENT")
                                 ) {
                             if (current_scope.hasVariable(tokenName)) {
                                 errorMessage += "\nError, ident has already been declared: " + token + ": " + tokenName;
@@ -165,7 +166,8 @@ public class AnalisadorSintatico {
                                 System.out.println("Tipo: "+ tokenTipo);
                             }
                             scopeTable.put(current_scope.getId(), current_scope);
-                        } else if(!lex.verifyIdent()
+                        } 
+                        else if(!lex.verifyIdent()
                                 && lastToken.equalsIgnoreCase("SEMICOMMA")){
                             if (!current_scope.hasVariable(tokenName)) {
                                 System.out.println("Variável adicionada ao escopo: " + tokenName);
