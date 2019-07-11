@@ -136,7 +136,7 @@ public class AnalisadorSintatico {
         postOder(rootNode);
         interCode = semanticTable.getNode(rootNode.getId())
                 .getStringAttributes("code");
-        
+        interCode = interCode.replaceAll("\n\n\n", "");
         System.out.println("## CODE ##\n".concat(interCode));
         return true;
     }
@@ -360,6 +360,26 @@ public class AnalisadorSintatico {
                 }
                 break;
             }
+//            case "TERM":
+//                if (root.getChild(0).getName().equalsIgnoreCase("UNARYEXPR") && root.getChild(1).getName().equalsIgnoreCase("TERM3")) {
+//                    SemanticNode TERM = semanticTable.getNode(root.getId());
+//                    SemanticNode UNARYEXPR = semanticTable.getNode(root.getChild(0).getId());
+//                    SemanticNode TERM3 = semanticTable.getNode(root.getChild(1).getId());
+//                    
+//                   TERM3.stringAttributes.put("her", UNARYEXPR.getStringAttributes("sin"));
+//                   System.out.println("Atribuindo: "
+//                            + TERM3.getName() + ".her <- "
+//                            + UNARYEXPR.getName() + ".sin = " + TERM3.getStringAttributes("her")
+//                    );
+//                   
+//                   TERM3.stringAttributes.put("addrher", UNARYEXPR.getStringAttributes("addr"));
+//                   System.out.println("Atribuindo: "
+//                            + TERM3.getName() + ".addrher <- "
+//                            + UNARYEXPR.getName() + ".addr = " + TERM3.getStringAttributes("addrher")
+//                    );
+//    
+//                }
+//                break;
             
             case "TERM3":{
                 SemanticNode TERM3 = semanticTable.getNode(root.getId());
@@ -1304,8 +1324,8 @@ public class AnalisadorSintatico {
                     
                     semanticTable.addRule(root.getChild(1).getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"))));
+                                    new atributeAssertionString(TERM3.getId(), "addrher", UNARYEXPR.getId(), "addr"),
+                                    new atributeAssertionString(TERM3.getId(), "her", UNARYEXPR.getId(), "sin"))));
                     
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(

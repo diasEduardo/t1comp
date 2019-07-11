@@ -32,7 +32,7 @@ public class View extends javax.swing.JFrame {
         initComponents();
         sourceCodeArea.setText("{ \n" +
 "  int a;  \n" +
-"  a = 2 + 2;\n" +
+"  a = 1 * 2;\n" +
 "}");
     }
     
