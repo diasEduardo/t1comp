@@ -31,12 +31,9 @@ public class View extends javax.swing.JFrame {
         this.app = app;
         initComponents();
         sourceCodeArea.setText("{\n" +
-"   \n" +
-"    if(0){\n" +
-"        int a;\n" +
-"    }else{\n" +
-"        int b;\n" +
-"    }end\n" +
+"    for(i=0;10-i;i=i+1){\n" +
+"        a = a+2;\n" +
+"    }\n" +
 "}");
     }
     

@@ -745,7 +745,6 @@ public class AnalisadorSintatico {
 //                    STATEMENT.code = IFSTAT.code || label(IFSTAT.next)
 
                 } else if (root.getChild(0).getName().equalsIgnoreCase("FORSTAT")) {
-                    SemanticNode STATLIST = root.getChild(1);
 //                    FORSTAT.next = FORSTAT.next
 //                    STATEMENT.code = FORSTAT.code || label(FORSTAT.next) DONE
                     SemanticNode FORSTAT = root.getChild(0);
@@ -1136,7 +1135,7 @@ public class AnalisadorSintatico {
                     
                     SemanticNode FORSTAT = root, 
                             ATRIBSTAT = root.getChild(2),
-                            NUMEXPRESSION = root.getChild(3),
+                            NUMEXPRESSION = root.getChild(4),
                             ATRIBSTAT_ = root.getChild(6),
                             STATEMENT = root.getChild(8);
                     
@@ -1161,19 +1160,20 @@ public class AnalisadorSintatico {
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     
                     bundle.add(new simpleStringAssertionBundle(ATRIBSTAT.getId(), "code"));
-                    bundle.add(new simpleStringAssertionBundle(FORSTAT.getId(), "label"));
+                    bundle.add(new simpleStringAssertionBundle(FORSTAT.getId(), "begin"));
                     bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
                     bundle.add(new generatorStringeAssertionBundle("if", NUMEXPRESSION.getId(), "addr", " != 0 ", "goto ", NUMEXPRESSION.getId(), "true"));
                     bundle.add(new generatorStringeAssertionBundle("goto ", NUMEXPRESSION.getId(), "false"));
                     bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "true"));
                     bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(), "code"));
                     bundle.add(new simpleStringAssertionBundle(FORSTAT.getId(), "end"));
-                    bundle.add(new simpleStringAssertionBundle(ATRIBSTAT.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(ATRIBSTAT_.getId(), "code"));
                     bundle.add(new generatorStringeAssertionBundle("goto ", FORSTAT.getId(), "begin"));
 
                     NUMEXPRESSION.stringAttributes.put("true", newLabel());
                     NUMEXPRESSION.stringAttributes.put("false", FORSTAT.getStringAttributes("next"));
                     FORSTAT.stringAttributes.put("begin", newLabel());
+                    FORSTAT.stringAttributes.put("end", newLabel());
                     STATEMENT.stringAttributes.put("next", FORSTAT.getStringAttributes("end"));
                     STATEMENT.stringAttributes.put("break", FORSTAT.getStringAttributes("next"));
                     
@@ -1183,9 +1183,9 @@ public class AnalisadorSintatico {
 //                                    new atributeAssertionString(NUMEXPRESSION.getId(), "true", newLabel()),
 //                                    new atributeAssertionString(NUMEXPRESSION.getId(), "false", FORSTAT.getId(), "next"),
 //                                    new atributeAssertionString(FORSTAT.getId(), "begin", newLabel()),
-//                                    new atributeAssertionString(FORSTAT.getId(), "temp", newTemp()),
 //                                    new atributeAssertionString(STATEMENT.getId(), "next", FORSTAT.getId(), "end"),
 //                                    new atributeAssertionString(STATEMENT.getId(), "break", FORSTAT.getId(), "next"),
+                                    new atributeAssertionString(FORSTAT.getId(), "temp", newTemp()),
                                     new atributeAssertionString(FORSTAT.getId(), "code", bundle)
                             )));
 
