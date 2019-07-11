@@ -360,6 +360,7 @@ public class AnalisadorSintatico {
                 }
                 break;
             }
+            
             case "TERM3":{
                 SemanticNode TERM3 = semanticTable.getNode(root.getId());
                 if (root.getChild(0).getName().equalsIgnoreCase("TERM2")) {
