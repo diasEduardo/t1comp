@@ -254,6 +254,26 @@ public class AnalisadorLexico {
         }
         return name.equalsIgnoreCase("ident");
     }
+    public String verifyType(){
+        String name = "";
+        int i = 0;
+        String tipo = " ";
+        boolean st = false;
+        while(!name.equalsIgnoreCase("semicomma")){
+            name = tokenList.get(i).getTypeName();
+            System.out.println("Token: "+ name);
+            i++;
+            if(name.equalsIgnoreCase("intconst") && !st){
+                tipo = "INT";
+            }
+            if(name.equalsIgnoreCase("stringconst")){
+                tipo = "STRING";
+                st = true;
+            }
+        }
+//        return name.equalsIgnoreCase("ident");
+        return tipo;
+    }
     public boolean hasTokens() {
         return !tokenList.isEmpty();
     }

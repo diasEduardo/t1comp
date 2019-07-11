@@ -142,8 +142,9 @@ public class AnalisadorSintatico {
                                 current_scope.addVariable(tokenName, lastTokenName);
                                 System.out.println("Tipo: " + lastTokenName);
                             } else {
-                                current_scope.addVariable(tokenName, " ");
-                                System.out.println("Tipo: ");
+                                String tokenTipo = lex.verifyType();
+                                current_scope.addVariable(tokenName, tokenTipo);
+                                System.out.println("Tipo: "+ tokenTipo);
                             }
                             scopeTable.put(current_scope.getId(), current_scope);
                         }
