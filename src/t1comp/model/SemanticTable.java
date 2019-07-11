@@ -41,7 +41,29 @@ public final class SemanticTable {
     
     public void addRule(Integer id, ArrayList<SemanticRule> rules) {
 //        System.out.println("Semantic rule applied for " + nodes.get(id).getName());
-        table.put(id, rules);
+        if(table.containsKey(id)){
+            ArrayList<SemanticRule> old = table.get(id);
+            for(int i = 0; i < rules.size();i++){
+                old.add(rules.get(i));
+            }
+            table.put(id, old);
+        }
+        else{
+            table.put(id, rules);
+        }
+    }
+    public void addRule(boolean b,Integer id, ArrayList<SemanticRule> rules) {
+//        System.out.println("Semantic rule applied for " + nodes.get(id).getName());
+        if(table.containsKey(id)){
+            ArrayList<SemanticRule> old = table.get(id);
+            for(int i = 0; i < old.size();i++){
+                rules.add(old.get(i));
+            }
+            table.put(id, rules);
+        }
+        else{
+            table.put(id, rules);
+        }
     }
     
     public ArrayList<SemanticRule> getRule(Integer id) {

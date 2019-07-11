@@ -96,8 +96,22 @@ public class newNode implements SemanticRule<Integer>{
             System.out.println("Novo nodo: "+ nodes.get(0).getName()+"."+ attributes.get(0) + " <- " + nodes.get(1).getName() +"."+ attributes.get(1) + " && " + nodes.get(2).getName()+"."+ attributes.get(2)+" && " + nodes.get(3).getName()+"."+ attributes.get(3) );
         }
         
+        
+        if (isOperator(nodes.get(1).getName())) {
+            SemanticNode operatorValue = table.getNode(nodes.get(1).getAttributeValue("node"));
+            SemanticNode leftOperand = table.getNode(nodes.get(2).getAttributeValue("node"));
+            System.out.println("T1 = " + operatorValue.getNodeValue());
+        }
+//        
         return 0;
     }
 
+    private boolean isOperator(String nodeName) {
+        if (nodeName.equals("SUMMINUS") || nodeName.equals("MULDIVMOD")) {
+            return true;
+        }
+        
+        return false;
+    }
     
 }

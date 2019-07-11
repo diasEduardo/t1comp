@@ -23,6 +23,7 @@ public final class SemanticNode {
     private SemanticTable smt = SemanticTable.getInstance();
     public static final int NULL_PARENT = -1;
     private String nodeValue;
+    public HashMap<String, String> stringAttributes;
 
     public String getNodeValue() {
         return nodeValue;
@@ -44,6 +45,7 @@ public final class SemanticNode {
         this.name = name;
         attributes = new HashMap<>();
         children = new ArrayList<>();
+        stringAttributes = new HashMap<>();
         
         this.parent = parent;
 //        System.out.println("Creating: " + this.name + "| From parent: " + this.parent);
@@ -53,6 +55,7 @@ public final class SemanticNode {
         this.name = "";
         attributes = new HashMap<>();
         children = new ArrayList<>();
+        stringAttributes = new HashMap<>();
         
         this.parent = i1;
         this.addChild(i2);
@@ -65,7 +68,7 @@ public final class SemanticNode {
         this.name = "";
         attributes = new HashMap<>();
         children = new ArrayList<>();
-       
+       stringAttributes = new HashMap<>();
         
         this.parent = i1;
         this.addChild(i2);
@@ -131,7 +134,7 @@ public final class SemanticNode {
     
     @Override
     public String toString() {
-        System.out.println(name);
+//        System.out.println(name);
         return name;
     }
 
@@ -145,5 +148,17 @@ public final class SemanticNode {
     
     public boolean isRoot() {
         return parent == NULL_PARENT;
+    }
+    
+    public String getStringAttributes(String key) {
+        try {
+            String result = stringAttributes.get(key);
+            if (result == null) 
+                return "";
+            
+            return result;
+        } catch (NullPointerException e) {
+            return "";
+        }
     }
 }

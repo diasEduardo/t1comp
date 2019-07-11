@@ -30,13 +30,11 @@ public class View extends javax.swing.JFrame {
     public View(App app) {
         this.app = app;
         initComponents();
-        sourceCodeArea.setText("class bintree{\n" +
-"  int a[2];\n" +
-"  bintree b;\n" +
-"\n" +
-" int sum() {\n" +
-"   a = 2 + 2;\n" +
-" }\n" +
+        sourceCodeArea.setText("{\n" +
+"    int i;\n" +
+"    for(i=0;10-i;i=i+1){\n" +
+"        a = a+2;\n" +
+"    }\n" +
 "}");
     }
     
@@ -50,6 +48,10 @@ public class View extends javax.swing.JFrame {
 
     public void updateStatus(String status) {
         statusTextArea.setText(statusTextArea.getText()+status);
+    }
+    
+    public void setInterCode(String code) {
+        statusTextArea2.setText(code);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -67,6 +69,8 @@ public class View extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        statusTextArea2 = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -86,7 +90,7 @@ public class View extends javax.swing.JFrame {
 
         sourceCodeArea.setColumns(20);
         sourceCodeArea.setRows(5);
-        sourceCodeArea.setText("class bintree{\n  constructor(){\n      ano = 1900;\n      mes = 1;\n      dia = 1;\n    }\n\n    constructor(int d, int m, int a){\n      dia = d;\n      mes = m;\n      ano = a;\n    }\n}");
+        sourceCodeArea.setText("class bintree{\n  int a = 1\n}");
         jScrollPane2.setViewportView(sourceCodeArea);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
@@ -96,6 +100,15 @@ public class View extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel2.setText("Resultados Obtidos");
+
+        statusTextArea2.setBackground(new java.awt.Color(81, 81, 81));
+        statusTextArea2.setColumns(20);
+        statusTextArea2.setFont(new java.awt.Font("Nimbus Mono L", 0, 15)); // NOI18N
+        statusTextArea2.setForeground(new java.awt.Color(181, 209, 1));
+        statusTextArea2.setRows(5);
+        statusTextArea2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        statusTextArea2.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        jScrollPane4.setViewportView(statusTextArea2);
 
         jMenu1.setText("Arquivo");
 
@@ -132,20 +145,21 @@ public class View extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(25, 25, 25)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 270, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addContainerGap())
+                    .addComponent(jLabel2)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(22, 22, 22)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(386, Short.MAX_VALUE)))
+                    .addContainerGap(389, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -157,15 +171,18 @@ public class View extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jLabel1))
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(42, 42, 42)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(22, Short.MAX_VALUE)))
+                    .addContainerGap(13, Short.MAX_VALUE)))
         );
 
         pack();
@@ -198,8 +215,10 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextArea sourceCodeArea;
     private javax.swing.JTextArea statusTextArea;
+    private javax.swing.JTextArea statusTextArea2;
     // End of variables declaration//GEN-END:variables
 }

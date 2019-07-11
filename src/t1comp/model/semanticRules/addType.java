@@ -31,9 +31,9 @@ public class addType implements SemanticRule<Integer>{
 //    Criei o attributo node value para portar os valores sineteziados dos atributos
     @Override
     public Integer action() {
-        String type = semanticTable.getNode(semanticTable.getNode(nodeId).getAttributeValue(attribute)).getNodeValue();
+        String type = semanticTable.getNode(nodeId).getStringAttributes(attribute);
         symbolTable.addType(symbolTableId, type);
-        System.out.println("Adicionando tipo: " + semanticTable.getNode(nodeId).getName()+ "." + attribute);
+        System.out.println("Adicionando tipo: " + semanticTable.getNode(nodeId).getName()+ "." + attribute + "= " + semanticTable.getNode(nodeId).getStringAttributes(attribute));
         return 0;
     }
 }

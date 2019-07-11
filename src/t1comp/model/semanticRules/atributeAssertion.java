@@ -40,7 +40,6 @@ public class atributeAssertion implements SemanticRule<Integer>{
         System.out.println("Atribuindo: " 
                 + node0.getName() + "." + attributes.get(0).toString() + " <- " 
                 + node1.getName()+ "." + attributes.get(1).toString());
-//        SemanticNode n
         return 0;
     }
     
