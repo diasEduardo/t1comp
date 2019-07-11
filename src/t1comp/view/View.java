@@ -31,8 +31,7 @@ public class View extends javax.swing.JFrame {
         this.app = app;
         initComponents();
         sourceCodeArea.setText("{ \n" +
-"  int a;  \n" +
-"  a = 1 * 2;\n" +
+"  read a;\n" +
 "}");
     }
     

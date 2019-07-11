@@ -452,11 +452,11 @@ public class AnalisadorSintatico {
                     
                     bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(),"code"));
                     bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(),"next"));
-                    bundle.add(new simpleStringAssertionBundle(" exit "));
+                    bundle.add(new simpleStringAssertionBundle(" exit ")); 
                     
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(STATEMENT.getId(), "next" , newLabel()),
+//                                    new atributeAssertionString(STATEMENT.getId(), "next" , newLabel()),
                                     new atributeAssertionString(STATEMENT.getId(), "return" , STATEMENT.getId(), "next"),
                                     new atributeAssertionString(PROGRAM.getId(), "code", bundle)
                             )));
@@ -705,7 +705,7 @@ public class AnalisadorSintatico {
                     
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(READSTAT.getId(), "next", READSTAT.getId(), "next"),
+                                    new atributeAssertionString(READSTAT.getId(), "next", STATEMENT.getId(), "next"),
                                     new atributeAssertionString(STATEMENT.getId(), "code", bundle)
                     )));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("RETURNSTAT") 
