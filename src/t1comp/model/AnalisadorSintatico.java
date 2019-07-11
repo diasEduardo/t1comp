@@ -142,15 +142,8 @@ public class AnalisadorSintatico {
                     String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() - 1);
                     if (token.equalsIgnoreCase("IDENT"))  {
                         
-                        if (  !lex.verifyIdent()
-                                && !lastToken.equalsIgnoreCase("AT")
-                                && !lastToken.equalsIgnoreCase("PLUS")
-                                && !lastToken.equalsIgnoreCase("MINUS")
-                                && !lastToken.equalsIgnoreCase("MUL")
-                                && !lastToken.equalsIgnoreCase("DIV")
-                                && !lastToken.equalsIgnoreCase("OPAR")
-                                && !lastToken.equalsIgnoreCase("OBRACK")
-                                && !lastToken.equalsIgnoreCase("SEMICOMMA")
+                        if (  !lex.verifyIdent() && lastToken.equalsIgnoreCase("OBRACE") ||
+                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("COMMA")
                                 ) {
                             if (current_scope.hasVariable(tokenName)) {
                                 errorMessage += "\nError, ident has already been declared: " + token + ": " + tokenName;
@@ -172,6 +165,14 @@ public class AnalisadorSintatico {
                                 System.out.println("Tipo: "+ tokenTipo);
                             }
                             scopeTable.put(current_scope.getId(), current_scope);
+                        } else if(!lex.verifyIdent()
+                                && lastToken.equalsIgnoreCase("SEMICOMMA")){
+                            if (!current_scope.hasVariable(tokenName)) {
+                                System.out.println("Variável adicionada ao escopo: " + tokenName);
+                                String tokenTipo = lex.verifyType();
+                                current_scope.addVariable(tokenName, tokenTipo);
+                                System.out.println("Tipo: "+ tokenTipo);
+                            }
                         }
                     }
                     lastTokenName = tokenName;
