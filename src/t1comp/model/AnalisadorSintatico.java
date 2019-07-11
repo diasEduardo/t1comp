@@ -495,7 +495,7 @@ public class AnalisadorSintatico {
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     
                     bundle.add(new simpleStringAssertionBundle(VARDECLBRACKETS1.getId(),"code"));
-                    bundle.add(new simpleStringAssertionBundle("\n"));
+//                    bundle.add(new simpleStringAssertionBundle("\n"));
                     bundle.add(new generatorStringeAssertionBundle(VARDECLBRACKETS.getId(),"width", "=", 
                             VARDECLBRACKETS1.getId(), "width".concat(" * " + tabsimbol)));
                     
@@ -557,10 +557,10 @@ public class AnalisadorSintatico {
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     
                     bundle.add(new simpleStringAssertionBundle(VARDECLWITHCOMA1.getId(),"code"));
-                    bundle.add(new simpleStringAssertionBundle("\n"));
+//                    bundle.add(new simpleStringAssertionBundle("\n"));
                     bundle.add(new generatorStringeAssertionBundle(VARDECLWITHCOMA.getId(),"aloc", "=", 
                             VARDECLWITHCOMA.getId(), "width", " * ", VARDECLWITHCOMA1.getId(), "width"));
-                    bundle.add(new simpleStringAssertionBundle("\n"));
+//                    bundle.add(new simpleStringAssertionBundle("\n"));
                     bundle.add(new generatorStringeAssertionBundle("aloc".concat(tableValue), 
                             VARDECLWITHCOMA.getId(), "aloc"));
                     
@@ -593,7 +593,7 @@ public class AnalisadorSintatico {
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     
                     bundle.add(new simpleStringAssertionBundle(VARDECL2.getId(),"code"));
-                    bundle.add(new simpleStringAssertionBundle("\n"));
+//                    bundle.add(new simpleStringAssertionBundle("\n"));
                     bundle.add(new simpleStringAssertionBundle(VARDECLBRACKETS.getId(),"code"));
                     
                     semanticTable.addRule(root.getId(),
@@ -642,7 +642,7 @@ public class AnalisadorSintatico {
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     
                     bundle.add(new simpleStringAssertionBundle(PRINTSTAT.getId(),"code"));
-                    bundle.add(new simpleStringAssertionBundle("\n"));
+//                    bundle.add(new simpleStringAssertionBundle("\n"));
                     bundle.add(new simpleStringAssertionBundle(PRINTSTAT.getId(),"next"));
                     
                     semanticTable.addRule(root.getId(),
