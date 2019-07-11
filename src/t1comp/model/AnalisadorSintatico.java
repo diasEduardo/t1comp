@@ -1253,12 +1253,18 @@ public class AnalisadorSintatico {
                     SemanticNode NUMEXPRESSION = semanticTable.getNode(root.getChild(1).getId());
                     
                     String node = SUMMINUS.getStringAttributes("node")+ " " + NUMEXPRESSION1.getStringAttributes("her") + " " + NUMEXPRESSION.getStringAttributes("node");
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION.getId(), "code"));
+                    bundle.add(new generatorStringeAssertionBundle(NUMEXPRESSION1.getId(),
+                            "addr", " = ", NUMEXPRESSION1.getId(), "addrher", SUMMINUS.getId(), "addr", NUMEXPRESSION.getId(), "addr"));
+                    
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "node", node),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
-                                    new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "addrher")
-                            // ||                                   gen(NUMEXPRESSION1.addr ‘=’ NUMEXPRESSION1.addrher SUMMINUS.addr NUMEXPRESSION.addr)
+                                    new atributeAssertionString(NUMEXPRESSION1.getId(), "code", bundle)
 
                             )));
                 }

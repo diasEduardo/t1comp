@@ -69,8 +69,8 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
                 this.sender1Att = sender1Att;
                 this.sender2 = sender2;
                 this.sender2Att = sender2Att;
-                this.sender3 = sender2;
-                this.sender3Att = sender2Att;
+                this.sender3 = sender3;
+                this.sender3Att = sender3Att;
             
         }
         
@@ -100,7 +100,7 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
             
             SemanticNode node = table.getNode(receiver);
             
-            if (node.getName().equalsIgnoreCase("STATEMENT1")) {
+            if (node.getName().equalsIgnoreCase("NUMEXPRESSION1")) {
                 System.out.print("");
             } 
             returnValue = node.getStringAttributes(receiveAtt)
@@ -125,7 +125,9 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
                 SemanticNode node3 = table.getNode(sender2);
                 returnValue = returnValue.concat(operator2).concat(node3.getStringAttributes(sender2Att));
             } else if (sender3 != null && sender3Att != null) {
+                SemanticNode node3 = table.getNode(sender2);
                 returnValue = returnValue
+                            .concat(node3.getStringAttributes(sender2Att))
                             .concat(table.getNode(sender3).getStringAttributes(sender3Att));
             } 
             
