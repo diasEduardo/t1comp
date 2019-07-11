@@ -688,12 +688,13 @@ public class AnalisadorSintatico {
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     
                     bundle.add(new simpleStringAssertionBundle(PRINTSTAT.getId(),"code"));
-//                    bundle.add(new simpleStringAssertionBundle("\n"));
                     bundle.add(new simpleStringAssertionBundle(PRINTSTAT.getId(),"next"));
                     
+                    PRINTSTAT.stringAttributes.put("next", STATEMENT.getStringAttributes("next"));
+                    semanticTable.addNode(PRINTSTAT);
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(PRINTSTAT.getId(), "next", STATEMENT.getId(), "next"),
+//                                    new atributeAssertionString(PRINTSTAT.getId(), "next", STATEMENT.getId(), "next"),
                                     new atributeAssertionString(STATEMENT.getId(), "code", bundle)
                     )));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("READSTAT") 
