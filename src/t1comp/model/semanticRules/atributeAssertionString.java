@@ -56,7 +56,13 @@ public class atributeAssertionString implements SemanticRule<Integer>{
             String stringBundleValue = "";
             
             for (StringAssertionBundle sab : bundle) {
-                stringBundleValue += sab.getValue() + "\n";
+                String value = sab.getValue();
+                if (value.endsWith("\n")) {
+                    stringBundleValue += value;
+                } else {
+                    stringBundleValue += value + "\n";
+                }
+                
             }
             
             node0.stringAttributes.put(attributes.get(0), stringBundleValue);

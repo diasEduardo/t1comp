@@ -111,8 +111,8 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
                     return command.concat(" " + returnValue + command2)
                             .concat(table.getNode(sender1).stringAttributes.get(sender1Att));
                 }
-                
-                return command.concat(" " + table.getNode(receiver).getStringAttributes(receiveAtt));
+                String value = table.getNode(receiver).getStringAttributes(receiveAtt);
+                return command.concat(" " + value);
                 
             }
             if (simpleStringGen != null) {
