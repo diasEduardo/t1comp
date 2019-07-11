@@ -68,6 +68,7 @@ public class AnalisadorSintatico {
         idScope++;
         boolean nextFor = false;
         String lastToken= "";
+        String lastTokenName="";
         while (lex.hasTokens()) {
             Token tokenObj = lex.getNextToken();
             String token = tokenObj.getTypeName();//tokens.get(0);
@@ -119,29 +120,34 @@ public class AnalisadorSintatico {
                         }
                     }
                     
-                    if (token.equalsIgnoreCase("IDENT") && !lex.verifyIdent() 
-                            && !lastToken.equalsIgnoreCase("AT")
-                            && !lastToken.equalsIgnoreCase("PLUS")
-                            && !lastToken.equalsIgnoreCase("MINUS")
-                            && !lastToken.equalsIgnoreCase("MUL")
-                            && !lastToken.equalsIgnoreCase("DIV")
-                            ) {
-                        String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() -1);
-                        if (current_scope.hasVariable(tokenName)) {
-                            errorMessage += "\nError, ident has already been declared: " + token+ ": "+ tokenName ;
-                            errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
-                                + ": " + String.valueOf(tokenLines[1]);
-                            break;
+                    if (token.equalsIgnoreCase("IDENT"))  {
+                        String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() - 1);
+                        if (  !lex.verifyIdent()
+                                && !lastToken.equalsIgnoreCase("AT")
+                                && !lastToken.equalsIgnoreCase("PLUS")
+                                && !lastToken.equalsIgnoreCase("MINUS")
+                                && !lastToken.equalsIgnoreCase("MUL")
+                                && !lastToken.equalsIgnoreCase("DIV")) {
+                            if (current_scope.hasVariable(tokenName)) {
+                                errorMessage += "\nError, ident has already been declared: " + token + ": " + tokenName;
+                                errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
+                                        + ": " + String.valueOf(tokenLines[1]);
+                                break;
+                            }
+                            System.out.println("Variável adicionada ao escopo: " + tokenName);
+                            if (lastToken.equalsIgnoreCase("CLASS") || lastToken.equalsIgnoreCase("INT") || lastToken.equalsIgnoreCase("STRING")) {
+                                current_scope.addVariable(tokenName, lastToken);
+                                System.out.println("Tipo: " + lastToken);
+                            } else if (lastToken.equalsIgnoreCase("IDENT")) {
+                                current_scope.addVariable(tokenName, lastTokenName);
+                                System.out.println("Tipo: " + lastTokenName);
+                            } else {
+                                current_scope.addVariable(tokenName, " ");
+                                System.out.println("Tipo: ");
+                            }
+                            scopeTable.put(current_scope.getId(), current_scope);
                         }
-                        System.out.println("Variável adicionada ao escopo: " + tokenName);
-                        if (lastToken.equalsIgnoreCase("CLASS") ||lastToken.equalsIgnoreCase("INT") || lastToken.equalsIgnoreCase("STRING")) {
-                            current_scope.addVariable(tokenName, lastToken);
-                            System.out.println("Tipo: " + lastToken);
-                        } else {
-                            current_scope.addVariable(tokenName, " ");
-                            System.out.println("Tipo: ");
-                        }
-                        scopeTable.put(current_scope.getId(), current_scope);
+                        lastTokenName = tokenName;
                     }
                     lastToken = token;
                     stack.remove(0);
