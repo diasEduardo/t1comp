@@ -371,9 +371,33 @@ public class AnalisadorSintatico {
                             + TERM2.getName() + ".her <- "
                             + TERM3.getName() + ".her = " + TERM3.getStringAttributes("her")
                     );
+                    
+                    TERM2.stringAttributes.put("addrher", TERM3.getStringAttributes("addrher"));
+                    semanticTable.addNode(TERM2);
+                    System.out.println("Atribuindo: "
+                            + TERM2.getName() + ".addrher <- "
+                            + TERM3.getName() + ".addrher = " + TERM3.getStringAttributes("addrher")
+                    );
                 }
                 break;
             }
+            case "TERM2": {
+                if (root.getChild(0).getName().equalsIgnoreCase("MULDIVMOD") && root.getChild(1).getName().equalsIgnoreCase("UNARYEXPR") && root.getChild(2).getName().equalsIgnoreCase("TERM3")) {
+                    SemanticNode TERM2 = semanticTable.getNode(root.getId());
+                    SemanticNode MULDIVMOD = semanticTable.getNode(root.getChild(0).getId());
+                    SemanticNode UNARYEXPR = semanticTable.getNode(root.getChild(1).getId());
+                    SemanticNode TERM3 = semanticTable.getNode(root.getChild(2).getId());
+
+                    TERM3.stringAttributes.put("addrher", TERM2.getStringAttributes("addr"));
+                    semanticTable.addNode(TERM3);
+                    System.out.println("Atribuindo: "
+                            + TERM3.getName() + ".addrher <- "
+                            + TERM2.getName() + ".addr = " + TERM2.getStringAttributes("addr")
+                    );
+                }
+                break;
+            }
+            
         }
     }
 
@@ -1259,6 +1283,7 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
                                     new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"))));
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
 //                                    new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
@@ -1289,10 +1314,9 @@ public class AnalisadorSintatico {
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "node", node),
-                                    new atributeAssertionString(root.getChild(2).getId(), "her", root.getChild(1).getId(), "sin"),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
-                                    new atributeAssertionString(root.getId(), "code", bundle),
-                                    new atributeAssertionString(root.getChild(2).getId(), "addrher", root.getId(), "addr"))));
+                                    new atributeAssertionString(root.getId(), "code", bundle))));
+//                                    new atributeAssertionString(root.getChild(2).getId(), "addrher", root.getId(), "addr"))));
                 }
                 break;
 
