@@ -813,6 +813,7 @@ public class AnalisadorSintatico {
                                     //                    STATEMENT1.addr = getName(STATEMENT1.her)
 //                                    new newLeaf(VARDECL1.getId(), "her", "int"),
 //                                    addType
+                                    new addType(semanticTable.getNode(root.getChild(1).getId()).getTableId(), VARDECL1.getId(), "sin"),
                                     new atributeAssertionString(STATEMENT.getId(), "width", "4"),
                                     new atributeAssertionString(STATEMENT.getId(), "aloc", newTemp()),
                                     new atributeAssertionString(STATEMENT.getId(), "code", bundle)
@@ -848,6 +849,7 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
 //                                    new newLeaf(VARDECL1.getId(), "her", "string"),
 //                                    addType
+                                    new addType(semanticTable.getNode(root.getChild(1).getId()).getTableId(), VARDECL1.getId(), "sin"),
                                     new atributeAssertionString(VARDECL1.getId(), "addr", VARDECL1.getId(), "her"),
                                     new atributeAssertionString(STATEMENT.getId(), "width", "4"),
                                     new atributeAssertionString(STATEMENT.getId(), "aloc", newTemp()),
@@ -901,6 +903,7 @@ public class AnalisadorSintatico {
                                     //                    STATEMENT1.addr = getName(STATEMENT1.her)
                                     new atributeAssertionString(VARDECL1.getId(), "addr", VARDECL1.getId(), "her"),
 //                                    addType
+                                    new addType(semanticTable.getNode(root.getChild(0).getId()).getTableId(), VARDECL1.getId(), "sin"),
                                     new atributeAssertionString(STATEMENT1.getId(), "width", "4"),
                                     new atributeAssertionString(STATEMENT1.getId(), "aloc", newTemp()),
                                     new atributeAssertionString(STATEMENT1.getId(), "code", bundle)
