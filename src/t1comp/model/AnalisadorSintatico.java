@@ -172,14 +172,6 @@ public class AnalisadorSintatico {
                                 System.out.println("Tipo: "+ tokenTipo);
                             }
                             scopeTable.put(current_scope.getId(), current_scope);
-                        } else if(!lex.verifyIdent()
-                                && lastToken.equalsIgnoreCase("SEMICOMMA")){
-                            if (!current_scope.hasVariable(tokenName)) {
-                                System.out.println("Variável adicionada ao escopo: " + tokenName);
-                                String tokenTipo = lex.verifyType();
-                                current_scope.addVariable(tokenName, tokenTipo);
-                                System.out.println("Tipo: "+ tokenTipo);
-                            }
                         }
                     }
                     lastTokenName = tokenName;

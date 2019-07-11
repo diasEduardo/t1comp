@@ -266,7 +266,7 @@ public class AnalisadorLexico {
             if(name.equalsIgnoreCase("intconst") && !st){
                 tipo = "INT";
             }
-            if(name.equalsIgnoreCase("stringconst")){
+            if(name.equalsIgnoreCase("stringconst")||name.equalsIgnoreCase("ident")){
                 tipo = "STRING";
                 st = true;
             }
