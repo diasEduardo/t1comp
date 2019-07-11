@@ -456,7 +456,7 @@ public class AnalisadorSintatico {
                     
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-//                                    new atributeAssertionString(STATEMENT.getId(), "next" , newLabel()),
+                                    new atributeAssertionString(STATEMENT.getId(), "next" , newLabel()),
                                     new atributeAssertionString(STATEMENT.getId(), "return" , STATEMENT.getId(), "next"),
                                     new atributeAssertionString(PROGRAM.getId(), "code", bundle)
                             )));
@@ -1484,6 +1484,6 @@ public class AnalisadorSintatico {
     
     private String newLabel() {
         labelIdCounter++;
-        return "L" + tempIdCounter + ":";
+        return "L" + labelIdCounter + ":";
     }
 }
