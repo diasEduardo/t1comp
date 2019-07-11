@@ -109,9 +109,14 @@ public class AnalisadorSintatico {
                             break;
                         }
                     }
-                    lastToken = token;
                     
-                    if (token.equalsIgnoreCase("IDENT") && !lex.verifyIdent()) {
+                    if (token.equalsIgnoreCase("IDENT") && !lex.verifyIdent() 
+                            && !lastToken.equalsIgnoreCase("AT")
+                            && !lastToken.equalsIgnoreCase("PLUS")
+                            && !lastToken.equalsIgnoreCase("MINUS")
+                            && !lastToken.equalsIgnoreCase("MUL")
+                            && !lastToken.equalsIgnoreCase("DIV")
+                            ) {
                         String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() -1);
                         if (current_scope.hasVariable(tokenName)) {
                             errorMessage += "\nError, ident has already been declared: " + token+ ": "+ tokenName ;
@@ -119,10 +124,11 @@ public class AnalisadorSintatico {
                                 + ": " + String.valueOf(tokenLines[1]);
                             break;
                         }
+//                        System.out.println("Last Token: " + lastToken);
                         System.out.println("Variável adicionada ao escopo: " + tokenName);
                         current_scope.addVariable(tokenName);
                     }
-                    
+                    lastToken = token;
                     stack.remove(0);
                     nodeTreeStack.remove(0);
 //                    action()
