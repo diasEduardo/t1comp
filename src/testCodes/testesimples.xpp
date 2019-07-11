@@ -1,0 +1,7 @@
+class bintree{
+  int a,b,c,d[5];
+    int test(){
+    return a * b / (c + d[4]);
+    }
+}
+

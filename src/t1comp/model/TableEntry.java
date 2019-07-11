@@ -19,6 +19,15 @@ public class TableEntry {
     private String lexeme;
     private int line, column;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    private String type;
+
     public TableEntry(TokenType token, String lexeme, int line, int column) {
         this.token = token;
         this.lexeme = lexeme;

@@ -1,0 +1,117 @@
+class main{
+
+class matrix{
+    int a[3][3];
+
+    constructor(int a[3][3]){
+        this.a=a;
+    }
+
+    int isIdentity(){
+        for( i = 0 ; i < 3 ; i = i + 1 ){
+            for( j = 0 ; j < 3 ; j = j + 1 ){
+                if(a[i][j] != 0 ) {
+                    if(i==j){
+                        if(a[i][j] != 1){
+                            return 0;
+                        }end
+                    }else{
+                        return 0;
+                    }end
+                }end
+            }
+        }
+        return 1;
+    }
+
+    int isDiagonal(){
+        for( i = 0 ; i < 3 ; i = i + 1 ){
+            for( j = 0 ; j < 3 ; j = j + 1 ){
+                if(a[i][j] != 0 ) {
+                    if(i!=j){
+                        return 0;
+                    }end
+                }end
+            }
+        }
+        return 1;
+    }
+
+    int isSuperior(){
+        n = 0;
+        for( i = 0 ; i < 3 ; i = i + 1 ){
+            for( j = 0 ; j < 3 ; j = j + 1 ){
+                if(j < n ) {
+                    if(a[i][j] != 0){
+                        return 0;
+                    }end
+                }end
+            }
+            n = n + 1;
+        }
+        return 1;
+    }
+
+    int isInferior(){
+        n = 0;
+        for( i = 0 ; i < 3 ; i = i + 1 ){
+            for( j = 0 ; j < 3 ; j = j + 1 ){
+                if(j > n ) {
+                    if(a[i][j] != 0){
+                        return 0;
+                    }end
+                }end
+            }
+            n = n + 1;
+        }
+        return 1;
+    }
+
+    int isZero(){
+        for( i = 0 ; i < 3 ; i = i + 1 ){
+            for( j = 0 ; j < 3 ; j = j + 1 ){
+                if(a[i][j] != 0) 
+                    return 0;
+                end
+            }
+        }
+        return 1;
+    }
+    int determinant(){
+        detA = a[0][0]*a[1][1]*a[2][2]+a[0][1]*a[1][2]*a[2][0]+a[0][2]*a[1][0]*a[2][1];
+        detB = a[2][0]*a[1][1]*a[0][2]+a[2][1]*a[1][2]*a[0][0]+a[2][2]*a[1][0]*a[0][1];
+        return detA-detB;
+    }
+    
+}
+
+    class exec {
+        int main(string args){
+            a = new int[3][3];
+            m = new matrix(a);
+
+            det = m.determinant();
+            print det;
+
+            if(m.isIdentity())
+                print "identidade";
+            end
+
+            if(m.isInferior())
+                print "triagular inferior";
+            end
+
+            if(m.isSuperior())
+                print "triangular superior";
+            end
+
+            if(m.isDiagonal())
+                print "diagoonal";
+            end
+        }
+    }
+
+
+}
+
+

@@ -57,14 +57,14 @@ public final class SymbolsTable {
     
     @Override
     public String toString() {
-        String printTable = "## Symbols Table: \n";
+        String printTable = "## Symbols Table:";
         for (TableEntry entry: tabela) {
             printTable = printTable.concat(
                 "Token: " + entry.getToken().toString() + 
                 " | Lexeme: " + entry.getLexeme() + 
                 " | Line: " + entry.getLine() +
                 " | Column: " + entry.getColumn()
-                    +"\n"
+                    +""
             );
         }
         
@@ -73,5 +73,19 @@ public final class SymbolsTable {
     
     public void display () {
 //        System.out.println(toString());
+    }
+    
+    public void addType(int index, String type) {
+        tabela.get(index).setType(type);
+    }
+    
+    public String getSymbol(int index) {
+        return tabela.get(index).getLexeme();
+    }
+    
+//    TODO it is not a steing, need to check type before setting the return value
+//    public <E> getIdValue(String ident, String type) { <-- eg
+    public String getIdValue(String ident) {
+        return ident;
     }
 }

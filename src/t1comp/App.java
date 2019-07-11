@@ -21,7 +21,7 @@ public final class App {
     private View view;
     private AnalisadorLexico lex;
     private AnalisadorSintatico parser;
-
+    
     public static void main(String[] args) {
         new App();
     }
@@ -42,5 +42,6 @@ public final class App {
         view.updateStatus("\n\nNEW ANALISIS\n");
         view.updateStatus(lex.statusMessage());
         view.updateStatus(parser.statusMessage());
+        view.setInterCode(parser.getInterCode());
     }
 }
