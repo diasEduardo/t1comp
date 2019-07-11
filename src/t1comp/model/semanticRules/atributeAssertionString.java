@@ -62,7 +62,7 @@ public class atributeAssertionString implements SemanticRule<Integer>{
             node0.stringAttributes.put(attributes.get(0), stringBundleValue);
             
             table.addNode(node0);
-            
+            System.out.println("Att bundle: "+ node0.getName() + "." + attributes.get(0) + "<- " + stringBundleValue);
             return 0;
         } 
         

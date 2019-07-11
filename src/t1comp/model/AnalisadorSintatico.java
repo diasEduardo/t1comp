@@ -1223,18 +1223,26 @@ public class AnalisadorSintatico {
 
             case "NUMEXPRESSION":
                 if (root.getChild(0).getName().equalsIgnoreCase("TERM") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION1")) {
+                    SemanticNode NUMEXPRESSION = semanticTable.getNode(root.getId());
+                    SemanticNode TERM = semanticTable.getNode(root.getChild(0).getId());
+                    SemanticNode NUMEXPRESSION1 = semanticTable.getNode(root.getChild(1).getId());
                     semanticTable.addRule(root.getChild(1).getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
                                     new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"))));
                     
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    bundle.add(new simpleStringAssertionBundle(TERM.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(NUMEXPRESSION1.getId(), "code"));
+
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
+//                                    new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
                                     new atributeAssertionString(root.getId(), "sin", root.getChild(1).getId(), "node"),
-                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"),
+                                    new atributeAssertionString(NUMEXPRESSION.getId(), "code", bundle),
                                     //                                    || NUMEXPRESSION.CODE
-                                    new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
+//                                    new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
                                     new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addr")
                             )));
                 }
@@ -1286,6 +1294,14 @@ public class AnalisadorSintatico {
 
             case "TERM":
                 if (root.getChild(0).getName().equalsIgnoreCase("UNARYEXPR") && root.getChild(1).getName().equalsIgnoreCase("TERM3")) {
+                    SemanticNode TERM = semanticTable.getNode(root.getId());
+                    SemanticNode UNARYEXPR = semanticTable.getNode(root.getChild(0).getId());
+                    SemanticNode TERM3 = semanticTable.getNode(root.getChild(1).getId());
+                    
+                    ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
+                    bundle.add(new simpleStringAssertionBundle(UNARYEXPR.getId(), "code"));
+                    bundle.add(new simpleStringAssertionBundle(TERM3.getId(), "code"));
+                    
                     semanticTable.addRule(root.getChild(1).getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
@@ -1296,7 +1312,7 @@ public class AnalisadorSintatico {
 //                                    new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
                                     new atributeAssertionString(root.getId(), "sin", root.getChild(1).getId(), "sin"),
 //                                    new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertionString(root.getId(), "code", root.getChild(0).getId(), "code"),
+                                    new atributeAssertionString(TERM.getId(), "code", bundle),
                                     //                                    || TERM3.code
                                     new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addr"))));
                 }
