@@ -261,7 +261,7 @@ public class AnalisadorLexico {
         boolean st = false;
         while(!name.equalsIgnoreCase("semicomma")){
             name = tokenList.get(i).getTypeName();
-            System.out.println("Token: "+ name);
+//            System.out.println("Token: "+ name);
             i++;
             if(name.equalsIgnoreCase("intconst") && !st){
                 tipo = "INT";
