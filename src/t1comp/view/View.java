@@ -30,8 +30,13 @@ public class View extends javax.swing.JFrame {
     public View(App app) {
         this.app = app;
         initComponents();
-        sourceCodeArea.setText("{ \n" +
-"  read a;\n" +
+        sourceCodeArea.setText("{\n" +
+"   \n" +
+"    if(0){\n" +
+"        int a;\n" +
+"    }else{\n" +
+"        int b;\n" +
+"    }end\n" +
 "}");
     }
     

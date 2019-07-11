@@ -31,6 +31,6 @@ public class simpleStringAssertionBundle implements StringAssertionBundle{
                 return singleString;
             }
             
-            return table.getNode(rootid).stringAttributes.get(att);
+            return table.getNode(rootid).getStringAttributes(att);
         }
 }
