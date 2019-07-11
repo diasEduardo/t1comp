@@ -139,21 +139,26 @@ public class AnalisadorSintatico {
                             break;
                         }
                     }
-                    
+                    String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() - 1);
                     if (token.equalsIgnoreCase("IDENT"))  {
-                        String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() - 1);
+                        
                         if (  !lex.verifyIdent()
                                 && !lastToken.equalsIgnoreCase("AT")
                                 && !lastToken.equalsIgnoreCase("PLUS")
                                 && !lastToken.equalsIgnoreCase("MINUS")
                                 && !lastToken.equalsIgnoreCase("MUL")
-                                && !lastToken.equalsIgnoreCase("DIV")) {
+                                && !lastToken.equalsIgnoreCase("DIV")
+                                && !lastToken.equalsIgnoreCase("OPAR")
+                                && !lastToken.equalsIgnoreCase("OBRACK")
+                                && !lastToken.equalsIgnoreCase("SEMICOMMA")
+                                ) {
                             if (current_scope.hasVariable(tokenName)) {
                                 errorMessage += "\nError, ident has already been declared: " + token + ": " + tokenName;
                                 errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
                                         + ": " + String.valueOf(tokenLines[1]);
                                 break;
                             }
+//                            System.out.println("Anterior: " + lastToken);
                             System.out.println("Variável adicionada ao escopo: " + tokenName);
                             if (lastToken.equalsIgnoreCase("CLASS") || lastToken.equalsIgnoreCase("INT") || lastToken.equalsIgnoreCase("STRING")) {
                                 current_scope.addVariable(tokenName, lastToken);
@@ -167,9 +172,17 @@ public class AnalisadorSintatico {
                                 System.out.println("Tipo: "+ tokenTipo);
                             }
                             scopeTable.put(current_scope.getId(), current_scope);
+                        } else if(!lex.verifyIdent()
+                                && lastToken.equalsIgnoreCase("SEMICOMMA")){
+                            if (!current_scope.hasVariable(tokenName)) {
+                                System.out.println("Variável adicionada ao escopo: " + tokenName);
+                                String tokenTipo = lex.verifyType();
+                                current_scope.addVariable(tokenName, tokenTipo);
+                                System.out.println("Tipo: "+ tokenTipo);
+                            }
                         }
-                        lastTokenName = tokenName;
                     }
+                    lastTokenName = tokenName;
                     lastToken = token;
                     stack.remove(0);
                     nodeTreeStack.remove(0);
