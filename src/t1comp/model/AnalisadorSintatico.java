@@ -7,13 +7,17 @@ package t1comp.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import t1comp.model.TableBuilder;
 import t1comp.model.semanticRules.addType;
+import t1comp.model.semanticRules.atributeAssertion;
+import t1comp.model.semanticRules.newLeaf;
+import t1comp.model.semanticRules.newNode;
+import t1comp.model.Scope;
 import t1comp.model.semanticRules.assertionString.StringAssertionBundle;
 import t1comp.model.semanticRules.assertionString.generatorStringeAssertionBundle;
 import t1comp.model.semanticRules.assertionString.simpleStringAssertionBundle;
-
 import t1comp.model.semanticRules.atributeAssertionString;
 
 /**
@@ -27,19 +31,22 @@ public class AnalisadorSintatico {
     private SymbolsTable symbolsTable;
     private SemanticTable semanticTable;
     private AllocationTable allocTable;
+    private HashMap<Integer, Scope> scopeTable;
+    private int idScope = 0;
     private int tempIdCounter = 0;
     private int labelIdCounter = 0;
     private ArrayList<String> generatedInterCode;
     private SemanticNode rootNode;
     private String interCode;
     private ArrayList<Integer> statmentContext;
-    
+  
     public AnalisadorSintatico() {
         parseTable = TableBuilder.buildTable();
         errorMessage = "";
         symbolsTable = SymbolsTable.getInstance();
         semanticTable = SemanticTable.getInstance();
         allocTable = AllocationTable.getInstance();
+        scopeTable = new HashMap<>();
         generatedInterCode = new ArrayList();
     }
 
@@ -73,7 +80,14 @@ public class AnalisadorSintatico {
         rootNode = new SemanticNode(semanticTable.genId(), "PROGRAM", SemanticNode.NULL_PARENT);
         semanticTable.addNode(rootNode);
         nodeTreeStack.add(rootNode);
-        SemanticNode current;
+        SemanticNode current = null;
+        ArrayList<Scope> scopeStack = new ArrayList<Scope>();
+        Scope current_scope = new Scope(idScope,false);
+        scopeTable.put(idScope, current_scope);
+        idScope++;
+        boolean nextFor = false;
+        String lastToken= "";
+        String lastTokenName="";
         while (lex.hasTokens()) {
             Token tokenObj = lex.getNextToken();
             String token = tokenObj.getTypeName();//tokens.get(0);
@@ -84,12 +98,79 @@ public class AnalisadorSintatico {
             }
             boolean tokenMatch = false;
             while (!tokenMatch) {
+                
                 if (token.toLowerCase().equals(stack.get(0).toLowerCase())) {
                     if (token.equalsIgnoreCase("ident") || token.equalsIgnoreCase("intconst") 
                             || token.equalsIgnoreCase("stringconst")) {
                         semanticTable.getNode(nodeTreeStack.get(0).getId()).setTableId(tokenObj.getTableIndex() - 1);
 //                        newNode.setTableId(tokenObj.getTableIndex());
                     }
+                    
+                    if (token.equalsIgnoreCase("FOR")) {
+                        nextFor = true;
+                    }
+                    
+                    if (token.equalsIgnoreCase("OBRACE")) {
+                        System.out.println("Escopo criado");
+                        scopeStack.add(0,current_scope);
+                        if(nextFor){
+                            current_scope = new Scope(idScope,nextFor);
+                            scopeTable.put(idScope, current_scope);
+                            nextFor = false;
+                        } else{
+                            current_scope = new Scope(idScope,current_scope.isInsideFor());
+                            scopeTable.put(idScope, current_scope);
+                        }
+                    }
+                    
+                    if (token.equalsIgnoreCase("CBRACE")) {
+                        current_scope = scopeStack.remove(0);
+                        System.out.println("Escopo fechado");
+                    }
+                    
+                    if (token.equalsIgnoreCase("BREAK")) {
+                        if((lastToken.equalsIgnoreCase("CPAR") && nextFor) || current_scope.isInsideFor()){
+                            System.out.println("Comando break dentro do loop");
+                        }
+                        else{
+                            errorMessage += "\nError on token (break outside loop): " + token;
+                            errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
+                                + ": " + String.valueOf(tokenLines[1]);
+                            break;
+                        }
+                    }
+                    
+                    if (token.equalsIgnoreCase("IDENT"))  {
+                        String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() - 1);
+                        if (  !lex.verifyIdent()
+                                && !lastToken.equalsIgnoreCase("AT")
+                                && !lastToken.equalsIgnoreCase("PLUS")
+                                && !lastToken.equalsIgnoreCase("MINUS")
+                                && !lastToken.equalsIgnoreCase("MUL")
+                                && !lastToken.equalsIgnoreCase("DIV")) {
+                            if (current_scope.hasVariable(tokenName)) {
+                                errorMessage += "\nError, ident has already been declared: " + token + ": " + tokenName;
+                                errorMessage += "- Lines: " + String.valueOf(tokenLines[0])
+                                        + ": " + String.valueOf(tokenLines[1]);
+                                break;
+                            }
+                            System.out.println("Variável adicionada ao escopo: " + tokenName);
+                            if (lastToken.equalsIgnoreCase("CLASS") || lastToken.equalsIgnoreCase("INT") || lastToken.equalsIgnoreCase("STRING")) {
+                                current_scope.addVariable(tokenName, lastToken);
+                                System.out.println("Tipo: " + lastToken);
+                            } else if (lastToken.equalsIgnoreCase("IDENT")) {
+                                current_scope.addVariable(tokenName, lastTokenName);
+                                System.out.println("Tipo: " + lastTokenName);
+                            } else {
+                                String tokenTipo = lex.verifyType();
+                                current_scope.addVariable(tokenName, tokenTipo);
+                                System.out.println("Tipo: "+ tokenTipo);
+                            }
+                            scopeTable.put(current_scope.getId(), current_scope);
+                        }
+                        lastTokenName = tokenName;
+                    }
+                    lastToken = token;
                     stack.remove(0);
                     nodeTreeStack.remove(0);
 //                    action()
@@ -363,26 +444,6 @@ public class AnalisadorSintatico {
                 }
                 break;
             }
-//            case "TERM":
-//                if (root.getChild(0).getName().equalsIgnoreCase("UNARYEXPR") && root.getChild(1).getName().equalsIgnoreCase("TERM3")) {
-//                    SemanticNode TERM = semanticTable.getNode(root.getId());
-//                    SemanticNode UNARYEXPR = semanticTable.getNode(root.getChild(0).getId());
-//                    SemanticNode TERM3 = semanticTable.getNode(root.getChild(1).getId());
-//                    
-//                   TERM3.stringAttributes.put("her", UNARYEXPR.getStringAttributes("sin"));
-//                   System.out.println("Atribuindo: "
-//                            + TERM3.getName() + ".her <- "
-//                            + UNARYEXPR.getName() + ".sin = " + TERM3.getStringAttributes("her")
-//                    );
-//                   
-//                   TERM3.stringAttributes.put("addrher", UNARYEXPR.getStringAttributes("addr"));
-//                   System.out.println("Atribuindo: "
-//                            + TERM3.getName() + ".addrher <- "
-//                            + UNARYEXPR.getName() + ".addr = " + TERM3.getStringAttributes("addrher")
-//                    );
-//    
-//                }
-//                break;
             
             case "TERM3":{
                 SemanticNode TERM3 = semanticTable.getNode(root.getId());
@@ -1512,6 +1573,7 @@ public class AnalisadorSintatico {
         }
     }
 
+
     private String newTemp() {
         tempIdCounter++;
         return "T" + tempIdCounter;
@@ -1521,4 +1583,5 @@ public class AnalisadorSintatico {
         labelIdCounter++;
         return "L" + labelIdCounter + ":";
     }
+
 }
