@@ -16,8 +16,6 @@ import t1comp.model.semanticRules.assertionString.simpleStringAssertionBundle;
 
 import t1comp.model.semanticRules.atributeAssertionString;
 
-import t1comp.model.semanticRules.newNode;
-
 /**
  *
  * @author nathangodinho
@@ -354,15 +352,11 @@ public class AnalisadorSintatico {
                     Integer id = root.getChild(1).getId();
                     SemanticNode LVALUTE2 = semanticTable.getNode(root.getId());
                     SemanticNode LVALUTE2_ = semanticTable.getNode(root.getChild(3).getId());
-
-                    SemanticNode leafA = new SemanticNode(semanticTable.genId(), "array", root.getId());
-                    SemanticNode leafI = new SemanticNode(semanticTable.genId(), tabsimbolIdent, root.getId());
-                    SemanticNode leafH = new SemanticNode(semanticTable.genId(), LVALUTE2.getStringAttributes("her"), root.getId());
-                    SemanticNode newNode = new SemanticNode(semanticTable.genId(), leafA.getId(), leafI.getId(), leafH.getId());
-                    semanticTable.addNode(newNode);
-                    LVALUTE2_.addAtribute("her", newNode.getId());
+                    
+                    String node = "array " + tabsimbolIdent + " " + LVALUTE2.getStringAttributes("her");
+                    LVALUTE2_.stringAttributes.put("her", node);
                     semanticTable.addNode(LVALUTE2_);
-                    System.out.println("Novo nodo: " + LVALUTE2_.getName() + ".her <- " + leafA.getName() + " && " + leafI.getName() + " && " + leafH.getName());
+                    System.out.println("Novo nodo: " + LVALUTE2_.getName() + ".her <- " + node);
                 }
                 break;
             }
@@ -488,8 +482,8 @@ public class AnalisadorSintatico {
                         root.getChild(3).getName().equalsIgnoreCase("VARDECLBRACKETS1")) {
                     
                     String tabsimbol = symbolsTable.getSymbol(semanticTable.getNode(root.getChild(1).getId()).getTableId());
-                    SemanticNode VARDECLBRACKETS = root;
-                    SemanticNode VARDECLBRACKETS1 = root.getChild(3);
+                    SemanticNode VARDECLBRACKETS = semanticTable.getNode(root.getId());
+                    SemanticNode VARDECLBRACKETS1 = semanticTable.getNode(root.getChild(3).getId());
                     
                       
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
@@ -499,11 +493,12 @@ public class AnalisadorSintatico {
                     bundle.add(new generatorStringeAssertionBundle(VARDECLBRACKETS.getId(),"width", "=", 
                             VARDECLBRACKETS1.getId(), "width".concat(" * " + tabsimbol)));
                     
+                    String node = "array " + tabsimbol + " " + VARDECLBRACKETS1.getStringAttributes("sin");
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
 //                                    new atributeAssertion(root.getChild(3).getId(), "her", root.getId(), "her"),
-                                    //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)    
-                                    new newNode(root.getId(), "sin", "array", tabsimbol, root.getChild(3).getId(), "sin"),
+                                    //VARDECLBRACKETS.sin = array(tabSimbolo(int-constant),VARDECLBRACKETS1.sin)
+                                    new atributeAssertionString(root.getId(), "sin", node),
                                     new atributeAssertionString(VARDECLBRACKETS.getId(), "width", newTemp()),
                                     new atributeAssertionString(VARDECLBRACKETS.getId(), "code", bundle)
                             )));
@@ -1228,9 +1223,14 @@ public class AnalisadorSintatico {
                                     new atributeAssertionString(root.getId(), "addr", root.getId(), "addrher"),
                                     new atributeAssertionString(root.getId(), "code", ""))));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("SUMMINUS") && root.getChild(1).getName().equalsIgnoreCase("NUMEXPRESSION")) {
+                    SemanticNode NUMEXPRESSION1 = semanticTable.getNode(root.getId());
+                    SemanticNode SUMMINUS = semanticTable.getNode(root.getChild(0).getId());
+                    SemanticNode NUMEXPRESSION = semanticTable.getNode(root.getChild(1).getId());
+                    
+                    String node = SUMMINUS.getStringAttributes("node")+ " " + NUMEXPRESSION1.getStringAttributes("her") + " " + NUMEXPRESSION.getStringAttributes("node");
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getId(), "her", root.getChild(1).getId(), "node"),
+                                    new atributeAssertionString(root.getId(), "node", node),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
                                     new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "addrher")
                             // ||                                   gen(NUMEXPRESSION1.addr ‘=’ NUMEXPRESSION1.addrher SUMMINUS.addr NUMEXPRESSION.addr)
@@ -1278,10 +1278,17 @@ public class AnalisadorSintatico {
                             "addr", "=", root.getId(), "addrher",
                             root.getChild(0).getId(), "addr", root.getChild(1).getId(), "addr"));
                     bundle.add(new simpleStringAssertionBundle(root.getChild(2).getId(), "code"));
+                    
+                    SemanticNode TERM2 = semanticTable.getNode(root.getId());
+                    SemanticNode MULDIVMOD = semanticTable.getNode(root.getChild(0).getId());
+                    SemanticNode UNARYEXPR = semanticTable.getNode(root.getChild(1).getId());
+                    SemanticNode TERM3 = semanticTable.getNode(root.getChild(2).getId());
+                    
+                    String node = MULDIVMOD.getStringAttributes("node")+ " " + TERM2.getStringAttributes("her") + " " + TERM3.getStringAttributes("sin");
 
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getId(), "her", root.getChild(2).getId(), "sin"),
+                                    new atributeAssertionString(root.getId(), "node", node),
                                     new atributeAssertionString(root.getChild(2).getId(), "her", root.getChild(1).getId(), "sin"),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
                                     new atributeAssertionString(root.getId(), "code", bundle),
@@ -1340,10 +1347,17 @@ public class AnalisadorSintatico {
                     bundle.add(new generatorStringeAssertionBundle(root.getId(),
                             "addr", "=", root.getChild(0).getId(), "addr",
                             root.getChild(1).getId(), "addr"));
+                    
+                    SemanticNode UNARYEXPR = semanticTable.getNode(root.getId());
+                    SemanticNode SUMMINUS = semanticTable.getNode(root.getChild(0).getId());
+                    SemanticNode FACTOR = semanticTable.getNode(root.getChild(1).getId());
+                    
+                    String node = SUMMINUS.getStringAttributes("node")+ " " + FACTOR.getStringAttributes("node");
 
+                    
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new newNode(root.getId(), "node", root.getChild(0).getId(), "node", root.getChild(1).getId(), "node"),
+                                    new atributeAssertionString(root.getId(), "node", node),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
                                     new atributeAssertionString(root.getId(), "code", bundle))));
                 }
