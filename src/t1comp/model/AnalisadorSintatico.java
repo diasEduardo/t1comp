@@ -1248,10 +1248,10 @@ public class AnalisadorSintatico {
                     SemanticNode NUMEXPRESSION = semanticTable.getNode(root.getId());
                     SemanticNode TERM = semanticTable.getNode(root.getChild(0).getId());
                     SemanticNode NUMEXPRESSION1 = semanticTable.getNode(root.getChild(1).getId());
-                    semanticTable.addRule(root.getChild(1).getId(),
+                    semanticTable.addRule(TERM.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(root.getChild(1).getId(), "addrher", root.getChild(0).getId(), "addr"),
-                                    new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"))));
+                                    new atributeAssertionString(NUMEXPRESSION1.getId(), "addrher", TERM.getId(), "addr"),
+                                    new atributeAssertionString(NUMEXPRESSION1.getId(), "her", TERM.getId(), "sin"))));
                     
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
                     bundle.add(new simpleStringAssertionBundle(TERM.getId(), "code"));
@@ -1324,12 +1324,12 @@ public class AnalisadorSintatico {
                     bundle.add(new simpleStringAssertionBundle(UNARYEXPR.getId(), "code"));
                     bundle.add(new simpleStringAssertionBundle(TERM3.getId(), "code"));
                     
-                    semanticTable.addRule(root.getChild(1).getId(),
+                    semanticTable.addRule(root.getChild(0).getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(TERM3.getId(), "addrher", root.getChild(0).getId(), "addr"),
                                     new atributeAssertionString(TERM3.getId(), "her", UNARYEXPR.getId(), "sin"))));
                     
-                    semanticTable.addRule(root.getId(),
+                    semanticTable.addRule(true,root.getId(),
                             new ArrayList<>(Arrays.asList(
 //                                    new atributeAssertionString(root.getChild(1).getId(), "her", root.getChild(0).getId(), "sin"),
                                     new atributeAssertionString(root.getId(), "sin", root.getChild(1).getId(), "sin"),
@@ -1404,7 +1404,7 @@ public class AnalisadorSintatico {
                 break;
             case "UNARYEXPR":
                 if (root.getChild(0).getName().equalsIgnoreCase("FACTOR")) {
-                    semanticTable.addRule(root.getId(),
+                    semanticTable.addRule(true,root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "sin", root.getChild(0).getId(), "node"),
                                     new atributeAssertionString(root.getId(), "addr", root.getChild(0).getId(), "addr"),
@@ -1424,7 +1424,7 @@ public class AnalisadorSintatico {
                     String node = SUMMINUS.getStringAttributes("node")+ " " + FACTOR.getStringAttributes("node");
 
                     
-                    semanticTable.addRule(root.getId(),
+                    semanticTable.addRule(true,root.getId(),
                             new ArrayList<>(Arrays.asList(
                                     new atributeAssertionString(root.getId(), "node", node),
                                     new atributeAssertionString(root.getId(), "addr", newTemp()),
