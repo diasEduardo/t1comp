@@ -671,8 +671,7 @@ public class AnalisadorSintatico {
                     
                     bundle.add(new simpleStringAssertionBundle(VARDECLWITHCOMA1.getId(),"code"));
 //                    bundle.add(new simpleStringAssertionBundle("\n"));
-                    bundle.add(new generatorStringeAssertionBundle(VARDECLWITHCOMA.getId(),"
-                                                                   ", "=", 
+                    bundle.add(new generatorStringeAssertionBundle(VARDECLWITHCOMA.getId(),"aloc", "=", 
                             VARDECLWITHCOMA.getId(), "width", " * ", VARDECLWITHCOMA1.getId(), "width"));
 //                    bundle.add(new simpleStringAssertionBundle("\n"));
                     bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), 
