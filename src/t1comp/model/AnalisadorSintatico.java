@@ -668,7 +668,7 @@ public class AnalisadorSintatico {
                     bundle.add(new generatorStringeAssertionBundle(VARDECLWITHCOMA.getId(),"aloc", "=", 
                             VARDECLWITHCOMA.getId(), "width", " * ", VARDECLWITHCOMA1.getId(), "width"));
 //                    bundle.add(new simpleStringAssertionBundle("\n"));
-                    bundle.add(new generatorStringeAssertionBundle("aloc".concat(tableValue), 
+                    bundle.add(new generatorStringeAssertionBundle("aloc ".concat(tableValue), 
                             VARDECLWITHCOMA.getId(), "aloc"));
                     
                     semanticTable.addRule(root.getId(),
@@ -1260,7 +1260,9 @@ public class AnalisadorSintatico {
                             STATLIST1 = root.getChild(1);
                     
                     ArrayList<StringAssertionBundle> bundle = new ArrayList<>();
-                    STATEMENT.stringAttributes.put("next", STATLIST.getStringAttributes("next"));
+                    STATEMENT.stringAttributes.put("next", newLabel());
+                    
+                    //STATEMENT.stringAttributes.put("next", STATLIST.getStringAttributes("next"));
                     semanticTable.addNode(STATEMENT);
                     bundle.add(new simpleStringAssertionBundle(STATEMENT.getId(), "code"));
                     bundle.add(new simpleStringAssertionBundle(STATLIST1.getId(), "code"));
