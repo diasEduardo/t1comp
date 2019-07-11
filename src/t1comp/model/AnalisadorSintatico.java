@@ -338,6 +338,8 @@ public class AnalisadorSintatico {
                     LVALUET2.stringAttributes.put("her", tableValue);
                     semanticTable.addNode(LVALUET2);
                     System.out.println("Nova folha: " + LVALUET2.getName() + ".her" + " <- " + LVALUET2.getStringAttributes("her"));
+                    LVALUET2.stringAttributes.put("addrher", tableValue);
+                    System.out.println("Attribuindo her: " + LVALUET2.getName() + ".addher" + " <- " + LVALUET2.getStringAttributes("addrher"));
  
                 }
                 break;
@@ -687,7 +689,7 @@ public class AnalisadorSintatico {
                     
                     semanticTable.addRule(root.getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(PRINTSTAT.getId(), "next", PRINTSTAT.getId(), "next"),
+                                    new atributeAssertionString(PRINTSTAT.getId(), "next", STATEMENT.getId(), "next"),
                                     new atributeAssertionString(STATEMENT.getId(), "code", bundle)
                     )));
                 } else if (root.getChild(0).getName().equalsIgnoreCase("READSTAT") 
@@ -1198,9 +1200,9 @@ public class AnalisadorSintatico {
                             new ArrayList<>(Arrays.asList(
 //                                    new newLeaf((root.getChild(1).getId()), "her", tabsimbolIdent),
                                     new atributeAssertionString(root.getId(), "node", root.getChild(1).getId(), "sin"),
-                                    new atributeAssertionString(root.getId(), "addher", tabsimbolIdent),
+//                                    new atributeAssertionString(root.getId(), "addher", tabsimbolIdent),
                                     new atributeAssertionString(root.getId(), "code", root.getChild(1).getId(), "code"),
-                                    new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addr")
+                                    new atributeAssertionString(root.getId(), "addr", root.getChild(1).getId(), "addrher")
                             )));
                 }
                 break;
@@ -1324,7 +1326,7 @@ public class AnalisadorSintatico {
                     
                     semanticTable.addRule(root.getChild(1).getId(),
                             new ArrayList<>(Arrays.asList(
-                                    new atributeAssertionString(TERM3.getId(), "addrher", UNARYEXPR.getId(), "addr"),
+                                    new atributeAssertionString(TERM3.getId(), "addrher", root.getChild(0).getId(), "addr"),
                                     new atributeAssertionString(TERM3.getId(), "her", UNARYEXPR.getId(), "sin"))));
                     
                     semanticTable.addRule(root.getId(),
