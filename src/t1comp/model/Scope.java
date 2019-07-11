@@ -6,36 +6,47 @@
 package t1comp.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
  * @author adribeiro
  */
 public class Scope {
-    private ArrayList<String> variables;
-    boolean insideFor;
+    private HashMap<Integer, String> variables;
+    private HashMap<Integer, String> tipos;
+    private int idV;
+    private int id;
+    private boolean insideFor;
     
-    public Scope(boolean inFor){
+    public Scope(int v,boolean inFor){
         insideFor = inFor;
-        variables = new ArrayList<String>();
+        variables = new HashMap<>();
+        tipos = new HashMap<>();
+        idV = 0;
+        id = v;
     }
     
     public boolean hasVariable(String v){
-        return variables.contains(v);
+        return variables.containsValue(v);
     }
     
-    public void addVariable(String v){
-        if(!variables.contains(v)){
-            variables.add(v);
-        }
+    public void addVariable(String v, String t){
+        variables.put(idV, v);
+        tipos.put(idV, t);
+        idV++;
     }
-
+    
     public boolean isInsideFor() {
         return insideFor;
     }
 
     public void setInsideFor(boolean insideFor) {
         this.insideFor = insideFor;
+    }
+
+    public int getId() {
+        return id;
     }
     
     

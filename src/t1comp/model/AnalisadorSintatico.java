@@ -7,6 +7,7 @@ package t1comp.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import t1comp.model.TableBuilder;
 import t1comp.model.semanticRules.addType;
@@ -26,6 +27,8 @@ public class AnalisadorSintatico {
     private SemanticTable semanticTable;
     private AllocationTable allocTable;
     SemanticNode rootNode;
+    private HashMap<Integer, Scope> scopeTable;
+    private int idScope;
     
 
     public AnalisadorSintatico() {
@@ -34,6 +37,8 @@ public class AnalisadorSintatico {
         symbolsTable = SymbolsTable.getInstance();
         semanticTable = SemanticTable.getInstance();
         allocTable = AllocationTable.getInstance();
+        scopeTable = new HashMap<>();
+        idScope = 0;
     }
 
     public String statusMessage() {
@@ -58,7 +63,9 @@ public class AnalisadorSintatico {
         nodeTreeStack.add(rootNode);
         SemanticNode current = null;
         ArrayList<Scope> scopeStack = new ArrayList<Scope>();
-        Scope current_scope = new Scope(false);
+        Scope current_scope = new Scope(idScope,false);
+        scopeTable.put(idScope, current_scope);
+        idScope++;
         boolean nextFor = false;
         String lastToken= "";
         while (lex.hasTokens()) {
@@ -86,10 +93,12 @@ public class AnalisadorSintatico {
                         System.out.println("Escopo criado");
                         scopeStack.add(0,current_scope);
                         if(nextFor){
-                            current_scope = new Scope(nextFor);
+                            current_scope = new Scope(idScope,nextFor);
+                            scopeTable.put(idScope, current_scope);
                             nextFor = false;
                         } else{
-                            current_scope = new Scope(current_scope.insideFor);
+                            current_scope = new Scope(idScope,current_scope.isInsideFor());
+                            scopeTable.put(idScope, current_scope);
                         }
                     }
                     
@@ -99,7 +108,7 @@ public class AnalisadorSintatico {
                     }
                     
                     if (token.equalsIgnoreCase("BREAK")) {
-                        if((lastToken.equalsIgnoreCase("CPAR") && nextFor) || current_scope.insideFor){
+                        if((lastToken.equalsIgnoreCase("CPAR") && nextFor) || current_scope.isInsideFor()){
                             System.out.println("Comando break dentro do loop");
                         }
                         else{
@@ -124,9 +133,15 @@ public class AnalisadorSintatico {
                                 + ": " + String.valueOf(tokenLines[1]);
                             break;
                         }
-//                        System.out.println("Last Token: " + lastToken);
                         System.out.println("Variável adicionada ao escopo: " + tokenName);
-                        current_scope.addVariable(tokenName);
+                        if (lastToken.equalsIgnoreCase("CLASS") ||lastToken.equalsIgnoreCase("INT") || lastToken.equalsIgnoreCase("STRING")) {
+                            current_scope.addVariable(tokenName, lastToken);
+                            System.out.println("Tipo: " + lastToken);
+                        } else {
+                            current_scope.addVariable(tokenName, " ");
+                            System.out.println("Tipo: ");
+                        }
+                        scopeTable.put(current_scope.getId(), current_scope);
                     }
                     lastToken = token;
                     stack.remove(0);
