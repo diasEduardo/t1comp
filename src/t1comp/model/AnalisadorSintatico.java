@@ -88,6 +88,7 @@ public class AnalisadorSintatico {
         boolean nextFor = false;
         String lastToken= "";
         String lastTokenName="";
+        String vN="";
         while (lex.hasTokens()) {
             Token tokenObj = lex.getNextToken();
             String token = tokenObj.getTypeName();//tokens.get(0);
@@ -142,9 +143,13 @@ public class AnalisadorSintatico {
                     String tokenName = symbolsTable.getSymbol(tokenObj.getTableIndex() - 1);
                     if (token.equalsIgnoreCase("IDENT"))  {
                         
-                        if (  !lex.verifyIdent() && lastToken.equalsIgnoreCase("OBRACE") ||
+//                        System.out.println("Anterior: " + lastToken);
+                        if ( 
                                 !lex.verifyIdent() && lastToken.equalsIgnoreCase("COMMA") ||
-                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("IDENT")
+                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("IDENT") ||
+                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("STRING") ||
+                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("CLASS") ||
+                                !lex.verifyIdent() && lastToken.equalsIgnoreCase("INT")
                                 ) {
                             if (current_scope.hasVariable(tokenName)) {
                                 errorMessage += "\nError, ident has already been declared: " + token + ": " + tokenName;
@@ -156,26 +161,27 @@ public class AnalisadorSintatico {
                             System.out.println("Variável adicionada ao escopo: " + tokenName);
                             if (lastToken.equalsIgnoreCase("CLASS") || lastToken.equalsIgnoreCase("INT") || lastToken.equalsIgnoreCase("STRING")) {
                                 current_scope.addVariable(tokenName, lastToken);
+                                vN = lastToken;
                                 System.out.println("Tipo: " + lastToken);
                             } else if (lastToken.equalsIgnoreCase("IDENT")) {
                                 current_scope.addVariable(tokenName, lastTokenName);
                                 System.out.println("Tipo: " + lastTokenName);
+                                vN = lastToken;
                             } else {
-                                String tokenTipo = lex.verifyType();
-                                current_scope.addVariable(tokenName, tokenTipo);
-                                System.out.println("Tipo: "+ tokenTipo);
+                                current_scope.addVariable(tokenName, vN);
+                                System.out.println("Tipo: "+ vN);
                             }
                             scopeTable.put(current_scope.getId(), current_scope);
                         } 
-                        else if(!lex.verifyIdent()
-                                && lastToken.equalsIgnoreCase("SEMICOMMA")){
-                            if (!current_scope.hasVariable(tokenName)) {
-                                System.out.println("Variável adicionada ao escopo: " + tokenName);
-                                String tokenTipo = lex.verifyType();
-                                current_scope.addVariable(tokenName, tokenTipo);
-                                System.out.println("Tipo: "+ tokenTipo);
-                            }
-                        }
+//                        else if(!lex.verifyIdent()
+//                                && lastToken.equalsIgnoreCase("SEMICOMMA")){
+//                            if (!current_scope.hasVariable(tokenName)) {
+//                                System.out.println("Variável adicionada ao escopo: " + tokenName);
+//                                String tokenTipo = lex.verifyType();
+//                                current_scope.addVariable(tokenName, tokenTipo);
+//                                System.out.println("Tipo: "+ tokenTipo);
+//                            }
+//                        }
                     }
                     lastTokenName = tokenName;
                     lastToken = token;
