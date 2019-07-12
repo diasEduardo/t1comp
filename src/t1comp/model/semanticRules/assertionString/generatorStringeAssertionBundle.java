@@ -16,7 +16,7 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
         private final SemanticTable table = SemanticTable.getInstance();
         Integer receiver, sender1, sender2, sender3;
         String receiveAtt, operator, sender1Att, sender2Att, sender3Att, 
-                operator2, simpleStringGen, command, command2;
+                operator2, simpleStringGen, command, command2, extraLine;
         boolean singleAtt = false;
       
         public generatorStringeAssertionBundle(Integer receiver, String receiveAtt, String operator, 
@@ -57,6 +57,17 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
                 this.sender1 = sender1;
                 this.sender1Att = sender1Att;
                 this.singleAtt = true;
+        }
+        
+        public generatorStringeAssertionBundle(Integer receiver, String receiveAtt, String operator, 
+                Integer sender1, String sender1Att, String extraLine) {
+                this.receiver = receiver;
+                this.receiveAtt = receiveAtt;
+                this.operator = operator;
+                this.sender1 = sender1;
+                this.sender1Att = sender1Att;
+                this.singleAtt = true;
+                this.extraLine = extraLine;
         }
         
         public generatorStringeAssertionBundle(Integer receiver, String receiveAtt, String operator, 
@@ -119,7 +130,8 @@ public class generatorStringeAssertionBundle implements StringAssertionBundle {
                 return returnValue.concat(simpleStringGen);
             }
             SemanticNode node2 = table.getNode(sender1);
-            returnValue = returnValue.concat(node2.getStringAttributes(sender1Att));
+            returnValue = returnValue.concat(node2.getStringAttributes(sender1Att))
+                    .concat(extraLine != null ? extraLine : "");
             
             if (operator2 != null) {
                 SemanticNode node3 = table.getNode(sender2);

@@ -31,10 +31,27 @@ public class View extends javax.swing.JFrame {
         this.app = app;
         initComponents();
         sourceCodeArea.setText("{\n" +
+"    int a,b;\n" +
+"    Object  ob[25][2];\n" +
+"\n" +
+"    a=2;\n" +
+"    b=4;\n" +
+"    print \"exemplo123\";\n" +
+"    print a+b/4;\n" +
+"    read  a;\n" +
+"    if(0){\n" +
+"        string a;\n" +
+"        a=\"a\";\n" +
+"    }else{\n" +
+"        string a;\n" +
+"        a=b;\n" +
+"    }end\n" +
+"\n" +
 "    int i;\n" +
 "    for(i=0;10-i;i=i+1){\n" +
 "        a = a+2;\n" +
 "    }\n" +
+"    return a*a;\n" +
 "}");
     }
     
